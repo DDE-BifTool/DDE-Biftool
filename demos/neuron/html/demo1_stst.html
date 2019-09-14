@@ -1,0 +1,340 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Continuation and stability of steady states (equilibria)</title><meta name="generator" content="MATLAB 9.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-02-03"><meta name="DC.source" content="demo1_stst.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Continuation and stability of steady states (equilibria)</h1><!--introduction--><p>
+$Id: demo1_stst.m 47 2014-04-19 17:05:42Z jan.sieber $
+</p><p>Once the user-defined functions are prepared, DDE-Biftool can compute and continue equilibria of the DDE, and compute their linearized stability, thus detecting local bifurcations. This demo requires <a href="demo1_funcs.html">demo1_funcs.html</a> to have run beforehand.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Initial guess for steady state</a></li><li><a href="#3">Linear stability of initial equilibrium</a></li><li><a href="#4">Ask for roots with more negative real part</a></li><li><a href="#5">Figures: Spectrum of equilibrium</a></li><li><a href="#6">Initialize branch of trivial equilibria</a></li><li><a href="#7">Extend and continue branch of trivial equilibria</a></li><li><a href="#8">Stability of branch of equilibria</a></li><li><a href="#9">Figures: Stability of equilibria</a></li><li><a href="#10">Save and continue with Hopf bifurcations: <a href="demo1_hopf.html">demo1_hopf.html</a></a></li></ul></div><pre class="codeinput"><span class="comment">%#ok&lt;*ASGLU,*NOPTS,*NASGU&gt;</span>
+<span class="comment">%</span>
+</pre><h2 id="2">Initial guess for steady state</h2><p>It is clear that the neuron DDE has a steady state solution <img src="demo1_stst_eq12633508824140386485.png" alt="$(x_1^*,x_2^*)=(0,0)$"> for all values of the parameters. We define a first steady state solution using the parameter values <img src="demo1_stst_eq12722231323017104368.png" alt="$\kappa=0.5$">, <img src="demo1_stst_eq07818585777722505755.png" alt="$\beta=-1$">, <img src="demo1_stst_eq10082049385946326433.png" alt="$a_{12}=1$">, <img src="demo1_stst_eq05491063879846349363.png" alt="$a_{21}=2.34$">, <img src="demo1_stst_eq14879353335488848726.png" alt="$\tau_1=\tau_2=0.2$"> and <img src="demo1_stst_eq09301356144353843913.png" alt="$\tau_s=1.5$">. Remember that we chose <tt>par</tt> <img src="demo1_stst_eq05586596990143650922.png" alt="$=[\kappa, \beta, a_{12}, a_{21},\tau_1,\tau_2, \tau_s]$">. It is recommended to use the provided function dde_stst_create as it fills in automatically all other fields and puts them into a default order. Arguments can be given in any order.</p><pre class="codeinput">stst=dde_stst_create(<span class="string">'parameter'</span>,[1/2, -1, 1, 2.34, 0.2, 0.2, 1.5],<span class="keyword">...</span>
+    <span class="string">'x'</span>,[0;0]);
+</pre><h2 id="3">Linear stability of initial equilibrium</h2><p>We get default point method parameters and correct the point, which, being already a correct solution, remains unchanged. Computing and plotting stability of the corrected point reveals it has one unstable real mode, see figure.</p><pre class="codeinput">method=df_mthod(<span class="string">'stst'</span>); <span class="comment">% this uses new Chebyshev approximation to find eigenvalues</span>
+method.stability.minimal_real_part=-1
+[stst,success]=p_correc(funcs,stst,[],[],method.point)
+<span class="comment">% compute its stability:</span>
+stst.stability=p_stabil(funcs,stst,method.stability)
+figure(1); clf;
+p_splot(stst); <span class="comment">% plot its stability:</span>
+</pre><pre class="codeoutput">method = 
+  struct with fields:
+
+    continuation: [1&times;1 struct]
+     bifurcation: [1&times;1 struct]
+           point: [1&times;1 struct]
+       stability: [1&times;1 struct]
+stst = 
+  struct with fields:
+
+         kind: 'stst'
+    parameter: [0.5 -1 1 2.34 0.2 0.2 1.5]
+            x: [2&times;1 double]
+    stability: []
+         nmfm: []
+         nvec: []
+         flag: ''
+success =
+  logical
+   1
+...</pre><img vspace="5" hspace="5" src="demo1_stst_01.png" alt=""> <h2 id="4">Ask for roots with more negative real part</h2><p>In both figures, approximations <img src="demo1_stst_eq11306502085970485897.png" alt="$(\times)$"> and corrections <img src="demo1_stst_eq00792549768492074096.png" alt="$(*)$"> are nearly indistinguishable. The stability comptued by Chebyshev interpolation has a field err that indicates the residual of the approximation, when checked using the characteristic matrix.</p><pre class="codeinput">method.stability.minimal_real_part=-4;
+method.stability.max_number_of_eigenvalues=1000;
+stst.stability=p_stabil(funcs,stst,method.stability); <span class="comment">% recompute stability:</span>
+figure(2); clf;
+p_splot(stst); <span class="comment">% replot stability</span>
+</pre><img vspace="5" hspace="5" src="demo1_stst_02.png" alt=""> <h2 id="5">Figures: Spectrum of equilibrium</h2><p>Approximated <img src="demo1_stst_eq11306502085970485897.png" alt="$(\times)$"> and corrected <img src="demo1_stst_eq00792549768492074096.png" alt="$(*)$"> roots of the characteristic equation of neuron system at its steady state solution <img src="demo1_stst_eq12633508824140386485.png" alt="$(x_1^*,x_2^*)=(0,0)$">. Real parts computed up to <img src="demo1_stst_eq01486954557893726405.png" alt="$\Re(\lambda)\geq -\frac{1}{\tau}$"> (top), <img src="demo1_stst_eq17552292049403326001.png" alt="$\Re(\lambda)\geq -2$"> (bottom).</p><h2 id="6">Initialize branch of trivial equilibria</h2><p>(See also <a href="demo1_simple.html">demo1_simple.html</a> how the steps below can be accomplished with a single call to SetupStst.) We will use this point as a first point to compute a branch of steady state solutions. First, we obtain an empty branch with free parameter <img src="demo1_stst_eq00088373482002467634.png" alt="$a_{21}$">, limited by <img src="demo1_stst_eq13242774239452996626.png" alt="$a_{21}\in[0,5]$"> and <img src="demo1_stst_eq01120311230596014874.png" alt="$\Delta a_{21}\leq 0.2$"> between points.</p><pre class="codeinput"><span class="comment">% get an empty branch with ind_a21 as a free parameter:</span>
+branch1=df_brnch(funcs,ind_a21,<span class="string">'stst'</span>)
+branch1.parameter
+branch1.parameter.min_bound
+<span class="comment">% set bounds for continuation parameter</span>
+branch1.parameter.min_bound(end+1,:)=[ind_a21 0];
+branch1.parameter.max_bound(end+1,:)=[ind_a21 5];
+branch1.parameter.max_step(end+1,:)=[ind_a21 0.2];
+<span class="comment">% use stst as a first branch point:</span>
+branch1.point=stst;
+</pre><pre class="codeoutput">branch1 = 
+  struct with fields:
+
+       method: [1&times;1 struct]
+    parameter: [1&times;1 struct]
+        point: []
+ans = 
+  struct with fields:
+
+         free: 4
+    min_bound: [3&times;2 double]
+    max_bound: []
+     max_step: []
+ans =
+     5     0
+     6     0
+     7     0
+</pre><h2 id="7">Extend and continue branch of trivial equilibria</h2><p>To obtain a second starting point we change  parameter value <img src="demo1_stst_eq00088373482002467634.png" alt="$a_{21}$"> slightly and correct again.Because we know how the branch of steady state solutions continued in <img src="demo1_stst_eq00088373482002467634.png" alt="$a_{21}$"> looks like (it is constant at <img src="demo1_stst_eq12633508824140386485.png" alt="$(x_1^*,x_2^*)=(0,0)$">) we disable plotting during continuation by setting the corresponding continuation method parameter to zero.</p><pre class="codeinput">stst.parameter(ind_a21)=stst.parameter(ind_a21)+0.1;
+[stst,success]=p_correc(funcs,stst,[],[],method.point)
+<span class="comment">% use as a second branch point:</span>
+branch1.point(2)=stst;
+branch1.method.continuation.plot=0;
+
+<span class="comment">% continue in one direction:</span>
+[branch1,s,f,r]=br_contn(funcs,branch1,100)
+<span class="comment">% turn the branch around:</span>
+branch1=br_rvers(branch1);
+<span class="comment">% continue in the other direction:</span>
+[branch1,s,f,r]=br_contn(funcs,branch1,100)
+</pre><pre class="codeoutput">stst = 
+  struct with fields:
+
+         kind: 'stst'
+    parameter: [0.5 -1 1 2.44 0.2 0.2 1.5]
+            x: [2&times;1 double]
+    stability: []
+         nmfm: []
+         nvec: []
+         flag: ''
+success =
+  logical
+   1
+BR_CONTN warning: boundary hit.
+branch1 = 
+  struct with fields:
+
+       method: [1&times;1 struct]
+    parameter: [1&times;1 struct]
+        point: [1&times;16 struct]
+...</pre><h2 id="8">Stability of branch of equilibria</h2><p>During continuation, sixteen points were successfully computed (<img src="demo1_stst_eq14618335207344013478.png" alt="$s=16$">) before the right boundary <img src="demo1_stst_eq08149519602106114191.png" alt="$a_{21}=5$"> was hit (signalled by a warning). No corrections failed (<img src="demo1_stst_eq00389420425365024615.png" alt="$f=0$">) and no computed points were later rejected (<img src="demo1_stst_eq17356595364700422427.png" alt="$r=0$">). Reversing the order of the branch points allows to continue to the left.</p><p>After obtaining suitable measure structures we plot the real part of the approximated and corrected roots of the characteristic equation along the branch, (see figure). Notice the strange behaviour (coinciding of several complex pairs of roots) at <img src="demo1_stst_eq06518037702567880132.png" alt="$a_{21}=0$">. At this parameter value one of the couplings between the neurons is broken. In fact, for <img src="demo1_stst_eq06518037702567880132.png" alt="$a_{21}=0$">, the evolution of the second component is independent of the evolution of the first.</p><pre class="codeinput">branch1.method.stability.minimal_real_part=-2;
+branch1=br_stabl(funcs,branch1,0,0);
+
+<span class="comment">% obtain suitable scalar measures to plot stability along branch:</span>
+[xm,ym]=df_measr(1,branch1)
+figure(3); clf;
+br_plot(branch1,xm,ym,<span class="string">'b'</span>); <span class="comment">% plot stability along branch:</span>
+ym.subfield=<span class="string">'l0'</span>;
+br_plot(branch1,xm,ym,<span class="string">'c'</span>);
+plot([0 5],[0 0],<span class="string">'-.'</span>);
+axis([0 5 -2 1.5]);
+xlabel(<span class="string">'a21'</span>);ylabel(<span class="string">'\Re\lambda'</span>);
+<span class="comment">% plot stability versus point number:</span>
+figure(4); clf;
+br_plot(branch1,[],ym,<span class="string">'b'</span>);
+br_plot(branch1,[],ym,<span class="string">'b.'</span>);
+plot([0 30],[0 0],<span class="string">'-.'</span>);
+xlabel(<span class="string">'point number along branch'</span>);ylabel(<span class="string">'\Re(\lambda)'</span>);
+</pre><pre class="codeoutput">xm = 
+  struct with fields:
+
+       field: 'parameter'
+    subfield: ''
+         row: 1
+         col: 4
+        func: ''
+ym = 
+  struct with fields:
+
+       field: 'stability'
+    subfield: 'l1'
+         row: 'all'
+         col: 1
+        func: 'real'
+</pre><img vspace="5" hspace="5" src="demo1_stst_03.png" alt=""> <img vspace="5" hspace="5" src="demo1_stst_04.png" alt=""> <h2 id="9">Figures: Stability of equilibria</h2><p><a name=stststability></a>
+</p><p>Real parts of the approximated (top) and corrected (top,bottom) roots of the characteristic equation versus <img src="demo1_stst_eq00088373482002467634.png" alt="$a_{21}$"> (top) respectively the point number along the branch (bottom).</p><h2 id="10">Save and continue with Hopf bifurcations: <a href="demo1_hopf.html">demo1_hopf.html</a></h2><pre class="codeinput">save(<span class="string">'demo1_stst_results.mat'</span>);
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Continuation and stability of steady states (equilibria)
+%
+% <html>
+% $Id: demo1_stst.m 47 2014-04-19 17:05:42Z jan.sieber $
+% </html>
+%
+% Once the user-defined functions are prepared, DDE-Biftool can compute and
+% continue equilibria of the DDE, and compute their linearized stability,
+% thus detecting local bifurcations. This demo requires <demo1_funcs.html> to
+% have run beforehand.
+%%
+%#ok<*ASGLU,*NOPTS,*NASGU>
+%
+%% Initial guess for steady state
+% It is clear that the neuron DDE has a steady state solution
+% $(x_1^*,x_2^*)=(0,0)$ for all values of the parameters. We define a first
+% steady state solution using the parameter values $\kappa=0.5$,
+% $\beta=-1$, $a_{12}=1$, $a_{21}=2.34$, $\tau_1=\tau_2=0.2$ and
+% $\tau_s=1.5$. Remember that we chose |par| $=[\kappa, \beta, a_{12},
+% a_{21},\tau_1,\tau_2, \tau_s]$. It is recommended to use the provided
+% function dde_stst_create as it fills in automatically all other fields
+% and puts them into a default order. Arguments can be given in any order.
+stst=dde_stst_create('parameter',[1/2, -1, 1, 2.34, 0.2, 0.2, 1.5],...
+    'x',[0;0]);
+
+%% Linear stability of initial equilibrium
+% We get default point method parameters and correct the point, which,
+% being already a correct solution, remains unchanged. Computing and
+% plotting stability of the corrected point reveals it has one unstable
+% real mode, see figure.
+
+method=df_mthod('stst'); % this uses new Chebyshev approximation to find eigenvalues
+method.stability.minimal_real_part=-1
+[stst,success]=p_correc(funcs,stst,[],[],method.point)
+% compute its stability:
+stst.stability=p_stabil(funcs,stst,method.stability)
+figure(1); clf;
+p_splot(stst); % plot its stability:
+%% Ask for roots with more negative real part
+% In both figures, approximations $(\times)$ and corrections $(*)$ are
+% nearly indistinguishable. The stability comptued by Chebyshev
+% interpolation has a field err that indicates the residual of the
+% approximation, when checked using the characteristic matrix.
+method.stability.minimal_real_part=-4;
+method.stability.max_number_of_eigenvalues=1000;
+stst.stability=p_stabil(funcs,stst,method.stability); % recompute stability:
+figure(2); clf;
+p_splot(stst); % replot stability
+%% Figures: Spectrum of equilibrium
+% Approximated $(\times)$ and corrected $(*)$ roots of the characteristic
+% equation of neuron system at its steady state solution
+% $(x_1^*,x_2^*)=(0,0)$. Real parts computed up to $\Re(\lambda)\geq
+% -\frac{1}{\tau}$ (top), $\Re(\lambda)\geq -2$ (bottom).
+
+%% Initialize branch of trivial equilibria
+% (See also <demo1_simple.html> how the steps below can be accomplished
+% with a single call to SetupStst.) We will use this point as a first point
+% to compute a branch of steady state solutions. First, we obtain an empty
+% branch with free parameter $a_{21}$, limited by $a_{21}\in[0,5]$ and
+% $\Delta a_{21}\leq 0.2$ between points.
+
+% get an empty branch with ind_a21 as a free parameter:
+branch1=df_brnch(funcs,ind_a21,'stst')
+branch1.parameter
+branch1.parameter.min_bound
+% set bounds for continuation parameter
+branch1.parameter.min_bound(end+1,:)=[ind_a21 0];
+branch1.parameter.max_bound(end+1,:)=[ind_a21 5];
+branch1.parameter.max_step(end+1,:)=[ind_a21 0.2];
+% use stst as a first branch point:
+branch1.point=stst;
+
+%%  Extend and continue branch of trivial equilibria
+% To obtain a second starting point we change  parameter value $a_{21}$
+% slightly and correct again.Because we know how the branch of steady state
+% solutions continued in $a_{21}$ looks like (it is constant at
+% $(x_1^*,x_2^*)=(0,0)$) we disable plotting during continuation by setting
+% the corresponding continuation method parameter to zero.
+
+stst.parameter(ind_a21)=stst.parameter(ind_a21)+0.1;
+[stst,success]=p_correc(funcs,stst,[],[],method.point)
+% use as a second branch point:
+branch1.point(2)=stst;
+branch1.method.continuation.plot=0;
+
+% continue in one direction:
+[branch1,s,f,r]=br_contn(funcs,branch1,100)
+% turn the branch around:
+branch1=br_rvers(branch1);
+% continue in the other direction:
+[branch1,s,f,r]=br_contn(funcs,branch1,100)
+
+%% Stability of branch of equilibria
+% During continuation, sixteen points were successfully computed ($s=16$)
+% before the right boundary $a_{21}=5$ was hit (signalled by a warning). No
+% corrections failed ($f=0$) and no computed points were later rejected
+% ($r=0$). Reversing the order of the branch points allows to continue to
+% the left.
+%
+% After obtaining suitable measure structures we plot the real part of the
+% approximated and corrected roots of the characteristic equation along the
+% branch, (see figure). Notice the strange behaviour (coinciding of several
+% complex pairs of roots) at $a_{21}=0$. At this parameter value one of the
+% couplings between the neurons is broken. In fact, for $a_{21}=0$, the
+% evolution of the second component is independent of the evolution of the
+% first.
+branch1.method.stability.minimal_real_part=-2;
+branch1=br_stabl(funcs,branch1,0,0);
+
+% obtain suitable scalar measures to plot stability along branch:
+[xm,ym]=df_measr(1,branch1)
+figure(3); clf;
+br_plot(branch1,xm,ym,'b'); % plot stability along branch:
+ym.subfield='l0';
+br_plot(branch1,xm,ym,'c');
+plot([0 5],[0 0],'-.');
+axis([0 5 -2 1.5]);
+xlabel('a21');ylabel('\Re\lambda');
+% plot stability versus point number:
+figure(4); clf;
+br_plot(branch1,[],ym,'b');
+br_plot(branch1,[],ym,'b.');
+plot([0 30],[0 0],'-.');
+xlabel('point number along branch');ylabel('\Re(\lambda)');
+%% Figures: Stability of equilibria
+%
+% <html><a name=stststability></a>
+% </html>
+%
+% Real parts of the approximated (top) and corrected (top,bottom) roots of
+% the characteristic equation versus $a_{21}$ (top) respectively the point
+% number along the branch (bottom).
+%% Save and continue with Hopf bifurcations: <demo1_hopf.html>
+save('demo1_stst_results.mat');
+
+##### SOURCE END #####
+--></body></html>

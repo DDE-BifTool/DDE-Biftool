@@ -1,0 +1,206 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Continuation of folds of periodic orbits</title><meta name="generator" content="MATLAB 9.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-02-03"><meta name="DC.source" content="demo1_POfold.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Continuation of folds of periodic orbits</h1><!--introduction--><p>
+$Id: demo1_POfold.m 178 2017-03-14 00:00:01Z jansieber $
+</p><p>The extension ddebiftool_extra_psol is able to continue local bifurcations of periodic orbits in two parameters. This demo shows how one can continue folds (saddle-nodes) of periodic orbits i nthe neuron problem. (requires running of <a href="demo1_psol.html">demo1_psol.html</a> first).</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Add extension folder to path</a></li><li><a href="#2">Vectorization for speed-up</a></li><li><a href="#3">Find initial guess</a></li><li><a href="#4">Initialize branch and set up extended system</a></li><li><a href="#5">Branch continuation</a></li><li><a href="#6">Extracting solution components</a></li><li><a href="#7">Stability of fold orbits</a></li><li><a href="#8">Save results (end of tutorial demo, but try also <a href="demo1_hcli.html">demo1_hcli.html</a>)</a></li></ul></div><h2 id="1">Add extension folder to path</h2><p>The extension is installed in a separate folder. In addition, a folder with utilities for user convenience is loaded.</p><pre class="codeinput">addpath(<span class="string">'../../ddebiftool_extra_psol/'</span>);
+addpath(<span class="string">'../../ddebiftool_utilities/'</span>);
+<span class="comment">%#ok&lt;*ASGLU,*NOPTS,*NASGU&gt;</span>
+</pre><h2 id="2">Vectorization for speed-up</h2><p>(regardless of original choice)</p><pre class="codeinput">funcs=fdirectional_vec;
+</pre><h2 id="3">Find initial guess</h2><p>For the branch computed in <a href="demo1_psol.html">demo1_psol.html</a> one fold occured at the maximal parameter value. So we extract its index <tt>indmax</tt>.</p><pre class="codeinput">[dummy,indmax]=max(arrayfun(@(x)x.parameter(ind_a21),branch5.point));
+</pre><h2 id="4">Initialize branch and set up extended system</h2><p>Then we call <tt>SetupPOfold</tt> to initialize the branch and to create the functions for the extended system. For the core DDE-Biftool routines the fold of periodic orbits is of the same type as a standard periodic orbit. However, the user-provided right-hand side has been extended (eg, foldfuncs.sys_rhs is different from funcs.sys_rhs). SetupPOfold has three mandatory parameters:</p><div><ul><li><tt>funcs</tt> containing the user-problem functions (in the demo: <tt>vfuncs</tt>),</li><li><tt>branch</tt>, the branch on which the fold occurred (in the demo: <tt>branch5</tt>), and</li><li><tt>ind</tt>, the index in <tt>branch.point</tt> near which the fold occurs (in the demo <tt>indmax</tt>).</li></ul></div><p>Output (to be fed into <tt>br_contn</tt>):</p><div><ul><li><tt>foldfuncs</tt>: functions for the extended system (derived from <tt>funcs</tt>)</li><li><tt>FPObranch</tt>: branch of folds of periodic orbits with two points</li></ul></div><p>The other parameters are optional name-value pairs. Important are</p><div><ul><li><tt>'contpar'</tt>: typically two integers ,the two continuation parameters,</li><li><tt>'dir'</tt>: in which direction the first step is taken), and</li><li><tt>'step'</tt>: the length of the first step. Note that name-value pairs are also passed on to fields of the <tt>branch</tt> structure: the output <tt>FPObranch</tt> inherits all fields from the input <tt>branch</tt>. Additional name-value argument pairs canbe used to change selected fields.</li></ul></div><pre class="codeinput">[foldfuncs,branch7]=SetupPOfold(funcs,branch5,indmax,<span class="string">'contpar'</span>,[ind_a21,ind_taus],<span class="keyword">...</span>
+    <span class="string">'dir'</span>,ind_taus,<span class="string">'print_residual_info'</span>,1,<span class="string">'step'</span>,0.01,<span class="string">'plot_measure'</span>,[],<span class="keyword">...</span>
+    <span class="string">'min_bound'</span>,[ind_a21,0],<span class="string">'max_bound'</span>,[ind_a21,4; ind_taus,10],<span class="keyword">...</span>
+    <span class="string">'max_step'</span>,[ind_a21,0.2; ind_taus,0.5]);
+</pre><pre class="codeoutput">it=  1, res=5.4344e-04, dx=4.7449e-02
+it=  2, res=3.9325e-02, dx=2.9205e-03
+it=  3, res=1.2638e-04, dx=5.9972e-05
+it=  4, res=5.9650e-08, dx=2.6660e-09
+it=  5, res=2.2368e-10, dx=4.2584e-11, success= 1
+it=  1, res=1.3726e-06, dx=8.7767e-08
+it=  2, res=2.1766e-10, dx=3.2388e-10, success= 1
+</pre><h2 id="5">Branch continuation</h2><p>The output of <tt>SetupPOfold</tt> can be fed directly into <tt>br_contn</tt> to perform a branch continuation. Note that the computation is typically slower than a standard continuation of periodic orbits because the system dimension is twice as large and additional delays have been introduced.</p><pre class="codeinput">figure(6);
+branch7.method.point.print_residual_info=0;
+branch7=br_contn(foldfuncs,branch7,100);
+xlabel(<span class="string">'a21'</span>);ylabel(<span class="string">'tau_s'</span>);
+title(<span class="string">'Continuation of fold of periodic orbits'</span>);
+</pre><img vspace="5" hspace="5" src="demo1_POfold_01.png" alt=""> <h2 id="6">Extracting solution components</h2><p>Since the fold continuation solves an extended system (with additional components) it does not make sense to compute the linear stability of the resulting orbits directly. However, <tt>foldfuncs</tt> has an additional field <tt>'get_comp'</tt>. This is a function that extacts the components of the extended system that correspond to the solution of the original system. The output of <tt>get_comp</tt> is an array of periodic orbits that are located precisely on the fold.</p><pre class="codeinput">pf_orbits=foldfuncs.get_comp(branch7.point,<span class="string">'solution'</span>);
+</pre><h2 id="7">Stability of fold orbits</h2><p>We compute Floquet multipliers for these orbits using the utility function <tt>GetStability(psol_array,...)</tt>. Its optional inputs instruct it to ignore the two eigenvalues closest to 1 when computing stability. It also returns <tt>triv_defect</tt> which measures the distance of the supposedly trivial eigenvalues (as computed) to their correct values. <tt>GetStability</tt> needs the optional input <tt>'funcs'</tt> if its first argument does not yet have a stability structure.</p><pre class="codeinput">[nunst_pf,dom,triv_defect,pf_orbits]=GetStability(pf_orbits,<span class="string">'funcs'</span>,funcs,<span class="keyword">...</span>
+    <span class="string">'exclude_trivial'</span>,true,<span class="string">'locate_trivial'</span>,@(x)[1,1]);
+fprintf(<span class="string">'max number of unstable Floquet multipliers: %d\n'</span>,max(nunst_pf));
+n_orbits=length(pf_orbits);
+figure(16);
+a21_pfold=arrayfun(@(x)x.parameter(4),branch7.point);
+taus_pfold=arrayfun(@(x)x.parameter(7),branch7.point);
+plot(1:n_orbits,triv_defect);
+xlabel(<span class="string">'point number'</span>);
+ylabel(<span class="string">'defect of trivial Floquet multiplier'</span>);
+</pre><pre class="codeoutput">max number of unstable Floquet multipliers: 0
+</pre><img vspace="5" hspace="5" src="demo1_POfold_02.png" alt=""> <h2 id="8">Save results (end of tutorial demo, but try also <a href="demo1_hcli.html">demo1_hcli.html</a>)</h2><pre class="codeinput">save(<span class="string">'demo1_POfold_results.mat'</span>)
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Continuation of folds of periodic orbits
+%
+% <html>
+% $Id: demo1_POfold.m 178 2017-03-14 00:00:01Z jansieber $
+% </html>
+%
+% The extension ddebiftool_extra_psol is able to continue local
+% bifurcations of periodic orbits in two parameters. This demo shows how
+% one can continue folds (saddle-nodes) of periodic orbits i nthe neuron
+% problem. (requires running of <demo1_psol.html> first).
+
+%% Add extension folder to path
+% The extension is installed in a separate folder. In addition, a folder
+% with utilities for user convenience is loaded.
+addpath('../../ddebiftool_extra_psol/');
+addpath('../../ddebiftool_utilities/');
+%#ok<*ASGLU,*NOPTS,*NASGU>
+%% Vectorization for speed-up
+% (regardless of original choice)
+funcs=fdirectional_vec;
+%% Find initial guess
+% For the branch computed in <demo1_psol.html> one fold occured at the
+% maximal parameter value. So we extract its index |indmax|. 
+[dummy,indmax]=max(arrayfun(@(x)x.parameter(ind_a21),branch5.point));
+
+%% Initialize branch and set up extended system
+% Then we call |SetupPOfold| to initialize the branch and to create the
+% functions for the extended system. For the core DDE-Biftool routines the
+% fold of periodic orbits is of the same type as a standard periodic orbit.
+% However, the user-provided right-hand side has been extended (eg,
+% foldfuncs.sys_rhs is different from funcs.sys_rhs). SetupPOfold has three
+% mandatory parameters:
+%
+% * |funcs| containing the user-problem functions (in the demo: |vfuncs|),
+% * |branch|, the branch on which the fold occurred (in the demo:
+% |branch5|), and
+% * |ind|, the index in |branch.point| near which the fold occurs (in the
+% demo |indmax|).
+%
+% Output (to be fed into |br_contn|):
+% 
+% * |foldfuncs|: functions for the extended system (derived from |funcs|)
+% * |FPObranch|: branch of folds of periodic orbits with two points
+%
+% The other parameters are optional name-value pairs. Important are
+%
+% * |'contpar'|: typically two integers ,the two continuation parameters,
+% * |'dir'|: in which direction the first step is taken), and 
+% * |'step'|: the length of the first step. 
+% Note that name-value pairs are also passed on to fields of the |branch|
+% structure: the output |FPObranch| inherits all fields from the input
+% |branch|. Additional name-value argument pairs canbe used to change
+% selected fields.
+[foldfuncs,branch7]=SetupPOfold(funcs,branch5,indmax,'contpar',[ind_a21,ind_taus],...
+    'dir',ind_taus,'print_residual_info',1,'step',0.01,'plot_measure',[],...
+    'min_bound',[ind_a21,0],'max_bound',[ind_a21,4; ind_taus,10],...
+    'max_step',[ind_a21,0.2; ind_taus,0.5]);
+%% Branch continuation
+% The output of |SetupPOfold| can be fed directly into |br_contn| to
+% perform a branch continuation. Note that the computation is typically
+% slower than a standard continuation of periodic orbits because the system
+% dimension is twice as large and additional delays have been introduced.
+figure(6);
+branch7.method.point.print_residual_info=0;
+branch7=br_contn(foldfuncs,branch7,100);
+xlabel('a21');ylabel('tau_s');
+title('Continuation of fold of periodic orbits');
+%% Extracting solution components
+% Since the fold continuation solves an extended system (with additional
+% components) it does not make sense to compute the linear stability of the
+% resulting orbits directly. However, |foldfuncs| has an additional field
+% |'get_comp'|. This is a function that extacts the components of the
+% extended system that correspond to the solution of the original system.
+% The output of |get_comp| is an array of periodic orbits that are located
+% precisely on the fold. 
+pf_orbits=foldfuncs.get_comp(branch7.point,'solution');
+
+%% Stability of fold orbits
+% We compute Floquet multipliers for these orbits using the utility
+% function |GetStability(psol_array,...)|. Its optional inputs instruct it
+% to ignore the two eigenvalues closest to 1 when computing stability. It
+% also returns |triv_defect| which measures the distance of the supposedly
+% trivial eigenvalues (as computed) to their correct values. |GetStability|
+% needs the optional input |'funcs'| if its first argument does not yet
+% have a stability structure.
+[nunst_pf,dom,triv_defect,pf_orbits]=GetStability(pf_orbits,'funcs',funcs,...
+    'exclude_trivial',true,'locate_trivial',@(x)[1,1]);
+fprintf('max number of unstable Floquet multipliers: %d\n',max(nunst_pf));
+n_orbits=length(pf_orbits);
+figure(16);
+a21_pfold=arrayfun(@(x)x.parameter(4),branch7.point);
+taus_pfold=arrayfun(@(x)x.parameter(7),branch7.point);
+plot(1:n_orbits,triv_defect);
+xlabel('point number');
+ylabel('defect of trivial Floquet multiplier');
+%% Save results (end of tutorial demo, but try also <demo1_hcli.html>)
+save('demo1_POfold_results.mat')
+
+##### SOURCE END #####
+--></body></html>

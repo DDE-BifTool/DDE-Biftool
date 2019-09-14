@@ -1,0 +1,175 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>DDE-BIFTOOL  state-dependent delays sd-demo</title><meta name="generator" content="MATLAB 9.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-07-14"><meta name="DC.source" content="gen_sym_sd_demo.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>DDE-BIFTOOL  state-dependent delays sd-demo</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Generation of right-hand side and its derivatives using symbolic toolbox</a></li><li><a href="#2">Differential equations</a></li><li><a href="#3">Add paths for symbolic routines</a></li><li><a href="#4">Set number of delays and parameter names</a></li><li><a href="#5">Introduce symbols for x variables, delays and parameters</a></li><li><a href="#6">Right-hand side</a></li><li><a href="#7">Delay</a></li><li><a href="#8">Differentiate and generate code, exporting it to sym_sd_demo</a></li><li><a href="#9">Bifurcation analysis</a></li></ul></div><h2 id="1">Generation of right-hand side and its derivatives using symbolic toolbox</h2><p>
+$Id: gen_sym_sd_demo.html 362 2019-07-14 15:49:40Z jansieber $
+</p><h2 id="2">Differential equations</h2><p>The differential equations for this example are</p><p><img src="gen_sym_sd_demo_eq04716780370712167111.png" alt="$$\begin{array}{l}&#xA;\frac{\mathrm{d}}{\mathrm{d} t}x_1(t)=\frac{1}{p_1+x_2(t)}\left(1-p_2x_1(t)x_1(t-\tau_3)&#xA;x_3(t-\tau_3)+p_3x_1(t-\tau_1)x_2(t-\tau_2)\right),\\&#xA;\frac{\mathrm{d}}{\mathrm{d} t}x_2(t)=\frac{p_4 x_1(t)}{p_1+x_2(t)}+&#xA;        p_5\tanh(x_2(t-\tau_5))-1,\\&#xA;\frac{\mathrm{d}}{\mathrm{d} t}x_3(t)=p_6(x_2(t)-x_3(t))-p_7(x_1(t-\tau_6)-x_2(t-\tau_4))e^{-p_8 \tau_5},\\&#xA;\frac{\mathrm{d}}{\mathrm{d} t}x_4(t)=x_1(t-\tau_4)e^{-p_1 \tau_5} -0.1,\\&#xA;\frac{\mathrm{d}}{\mathrm{d} t}x_5(t)=3(x_1(t-\tau_2)-x_5(t))-p_9,&#xA;\end{array} $$"></p><p>where <img src="gen_sym_sd_demo_eq18422924223242836946.png" alt="$\tau_1$"> and <img src="gen_sym_sd_demo_eq10838569786326464271.png" alt="$\tau_2$"> are constant delays and</p><p><img src="gen_sym_sd_demo_eq05081440838560941636.png" alt="$$&#xA;\begin{array}{l}&#xA;\tau_3=2+p_5\tau_1x_2(t)x_2(t-\tau_1),\\&#xA;\tau_4=1-\frac{1}{1+x_1(t)x_2(t-\tau_2)},\\&#xA;\tau_5=x_4(t),\\&#xA;\tau_6=x_5(t).&#xA;\end{array}&#xA;$$"></p><p>This system has five components <img src="gen_sym_sd_demo_eq15998228817611113019.png" alt="$(x_1,\ldots,x_5)$">, six delays <img src="gen_sym_sd_demo_eq03351112231038717199.png" alt="$(\tau_1,\ldots,\tau_6)$"> and eleven parameters <img src="gen_sym_sd_demo_eq07305098482497353881.png" alt="$(p_1,\ldots,p_{11})$">, where <img src="gen_sym_sd_demo_eq15857361121972971073.png" alt="$p_{10}=\tau_1$"> and <img src="gen_sym_sd_demo_eq01312249676493503629.png" alt="$p_{11}=\tau_2$">.</p><h2 id="3">Add paths for symbolic routines</h2><pre class="codeinput">clear
+addpath(<span class="string">'../../ddebiftool'</span>,<span class="keyword">...</span>
+    <span class="string">'../../ddebiftool_extra_symbolic'</span>);
+<span class="keyword">if</span> dde_isoctave()
+    pkg <span class="string">load</span> <span class="string">symbolic</span>
+<span class="keyword">end</span>
+</pre><h2 id="4">Set number of delays and parameter names</h2><pre class="codeinput">ntau=6;
+parnames=[strcat(<span class="string">'p'</span>,num2cell(<span class="string">'1'</span>:<span class="string">'9'</span>)),{<span class="string">'tau1'</span>,<span class="string">'tau2'</span>}];
+cind=[parnames;num2cell(1:length(parnames))];
+ind=struct(cind{:});
+</pre><h2 id="5">Introduce symbols for x variables, delays and parameters</h2><pre class="codeinput">x=sym(<span class="string">'x'</span>,[5,ntau+1]);
+syms(parnames{:});
+par=sym(parnames);
+</pre><h2 id="6">Right-hand side</h2><pre class="codeinput">f=[<span class="keyword">...</span>
+    (1/(p1+x(2,1)))*(1-p2*x(1,1)*x(1,4)*x(3,4)+p3*x(1,2)*x(2,3));<span class="keyword">...</span>
+    p4*x(1,1)/(p1+x(2,1))+p5*tanh(x(2,6))-1;<span class="keyword">...</span>
+    p6*(x(2,1)-x(3,1))-p7*(x(1,7)-x(2,5))*exp(-p8*x(4,1));<span class="keyword">...</span>
+    x(1,5)*exp(-p1*x(4,1))-0.1;<span class="keyword">...</span>
+    3*(x(1,3)-x(5,1))-p9];
+</pre><h2 id="7">Delay</h2><pre class="codeinput">delays=[<span class="keyword">...</span>
+    tau1;<span class="keyword">...</span>
+    tau2;<span class="keyword">...</span>
+    2+p5*tau1*x(2,1)*x(2,2);<span class="keyword">...</span>
+    1-1/(1+x(2,3)*x(1,1));<span class="keyword">...</span>
+    x(4,1);<span class="keyword">...</span>
+    x(5,1)];
+</pre><h2 id="8">Differentiate and generate code, exporting it to sym_sd_demo</h2><pre class="codeinput">[fstr,derivs]=dde_sym2funcs(f,x,par,<span class="string">'sd_delay'</span>,delays,<span class="keyword">...</span>
+    <span class="string">'directional_derivative'</span>,true,<span class="string">'filename'</span>,<span class="string">'sym_sd_demo'</span>);
+</pre><h2 id="9">Bifurcation analysis</h2><p>DDE-Biftool itself does not rely on the symbolic toolbox, but only on its generated code. See <a href="sd_demo.html">sd_demo.html</a> for the demo.</p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% DDE-BIFTOOL  state-dependent delays sd-demo
+%% Generation of right-hand side and its derivatives using symbolic toolbox
+% 
+% <html>
+% $Id: gen_sym_sd_demo.html 362 2019-07-14 15:49:40Z jansieber $
+% </html>
+% 
+%% Differential equations
+% The differential equations for this example are
+%
+% $$\begin{array}{l}
+% \frac{\mathrm{d}}{\mathrm{d} t}x_1(t)=\frac{1}{p_1+x_2(t)}\left(1-p_2x_1(t)x_1(t-\tau_3)
+% x_3(t-\tau_3)+p_3x_1(t-\tau_1)x_2(t-\tau_2)\right),\\
+% \frac{\mathrm{d}}{\mathrm{d} t}x_2(t)=\frac{p_4 x_1(t)}{p_1+x_2(t)}+
+%         p_5\tanh(x_2(t-\tau_5))-1,\\
+% \frac{\mathrm{d}}{\mathrm{d} t}x_3(t)=p_6(x_2(t)-x_3(t))-p_7(x_1(t-\tau_6)-x_2(t-\tau_4))e^{-p_8 \tau_5},\\
+% \frac{\mathrm{d}}{\mathrm{d} t}x_4(t)=x_1(t-\tau_4)e^{-p_1 \tau_5} -0.1,\\
+% \frac{\mathrm{d}}{\mathrm{d} t}x_5(t)=3(x_1(t-\tau_2)-x_5(t))-p_9,
+% \end{array} $$
+%
+% where $\tau_1$ and $\tau_2$ are constant delays and
+%
+% $$
+% \begin{array}{l}
+% \tau_3=2+p_5\tau_1x_2(t)x_2(t-\tau_1),\\
+% \tau_4=1-\frac{1}{1+x_1(t)x_2(t-\tau_2)},\\
+% \tau_5=x_4(t),\\
+% \tau_6=x_5(t).
+% \end{array}
+% $$
+%
+% This system has five components $(x_1,\ldots,x_5)$, six delays
+% $(\tau_1,\ldots,\tau_6)$ and eleven parameters $(p_1,\ldots,p_{11})$,
+% where $p_{10}=\tau_1$ and $p_{11}=\tau_2$. 
+%
+%% Add paths for symbolic routines
+clear
+addpath('../../ddebiftool',...
+    '../../ddebiftool_extra_symbolic');
+if dde_isoctave()
+    pkg load symbolic
+end
+%% Set number of delays and parameter names
+ntau=6;
+parnames=[strcat('p',num2cell('1':'9')),{'tau1','tau2'}];
+cind=[parnames;num2cell(1:length(parnames))];
+ind=struct(cind{:});
+%% Introduce symbols for x variables, delays and parameters
+x=sym('x',[5,ntau+1]);
+syms(parnames{:});
+par=sym(parnames);
+%% Right-hand side
+f=[...
+    (1/(p1+x(2,1)))*(1-p2*x(1,1)*x(1,4)*x(3,4)+p3*x(1,2)*x(2,3));...
+    p4*x(1,1)/(p1+x(2,1))+p5*tanh(x(2,6))-1;...
+    p6*(x(2,1)-x(3,1))-p7*(x(1,7)-x(2,5))*exp(-p8*x(4,1));...
+    x(1,5)*exp(-p1*x(4,1))-0.1;...
+    3*(x(1,3)-x(5,1))-p9];
+%% Delay
+delays=[...
+    tau1;...
+    tau2;...
+    2+p5*tau1*x(2,1)*x(2,2);...
+    1-1/(1+x(2,3)*x(1,1));...
+    x(4,1);...
+    x(5,1)];
+%% Differentiate and generate code, exporting it to sym_sd_demo
+[fstr,derivs]=dde_sym2funcs(f,x,par,'sd_delay',delays,...
+    'directional_derivative',true,'filename','sym_sd_demo');
+%% Bifurcation analysis
+% DDE-Biftool itself does not rely on the symbolic toolbox, but only on its
+% generated code. See <sd_demo.html> for the demo.
+
+##### SOURCE END #####
+--></body></html>

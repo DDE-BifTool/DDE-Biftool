@@ -1,0 +1,649 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>DDE-BIFTOOL demo 1 - Neuron, simplification using utilities</title><meta name="generator" content="MATLAB 9.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-02-03"><meta name="DC.source" content="demo1_simple.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>DDE-BIFTOOL demo 1 - Neuron, simplification using utilities</h1><!--introduction--><p>
+$Id: demo1_simple.m 178 2017-03-14 00:00:01Z jansieber $
+</p><p>This demo repeats the illustrative example using the convenience functions in <tt>ddebiftool_utilities</tt>. The system of delay differential equations is [Shay,99] again</p><p><img src="demo1_simple_eq01440467975577787343.png" alt="$$\left\{\begin{array}{l}\dot{x_1}(t)=&#xA;-\kappa x_1(t)+\beta \tanh(x_1(t-\tau_s))+a_{12}\tanh(x_2(t-\tau_2)) \\&#xA;\dot{x_2}(t)=-\kappa x_2(t)+\beta \tanh(x_2(t-\tau_s))+a_{21}\tanh(x_1(t-\tau_1)).&#xA;\end{array}\right.$$"></p><p>This system models two coupled neurons with time delayed connections. It has two components (<img src="demo1_simple_eq06613056106014670631.png" alt="$x_1$"> and <img src="demo1_simple_eq03385156042344747669.png" alt="$x_2$">), three delays (<img src="demo1_simple_eq18422924223242836946.png" alt="$\tau_1$">, <img src="demo1_simple_eq10838569786326464271.png" alt="$\tau_2$"> and <img src="demo1_simple_eq16585733689390013092.png" alt="$\tau_s$">), and four other parameters (<img src="demo1_simple_eq16107531617707909724.png" alt="$\kappa$">, <img src="demo1_simple_eq17331442575217596290.png" alt="$\beta$">, <img src="demo1_simple_eq05447675844696260048.png" alt="$a_{12}$"> and <img src="demo1_simple_eq00088373482002467634.png" alt="$a_{21}$">).</p><p>The demo will show (with fewer explanations than <a href="demo1_funcs.html">demo1_funcs.html</a> and its follow-on files)</p><div><ul><li>continuation of equilibria in <img src="demo1_simple_eq00088373482002467634.png" alt="$a_{21}$">,</li><li>computation of their stability (eigenvalues of linearization),</li><li>continuation of Hopf bifurcations in <img src="demo1_simple_eq00088373482002467634.png" alt="$a_{21}$"> and <img src="demo1_simple_eq16585733689390013092.png" alt="$\tau_s$">,</li><li>branching off from a Hopf bifurcation to continue a family of periodic orbits in <img src="demo1_simple_eq00088373482002467634.png" alt="$a_{21}$">,</li><li>computation of stability of periodic orbits (Floquet multipliers of linearization),</li><li>continuation of folds of periodic orbits in <img src="demo1_simple_eq00088373482002467634.png" alt="$a_{21}$"> and <img src="demo1_simple_eq16585733689390013092.png" alt="$\tau_s$"></li></ul></div><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Additional Folder for Path</a></li><li><a href="#2">Definition of right-hand side</a></li><li><a href="#3">Choose problem definition to be tested</a></li><li><a href="#4">Steady state branches</a></li><li><a href="#5">Stability along branch and bifurcations</a></li><li><a href="#6">Hopf continuation</a></li><li><a href="#7">Figure: Continuation (predictions and corrections) of Hopf bifurcation</a></li><li><a href="#8">Linear stability along Hopf curve</a></li><li><a href="#9">Switch to second Hopf curve near double Hopf point</a></li><li><a href="#10">Figure: Continuation (predictions and corrections) of both Hopf bifurcations</a></li><li><a href="#11">First Lyapunov coefficient L1 along both Hopf curves</a></li><li><a href="#12">Error in normal form of double Hopf point</a></li><li><a href="#13">Two-parameter bifurcation diagram of Hopf bifurcations</a></li><li><a href="#14">PLot Lyapunov coefficients</a></li><li><a href="#15">Periodic orbit continuation</a></li><li><a href="#16">Figure: family of periodic orbits</a></li><li><a href="#17">Floquet multipliers of periodic orbits</a></li><li><a href="#18">Continuation of folds of periodic orbits</a></li><li><a href="#19">Floquet multipliers of fold periodic orbits</a></li><li><a href="#20">Defect of trivial Floquet multipliers</a></li><li><a href="#21">Add fold of periodic orbits to Two-parameter bifurcation diagram</a></li><li><a href="#22">save data:</a></li></ul></div><h2 id="1">Additional Folder for Path</h2><p>The utility functions are stored in a separate folder, which has to be loaded in addition to <tt>ddebiftool</tt>. We also include the folders for periodic orbits and for normal form functions.</p><pre class="codeinput">addpath(<span class="string">'../../ddebiftool/'</span>,<span class="keyword">...</span>
+    <span class="string">'../../ddebiftool_extra_psol/'</span>,<span class="keyword">...</span>
+    <span class="string">'../../ddebiftool_utilities/'</span>,<span class="keyword">...</span>
+    <span class="string">'../../ddebiftool_extra_nmfm/'</span>);
+clear;
+format <span class="string">compact</span>
+format <span class="string">short</span> <span class="string">g</span>
+<span class="comment">%#ok&lt;*ASGLU,*NOPTS,*NASGU&gt;</span>
+</pre><h2 id="2">Definition of right-hand side</h2><p>When using we vectorize the right-hand side in xx, but do not specify the derivatives analytically, relying on finite difference approximations. See <a href="demo1_funcs.html">demo1_funcs.html</a> for details. The parameter vector has the order <img src="demo1_simple_eq10866862243016839112.png" alt="$[\kappa, \beta, a_{12}, a_{21}, \tau_1, \tau_2, \tau_s]$">.</p><p>When using fsymbolic we use the right-hand side and derivatives gnereated with the symbolic toolbox.</p><pre class="codeinput">parnames={<span class="string">'kappa'</span>,<span class="string">'beta'</span>,<span class="string">'a12'</span>,<span class="string">'a21'</span>,<span class="string">'tau1'</span>,<span class="string">'tau2'</span>,<span class="string">'taus'</span>};
+cind=[parnames;num2cell(1:length(parnames))];
+ind=struct(cind{:});
+getp=@(br,name)arrayfun(@(x)x.parameter(ind.(name)), br.point);
+neuron_sys_rhs=@(x,p)[<span class="keyword">...</span>
+    -p(ind.kappa)*x(1,1,:)+p(ind.beta)*tanh(x(1,4,:))+p(ind.a12)*tanh(x(2,3,:));<span class="keyword">...</span><span class="comment">.</span>
+    -p(ind.kappa)*x(2,1,:)+p(ind.beta)*tanh(x(2,4,:))+p(ind.a21)*tanh(x(1,2,:))];
+neuron_tau=@()[ind.tau1,ind.tau2,ind.taus];
+fnum=set_funcs(<span class="keyword">...</span>
+    <span class="string">'sys_rhs'</span>,neuron_sys_rhs,<span class="string">'sys_tau'</span>,neuron_tau,<span class="string">'x_vectorized'</span>,true);
+fsymbolic=set_symfuncs(@sym_neuron,<span class="string">'sys_tau'</span>,neuron_tau);
+</pre><h2 id="3">Choose problem definition to be tested</h2><pre class="codeinput">funcs=fsymbolic;
+<span class="comment">% general continuation parameters, kept in a cell list</span>
+parbd={<span class="string">'min_bound'</span>,[ind.a21,0],<span class="string">'max_bound'</span>,[ind.a21,3; ind.taus,10],<span class="keyword">...</span>
+    <span class="string">'max_step'</span>,[ind.a21,0.2; ind.taus,0.5]};
+</pre><h2 id="4">Steady state branches</h2><p>The convenience function <tt>SetupStst</tt> can be used to define the initial piece of a steady-state branch. Its first arguments is <tt>funcs</tt>, the others are name-value pairs. Important parameters:</p><div><ul><li><tt>'parameter'</tt>: row vector of initial parameters</li><li><tt>'x'</tt>: column vector of initial equilibrium</li><li><tt>'contpar'</tt>: index of continuation parameter (or vector of indices)</li><li><tt>'step'</tt>: initial step along branch (default 0.01)</li></ul></div><p>All other name-value pairs are appended as fields to the structures in branch1 if their names match. Of course, the <tt>branch</tt> structure can also be manipulated manually afterwards. The subsequent continuation extends the branch in both directions up to the boundaries <tt>min_bound</tt> and <tt>max_bound</tt>.</p><pre class="codeinput">par0([ind.kappa,ind.beta,ind.a12,ind.a21,ind.tau1,ind.tau2,ind.taus])=<span class="keyword">...</span>
+     [    1/2,      -1,      1,  2.34,       0.2      0.2,     1.5];
+[branch1,suc]=SetupStst(funcs,<span class="keyword">...</span>
+    <span class="string">'parameter'</span>,par0,<span class="string">'x'</span>,[0;0],<span class="keyword">...</span>
+    <span class="string">'contpar'</span>,ind.a21,<span class="string">'step'</span>,0.1,parbd{:});
+branch1.method.continuation.plot=0; <span class="comment">% don't plot prgress</span>
+[branch1,s,f,r]=br_contn(funcs,branch1,100);
+branch1=br_rvers(branch1);
+[branch1,s,f,r]=br_contn(funcs,branch1,100)
+</pre><pre class="codeoutput">BR_CONTN warning: boundary hit.
+BR_CONTN warning: boundary hit.
+branch1 = 
+  struct with fields:
+
+       method: [1&times;1 struct]
+    parameter: [1&times;1 struct]
+        point: [1&times;19 struct]
+s =
+    14
+f =
+     0
+r =
+     0
+</pre><h2 id="5">Stability along branch and bifurcations</h2><p>The convenience function <tt>GetStability</tt> recomputes the eigenvalues if not yet present and returns as its first output <tt>nunst</tt> the number of unstable eigenvalues for bifurcation detection. Its first argument is the <tt>branch</tt> structure for which stability information is required. We find the first point at which the number of unstable eigenvalues changes by 2. The function <tt>LocateSpecialPoints</tt> also refines the branch as necessaryto pinpoint bifurcation points. Note that the branch point at a21=2.25 is incorrectly identified asa fold such that the correction fails.</p><pre class="codeinput">branch1.method.stability.minimal_real_part=-2;
+[branch1,bif1testfuncs,indbif1,bif1types]=LocateSpecialPoints(funcs,branch1);
+</pre><pre class="codeoutput">StstCodimension1: calculate stability if not yet present
+StstCodimension1: (provisional) 1 fold 1 Hopf  detected.
+Warning: Matrix is singular to working precision. 
+Warning: Matrix is singular to working precision. 
+Warning: Matrix is singular to working precision. 
+Warning: Correction failed 
+br_insert: detected 1 of 2: stst. Normalform:
+  struct with no fields.
+br_insert: detected 2 of 2: hopf. Normalform:
+    L1: -0.39616
+</pre><h2 id="6">Hopf continuation</h2><p>Similar to <tt>SetupStst</tt> the convenience function <tt>SetupHopf</tt> creates the initial Hopf branch. Its first arguments are <tt>funcs</tt>, the branch along which the Hopf bifurcation was detected (here <tt>branch1</tt>), and the index of the point near which the Hopf bifurcation was detected. Important parameters:</p><div><ul><li><tt>'contpar'</tt>: bifurcation parameters (vector of length &gt;=2)</li><li><tt>'dir'</tt>: index of parameter, which is varied at initial step. The default is [], which means that only one point on the branch is computed. This is useful if one wants to correct only a single Hopf point.</li><li><tt>'step'</tt>: initial step along branch (default <tt>1e-3</tt>)</li><li><tt>'excudefreqs'</tt>: list of frequencies that should be excluded (default []). The initial guess for the Hopf frequency is the complex conjugate pair closest to the imaginary axis, after one takes away a pair of eigenvalues for each frequency listed in <tt>excludefreqs</tt>.</li></ul></div><p>All other name-value pairs can be used to replace fields in the structures of the Hopf branch. Otherwise, the output <tt>branch2</tt> inherits all values from the input <tt>branch</tt>. The subsequent continuation  extends the branch in both directions up to the boundaries <tt>min_bound</tt> and <tt>max_bound</tt>.</p><pre class="codeinput">indhopf=indbif1(strcmp(bif1types,<span class="string">'hopf'</span>))
+[branch2,suc]=SetupHopf(funcs,branch1,indhopf,<span class="string">'contpar'</span>,[ind.a21,ind.taus],<span class="keyword">...</span>
+    <span class="string">'dir'</span>,ind.taus,<span class="string">'step'</span>,0.1,<span class="string">'plot'</span>,1,parbd{:});
+figure(1); clf;ax1=gca;
+[branch2,s,f,r]=br_contn(funcs,branch2,40,<span class="string">'plotaxis'</span>,ax1);
+branch2=br_rvers(branch2);
+[branch2,s,f,r]=br_contn(funcs,branch2,20,<span class="string">'plotaxis'</span>,ax1);
+xlabel(ax1,<span class="string">'a21'</span>);ylabel(ax1,<span class="string">'\tau_s'</span>);
+</pre><pre class="codeoutput">indhopf =
+    15
+BR_CONTN warning: boundary hit.
+</pre><img vspace="5" hspace="5" src="demo1_simple_01.png" alt=""> <h2 id="7">Figure: Continuation (predictions and corrections) of Hopf bifurcation</h2><p>Predictions and corrections in the <img src="demo1_simple_eq09310323576460100950.png" alt="$(a_{21},\tau_s)$">-plane after computation of a first branch of Hopf bifurcations.</p><h2 id="8">Linear stability along Hopf curve</h2><p>The function <tt>GetStability</tt> has a few additional outputs and inputs. The optional input <tt>exclude_trivial</tt> forces exclusion of trivial eigenvalues for bifurcations (for example the pair on the imaginary axis for the Hopf bifurcation) in the count of unstable eigenvalues. The second output (here <tt>dom</tt>) contains the dominant eigenvalue (that is, the closest to the imaginary axis, excluding the trivial eigenvalues). The third output (here <tt>triv_defect</tt>) is non-empty whenever <tt>exclude_trivial</tt> is true. It contains the defect between the known trivial eigenvalue (say. 1i*point.omega for Hopf points) and the value obtained in the stability calculation. The fourth output is the modified <tt>point</tt> array, now containing stability information.</p><pre class="codeinput">[hopf_branch_wbifs,hopftestfuncs,indbifhopf,bifhopftypes]=LocateSpecialPoints(funcs,branch2);
+nunst_hopf=GetStability(hopf_branch_wbifs,<span class="string">'exclude_trivial'</span>,true);
+<span class="comment">% identify degenerate Takens-Bogdanov point (Hopf frequency crosses zero):</span>
+indTakens=indbifhopf(strcmp(bifhopftypes,<span class="string">'BT'</span>));
+pt_Takens=hopf_branch_wbifs.point(indTakens);
+a21_Takens=pt_Takens.parameter(ind.a21);
+</pre><pre class="codeoutput">HopfCodimension2: calculate stability if not yet present
+HopfCodimension2: calculate L1 coefficients
+HopfCodimension2: (provisional) 1 Takens-Bogdanov 2 Hopf-Hopf  detected.
+br_insert: detected 1 of 3: hoho. Normalform:
+    g2100: -0.030007 -  0.0094837i
+    g1011: -0.060013 -   0.018967i
+    g1110: -0.11318 +   0.037831i
+    g0021: -0.056592 +   0.018915i
+    theta: 1.0605
+    delta: 3.7719
+br_insert: detected 2 of 3: hoho. Normalform:
+    g2100: -0.15746 -   0.046726i
+    g1011: -0.31492 -   0.093453i
+    g1110: -0.31492 -   0.093452i
+    g0021: -0.15746 -   0.046726i
+    theta: 2
+    delta: 2
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.937656e-18. 
+br_insert: detected 3 of 3: BT. Normalform:
+...</pre><h2 id="9">Switch to second Hopf curve near double Hopf point</h2><p>Repeat the Hopf continuation for the point on <tt>branch2</tt> where another eigenvalue becomes unstable, again using <tt>SetupHopf</tt>, but now using <img src="demo1_simple_eq00088373482002467634.png" alt="$a_{21}$"> as the parameter and initial step -0.05. Initially, we turn on residual printouts.</p><pre class="codeinput">indhopf2=indbifhopf(find(strcmp(<span class="string">'hoho'</span>,bifhopftypes),1,<span class="string">'first'</span>));
+[branch3,suc]=SetupHopf(funcs,hopf_branch_wbifs,indhopf2,<span class="string">'contpar'</span>,[ind.a21,ind.taus],<span class="keyword">...</span>
+    <span class="string">'dir'</span>,ind.a21,<span class="string">'step'</span>,-0.05,<span class="string">'print_residual_info'</span>,1);
+branch3.method.point.print_residual_info=0;
+[branch3,s,f,r]=br_contn(funcs,branch3,100,<span class="string">'plotaxis'</span>,ax1);
+branch3=br_rvers(branch3);
+[branch3,s,f,r]=br_contn(funcs,branch3,100,<span class="string">'plotaxis'</span>,ax1);
+xlabel(<span class="string">'a21'</span>);ylabel(<span class="string">'\tau_s'</span>);
+</pre><pre class="codeoutput">it=  1, res=4.4970e-11, dx=4.3911e-10, success= 1
+it=  1, res=3.2013e-03, dx=1.2973e-02
+it=  2, res=1.4100e-05, dx=8.0038e-05
+it=  3, res=4.9871e-10, dx=4.3744e-09
+it=  4, res=3.3307e-16, dx=8.6527e-16, success= 1
+BR_CONTN warning: boundary hit.
+BR_CONTN warning: boundary hit.
+</pre><img vspace="5" hspace="5" src="demo1_simple_02.png" alt=""> <h2 id="10">Figure: Continuation (predictions and corrections) of both Hopf bifurcations</h2><p>Predictions and corrections in the <img src="demo1_simple_eq09310323576460100950.png" alt="$(a_{21},\tau_s)$">-plane after computation of second branch of Hopf bifurcations (superimposed on result of first Hopf bifurcation).</p><h2 id="11">First Lyapunov coefficient L1 along both Hopf curves</h2><p>After a Hopf curve is computed, <tt>HopfLyapunovCoefficients</tt> returns the first Lyapunov coefficient L1, which determines if the Hopf bifurcation is supercritical (L1&lt;0) or subcritical (L1&gt;0). Since L1 depends on 3rd-order derivatives of <tt>sys_rhs</tt>, the default finite-difference approximation <tt>df_mfderiv</tt> is susceptible to round-off errors. Hence, <tt>HopfLyapunovCoefficients</tt> returns 2 results, the second one using a lower-order approximation. The difference between both outputs gives an error estimate. The results show that both curves are supercritical. When a symbolic derivative is provided the reported error will be zero (as it is not applicable).</p><pre class="codeinput">[hopf2_branch_wbifs,hopf2testfuncs,indbifhopf2,bifhopf2types]=<span class="keyword">...</span>
+    LocateSpecialPoints(funcs,branch3);
+fprintf(<span class="string">'maximal L1 along branch2: %g\n'</span>,max(hopftestfuncs.genh(1,:)))
+fprintf(<span class="string">'  max error of L1 along branch2: %g\n'</span>,max(abs(diff(hopftestfuncs.genh))));
+fprintf(<span class="string">'maximal L1 along branch3: %g\n'</span>,max(hopf2testfuncs.genh(1,:)))
+fprintf(<span class="string">'  max error of L1 along branch3: %g\n'</span>,max(abs(diff(hopf2testfuncs.genh))));
+</pre><pre class="codeoutput">HopfCodimension2: calculate stability if not yet present
+HopfCodimension2: calculate L1 coefficients
+HopfCodimension2: (provisional) 2 Hopf-Hopf  detected.
+br_insert: detected 1 of 2: hoho. Normalform:
+    g2100: -0.048803 -  0.0041469i
+    g1011: -0.097606 -  0.0082938i
+    g1110: -0.097578 -  0.0083128i
+    g0021: -0.048789 -  0.0041564i
+    theta: 2.0006
+    delta: 1.9994
+br_insert: detected 2 of 2: hoho. Normalform:
+    g2100: -0.030007 -  0.0094837i
+    g1011: -0.060013 -   0.018967i
+    g1110: -0.11318 +   0.037831i
+    g0021: -0.056592 +   0.018915i
+    theta: 1.0605
+    delta: 3.7719
+maximal L1 along branch2: -0.0885612
+  max error of L1 along branch2: 0
+maximal L1 along branch3: 0.653307
+...</pre><h2 id="12">Error in normal form of double Hopf point</h2><p>Similar to the L1 coefficients, the normal form coefficients of a Hopf-Hopf point depend on 3rd-order derivatives of <tt>sys_rhs</tt>. Thus, the function computing the normal form returns two values, the difference of which is an error estimate. The output of <tt>HopfHopfNormalform</tt> is an entire point structure of kind 'hoho'. The field nmfm contains normal form coefficients. Other fields of interest are <tt>omega1</tt> and <tt>omega2</tt>.</p><pre class="codeinput">[hoho,hoho_low]=HopfHopfNormalform(funcs,hopf_branch_wbifs,indhopf2+[-1,1]);
+fprintf([<span class="string">'Normal form coefficients of Hopf-Hopf point\n'</span>,<span class="keyword">...</span>
+    <span class="string">'at (a_21,tau_s)=(%g,%g) with omega1=%g, omega2=%g:\n'</span>],<span class="keyword">...</span>
+    hoho.parameter(ind.a21),hoho.parameter(ind.taus),<span class="keyword">...</span>
+    hoho.nvec.omega(1),hoho.nvec.omega(2));
+disp(hoho.nmfm);
+fprintf(<span class="string">'Error of normal form coefficients: %g\n'</span>,<span class="keyword">...</span>
+     norm(structfun(@(x)x,hoho.nmfm)-structfun(@(x)x,hoho_low.nmfm),<span class="string">'inf'</span>));
+</pre><pre class="codeoutput">Normal form coefficients of Hopf-Hopf point
+at (a_21,tau_s)=(0.207296,8.63407) with omega1=0.328715, omega2=0.915712:
+    g2100: -0.030007 -  0.0094837i
+    g1011: -0.060013 -   0.018967i
+    g1110: -0.11318 +   0.037831i
+    g0021: -0.056592 +   0.018915i
+    theta: 1.0605
+    delta: 3.7719
+Error of normal form coefficients: 0
+</pre><h2 id="13">Two-parameter bifurcation diagram of Hopf bifurcations</h2><p>with codimension-two points</p><pre class="codeinput">figure(3);clf;
+subplot(3,3,[1,2,4,5]);
+ax3=gca;hold(ax3,<span class="string">'on'</span>);
+args={<span class="string">'ax'</span>,ax3,<span class="string">'stability'</span>,0.75};
+lbp=plot(ax3,a21_Takens*[1,1],[0,10],<span class="string">'r'</span>,<span class="string">'linewidth'</span>,2);
+lg={lbp,{<span class="string">'branch point'</span>}};
+legend(ax3,lg{1},lg{2});
+lg=Plot2dBranch(hopf_branch_wbifs,<span class="string">'oldlegend'</span>,lg,args{:});
+lg=Plot2dBranch(hopf2_branch_wbifs,<span class="string">'oldlegend'</span>,lg,args{:});
+set(findobj(get(ax3,<span class="string">'parent'</span>),<span class="string">'type'</span>,<span class="string">'legend'</span>),<span class="string">'position'</span>,[0.7,0.1,0.2,0.2])
+grid <span class="string">on</span>
+xlabel(<span class="string">'a_{21}'</span>);
+ylabel(<span class="string">'\tau_s'</span>);
+title(<span class="string">'(Repeated) two-parameter Hopf curves'</span>);
+drawnow;
+a21lim=get(ax3,<span class="string">'xlim'</span>);
+tauslim=get(ax3,<span class="string">'ylim'</span>);
+</pre><img vspace="5" hspace="5" src="demo1_simple_03.png" alt=""> <h2 id="14">PLot Lyapunov coefficients</h2><pre class="codeinput">a21_h1 =getp(hopf_branch_wbifs,<span class="string">'a21'</span>);
+taus_h1=getp(hopf_branch_wbifs,<span class="string">'taus'</span>);
+a21_h2 =getp(hopf2_branch_wbifs,<span class="string">'a21'</span>);
+taus_h2=getp(hopf2_branch_wbifs,<span class="string">'taus'</span>);
+figure(3);
+subplot(3,3,[3,6]);
+plot(hopftestfuncs.genh(1,:),taus_h1,<span class="string">'.-'</span>);
+set(gca,<span class="string">'ylim'</span>,tauslim,<span class="string">'xlim'</span>,[-0.6,0]);
+grid <span class="string">on</span>
+ylabel(<span class="string">'\tau_s'</span>);
+xlabel(<span class="string">'L1'</span>);
+title(<span class="string">'L1 branch2'</span>);
+subplot(3,3,[7,8]);
+plot(a21_h2,hopf2testfuncs.genh(1,:),<span class="string">'.-'</span>,<span class="string">'color'</span>,[0,0.5,0]);
+set(gca,<span class="string">'ylim'</span>,[-0.1,0],<span class="string">'xlim'</span>,a21lim);
+grid <span class="string">on</span>
+xlabel(<span class="string">'a_{21}'</span>);
+ylabel(<span class="string">'L1'</span>);
+title(<span class="string">'First Lyapunov coefficient along branch3'</span>);
+</pre><img vspace="5" hspace="5" src="demo1_simple_04.png" alt=""> <h2 id="15">Periodic orbit continuation</h2><p>The convenience function <tt>SetupPsol</tt> creates the initial branch of periodic orbits. Its first arguments are <tt>funcs</tt>, the Hopf or steady-state branch along which a Hopf bifurcation was detected, and the index of the Hopf point along the branch where one wants to branch off point. Important additional parameters:</p><div><ul><li><tt>'radius'</tt>: amplitude of initial periodic orbit (default 1e-3),</li><li><tt>'contpar'</tt>: index of continuation parameter (otherwise taken from input branch),</li><li><tt>'degree'</tt>: degree of collocation polynomials (default 3)</li><li><tt>'intervals'</tt>: number of collocation intervals (default 20)</li><li><tt>'hopfcorrection'</tt>: apply Newton iteration to find correct Hopf point before branching off. This is recommended if the point provided is not of kind <tt>'hopf'</tt>.</li></ul></div><p>All other parameters are passed on to the resulting output branch of periodic orbits (here <tt>branch4</tt>). The parameter field of the output branch is inherited from the input branch (before optional parameters are taken into account).</p><pre class="codeinput">[branch4,suc]=SetupPsol(funcs,branch1,indhopf,<span class="string">'degree'</span>,4,<span class="string">'intervals'</span>,40,<span class="keyword">...</span>
+    <span class="string">'max_step'</span>,[ind.a21,0.1]);
+figure(2); clf;ax2=gca;
+[branch4,s,f,r]=br_contn(funcs,branch4,50,<span class="string">'plotaxis'</span>,ax2);
+<span class="comment">% look at the period along the branch:</span>
+a21_per=arrayfun(@(x)x.parameter(ind.a21),branch4.point);
+periods=[branch4.point.period];
+figure(4); clf;
+plot(a21_per,periods,<span class="string">'b.-'</span>);
+xlabel(<span class="string">'a21'</span>);
+ylabel(<span class="string">'period'</span>);
+</pre><img vspace="5" hspace="5" src="demo1_simple_05.png" alt=""> <img vspace="5" hspace="5" src="demo1_simple_06.png" alt=""> <h2 id="16">Figure: family of periodic orbits</h2><p>Branch of periodic solutions emanating from a Hopf point. The branch turns at the far right.</p><h2 id="17">Floquet multipliers of periodic orbits</h2><p>The function <tt>GetStability</tt> can be used for periodic orbits as well.</p><pre class="codeinput">[nunst_per,dom,trivdef_per,branch4.point]=GetStability(branch4,<span class="keyword">...</span>
+    <span class="string">'funcs'</span>,funcs,<span class="string">'exclude_trivial'</span>,true);
+fprintf(<span class="string">'Loss of stability at point %d\n'</span>,find(nunst_per,1,<span class="string">'first'</span>));
+</pre><pre class="codeoutput">Loss of stability at point 42
+</pre><h2 id="18">Continuation of folds of periodic orbits</h2><p>See <a href="demo1_POfold.html">demo1_POfold.html</a> for extensive explanation. find inital approximate fold</p><pre class="codeinput">[dummy,indmax]=max(arrayfun(@(x)x.parameter(ind.a21),branch4.point));
+<span class="comment">% initialize problem functions and branch</span>
+[foldfuncs,branch5]=SetupPOfold(funcs,branch4,indmax,<span class="string">'contpar'</span>,[ind.a21,ind.taus],<span class="keyword">...</span>
+    <span class="string">'dir'</span>,ind.taus,<span class="string">'print_residual_info'</span>,1,<span class="string">'step'</span>,0.01,<span class="string">'plot_measure'</span>,[],<span class="keyword">...</span>
+    parbd{:});
+<span class="comment">% do not print residuals along branch</span>
+<span class="comment">%branch5.method.point.print_residual_info=0;</span>
+<span class="comment">% continue branch</span>
+figure(1);
+branch5=br_contn(foldfuncs,branch5,100);
+branch5=br_rvers(branch5);
+branch5=br_contn(foldfuncs,branch5,60);
+xlabel(<span class="string">'a21'</span>);ylabel(<span class="string">'tau_s'</span>);
+title(<span class="string">'Continuation of fold of periodic orbits'</span>);
+</pre><pre class="codeoutput">it=  1, res=6.1875e-04, dx=4.9715e-02
+it=  2, res=4.3338e-02, dx=3.3460e-03
+it=  3, res=1.6729e-04, dx=7.5537e-05
+it=  4, res=9.4699e-08, dx=4.1720e-09
+it=  5, res=7.1942e-14, dx=8.4326e-14, success= 1
+it=  1, res=1.3493e-06, dx=8.7095e-08
+it=  2, res=1.6342e-13, dx=6.6426e-14, success= 1
+it=  1, res=3.5638e-06, dx=2.3393e-07
+it=  2, res=1.1189e-12, dx=1.7622e-13, success= 1
+it=  1, res=5.1387e-06, dx=3.3739e-07
+it=  2, res=2.2964e-12, dx=3.3534e-13, success= 1
+it=  1, res=2.9912e-04, dx=3.8974e-06
+it=  2, res=6.0409e-10, dx=1.0563e-10, success= 1
+it=  1, res=3.5571e-04, dx=4.2317e-06
+it=  2, res=7.5601e-10, dx=1.3671e-10, success= 1
+it=  1, res=1.0702e-05, dx=7.1313e-07
+it=  2, res=1.0101e-11, dx=1.2304e-12, success= 1
+it=  1, res=1.5447e-05, dx=1.0216e-06
+it=  2, res=2.0912e-11, dx=2.5155e-12, success= 1
+it=  1, res=1.8857e-04, dx=3.7912e-07
+...</pre><img vspace="5" hspace="5" src="demo1_simple_07.png" alt=""> <h2 id="19">Floquet multipliers of fold periodic orbits</h2><pre class="codeinput">[nunst_pf,dom,triv_defect,branch5.point]=GetStability(branch5,<span class="string">'funcs'</span>,foldfuncs,<span class="keyword">...</span>
+    <span class="string">'exclude_trivial'</span>,true);
+fprintf(<span class="string">'max number of unstable Floquet multipliers: %d\n'</span>,max(nunst_pf));
+</pre><pre class="codeoutput">max number of unstable Floquet multipliers: 0
+</pre><h2 id="20">Defect of trivial Floquet multipliers</h2><p>plot the defect of the trivial Floquet multiplier as computed by GetStability</p><pre class="codeinput">n_orbits=length(branch5.point);
+figure(5);
+a21_pfold=getp(branch5,<span class="string">'a21'</span>);
+taus_pfold=getp(branch5,<span class="string">'taus'</span>);
+plot(1:n_orbits,triv_defect);
+xlabel(<span class="string">'point number'</span>);
+ylabel(<span class="string">'defect of trivial Floquet multiplier'</span>);
+title(<span class="string">'Comparison of Floquet multiplier computation with extended system'</span>);
+</pre><img vspace="5" hspace="5" src="demo1_simple_08.png" alt=""> <h2 id="21">Add fold of periodic orbits to Two-parameter bifurcation diagram</h2><pre class="codeinput">lg=Plot2dBranch(branch5,<span class="string">'funcs'</span>,foldfuncs,args{:},<span class="string">'oldlegend'</span>,lg);
+</pre><img vspace="5" hspace="5" src="demo1_simple_09.png" alt=""> <img vspace="5" hspace="5" src="demo1_simple_10.png" alt=""> <h2 id="22">save data:</h2><pre class="codeinput">save(<span class="string">'demo1_simple_results.mat'</span>);
+</pre><img vspace="5" hspace="5" src="demo1_simple_11.png" alt=""> <img vspace="5" hspace="5" src="demo1_simple_12.png" alt=""> <img vspace="5" hspace="5" src="demo1_simple_13.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% DDE-BIFTOOL demo 1 - Neuron, simplification using utilities
+%
+% <html>
+% $Id: demo1_simple.m 178 2017-03-14 00:00:01Z jansieber $
+% </html>
+%
+% This demo repeats the illustrative example using the convenience
+% functions in |ddebiftool_utilities|. The system of
+% delay differential equations is [Shay,99] again
+% 
+% $$\left\{\begin{array}{l}\dot{x_1}(t)=
+% -\kappa x_1(t)+\beta \tanh(x_1(t-\tau_s))+a_{12}\tanh(x_2(t-\tau_2)) \\ 
+% \dot{x_2}(t)=-\kappa x_2(t)+\beta \tanh(x_2(t-\tau_s))+a_{21}\tanh(x_1(t-\tau_1)).
+% \end{array}\right.$$
+%
+% This system models two coupled neurons with time delayed connections.
+% It has two components ($x_1$ and $x_2$), three delays 
+% ($\tau_1$, $\tau_2$ and $\tau_s$), and four other parameters 
+% ($\kappa$, $\beta$, $a_{12}$ and $a_{21}$).
+%
+% The demo will show (with fewer explanations than <demo1_funcs.html> and
+% its follow-on files)
+% 
+% * continuation of equilibria in $a_{21}$,
+% * computation of their stability (eigenvalues of linearization),
+% * continuation of Hopf bifurcations in $a_{21}$ and $\tau_s$,
+% * branching off from a Hopf bifurcation to continue a family of periodic
+% orbits in $a_{21}$,
+% * computation of stability of periodic orbits (Floquet multipliers of
+% linearization),
+% * continuation of folds of periodic orbits in $a_{21}$ and $\tau_s$
+%%
+
+%% Additional Folder for Path
+% The utility functions are stored in a separate folder, which has to be
+% loaded in addition to |ddebiftool|. We also include the folders for
+% periodic orbits and for normal form functions.
+addpath('../../ddebiftool/',...
+    '../../ddebiftool_extra_psol/',...
+    '../../ddebiftool_utilities/',...
+    '../../ddebiftool_extra_nmfm/');
+clear;
+format compact
+format short g
+%#ok<*ASGLU,*NOPTS,*NASGU>
+%% Definition of right-hand side
+% When using we vectorize the right-hand side in xx, but do not specify the
+% derivatives analytically, relying on finite difference approximations.
+% See <demo1_funcs.html> for details. The parameter vector has the order
+% $[\kappa, \beta, a_{12}, a_{21}, \tau_1, \tau_2, \tau_s]$.
+%
+% When using fsymbolic we use the right-hand side and derivatives gnereated
+% with the symbolic toolbox.
+parnames={'kappa','beta','a12','a21','tau1','tau2','taus'};
+cind=[parnames;num2cell(1:length(parnames))];
+ind=struct(cind{:});
+getp=@(br,name)arrayfun(@(x)x.parameter(ind.(name)), br.point);
+neuron_sys_rhs=@(x,p)[...
+    -p(ind.kappa)*x(1,1,:)+p(ind.beta)*tanh(x(1,4,:))+p(ind.a12)*tanh(x(2,3,:));....
+    -p(ind.kappa)*x(2,1,:)+p(ind.beta)*tanh(x(2,4,:))+p(ind.a21)*tanh(x(1,2,:))];
+neuron_tau=@()[ind.tau1,ind.tau2,ind.taus];
+fnum=set_funcs(...
+    'sys_rhs',neuron_sys_rhs,'sys_tau',neuron_tau,'x_vectorized',true);
+fsymbolic=set_symfuncs(@sym_neuron,'sys_tau',neuron_tau);
+%% Choose problem definition to be tested
+funcs=fsymbolic;
+% general continuation parameters, kept in a cell list
+parbd={'min_bound',[ind.a21,0],'max_bound',[ind.a21,3; ind.taus,10],...
+    'max_step',[ind.a21,0.2; ind.taus,0.5]};
+%% Steady state branches
+% The convenience function |SetupStst| can be used to define the initial
+% piece of a steady-state branch. Its first arguments is |funcs|, the
+% others are name-value pairs. Important parameters:
+% 
+% * |'parameter'|: row vector of initial parameters
+% * |'x'|: column vector of initial equilibrium
+% * |'contpar'|: index of continuation parameter (or vector of indices)
+% * |'step'|: initial step along branch (default 0.01)
+%
+% All other name-value pairs are appended as fields to the structures in
+% branch1 if their names match. Of course, the |branch| structure can also
+% be manipulated manually afterwards. The subsequent continuation extends
+% the branch in both directions up to the boundaries |min_bound| and
+% |max_bound|.
+par0([ind.kappa,ind.beta,ind.a12,ind.a21,ind.tau1,ind.tau2,ind.taus])=...
+     [    1/2,      -1,      1,  2.34,       0.2      0.2,     1.5];
+[branch1,suc]=SetupStst(funcs,...
+    'parameter',par0,'x',[0;0],...
+    'contpar',ind.a21,'step',0.1,parbd{:});
+branch1.method.continuation.plot=0; % don't plot prgress
+[branch1,s,f,r]=br_contn(funcs,branch1,100);
+branch1=br_rvers(branch1);
+[branch1,s,f,r]=br_contn(funcs,branch1,100)
+
+%% Stability along branch and bifurcations
+% The convenience function |GetStability| recomputes the eigenvalues if not
+% yet present and returns as its first output |nunst| the number of
+% unstable eigenvalues for bifurcation detection. Its first argument is the
+% |branch| structure for which stability information is required. We find
+% the first point at which the number of unstable eigenvalues changes by 2.
+% The function |LocateSpecialPoints| also refines the branch as necessaryto
+% pinpoint bifurcation points. Note that the branch point at a21=2.25 is
+% incorrectly identified asa fold such that the correction fails.
+branch1.method.stability.minimal_real_part=-2;
+[branch1,bif1testfuncs,indbif1,bif1types]=LocateSpecialPoints(funcs,branch1);
+
+%% Hopf continuation
+% Similar to |SetupStst| the convenience function |SetupHopf| creates
+% the initial Hopf branch. Its first arguments are |funcs|, the branch
+% along which the Hopf bifurcation was detected (here |branch1|), and the
+% index of the point near which the Hopf bifurcation was detected.
+% Important parameters:
+%
+% * |'contpar'|: bifurcation parameters (vector of length >=2)
+% * |'dir'|: index of parameter, which is varied at initial step. The
+% default is [], which means that only one point on the branch is computed.
+% This is useful if one wants to correct only a single Hopf point.
+% * |'step'|: initial step along branch (default |1e-3|)
+% * |'excudefreqs'|: list of frequencies that should be excluded (default
+% []). The initial guess for the Hopf frequency is the complex conjugate
+% pair closest to the imaginary axis, after one takes away a pair of
+% eigenvalues for each frequency listed in |excludefreqs|.
+%
+% All other name-value pairs can be used to replace fields in the
+% structures of the Hopf branch. Otherwise, the output |branch2| inherits
+% all values from the input |branch|. The subsequent continuation  extends
+% the branch in both directions up to the boundaries |min_bound| and
+% |max_bound|.
+indhopf=indbif1(strcmp(bif1types,'hopf'))
+[branch2,suc]=SetupHopf(funcs,branch1,indhopf,'contpar',[ind.a21,ind.taus],...
+    'dir',ind.taus,'step',0.1,'plot',1,parbd{:});
+figure(1); clf;ax1=gca;
+[branch2,s,f,r]=br_contn(funcs,branch2,40,'plotaxis',ax1);
+branch2=br_rvers(branch2);
+[branch2,s,f,r]=br_contn(funcs,branch2,20,'plotaxis',ax1);
+xlabel(ax1,'a21');ylabel(ax1,'\tau_s');
+%% Figure: Continuation (predictions and corrections) of Hopf bifurcation
+% Predictions and corrections in the $(a_{21},\tau_s)$-plane after
+% computation of a first branch of Hopf bifurcations.
+
+%% Linear stability along Hopf curve
+% The function |GetStability| has a few additional outputs and inputs. The
+% optional input |exclude_trivial| forces exclusion of trivial eigenvalues
+% for bifurcations (for example the pair on the imaginary axis for the Hopf
+% bifurcation) in the count of unstable eigenvalues. The second output
+% (here |dom|) contains the dominant eigenvalue (that is, the closest to
+% the imaginary axis, excluding the trivial eigenvalues). The third output
+% (here |triv_defect|) is non-empty whenever |exclude_trivial| is true. It
+% contains the defect between the known trivial eigenvalue (say.
+% 1i*point.omega for Hopf points) and the value obtained in the stability
+% calculation. The fourth output is the modified |point| array, now
+% containing stability information.
+[hopf_branch_wbifs,hopftestfuncs,indbifhopf,bifhopftypes]=LocateSpecialPoints(funcs,branch2);
+nunst_hopf=GetStability(hopf_branch_wbifs,'exclude_trivial',true);
+% identify degenerate Takens-Bogdanov point (Hopf frequency crosses zero):
+indTakens=indbifhopf(strcmp(bifhopftypes,'BT'));
+pt_Takens=hopf_branch_wbifs.point(indTakens);
+a21_Takens=pt_Takens.parameter(ind.a21);
+%% Switch to second Hopf curve near double Hopf point
+% Repeat the Hopf continuation for the point on |branch2| where another
+% eigenvalue becomes unstable, again using |SetupHopf|, but now using
+% $a_{21}$ as the parameter and initial step -0.05. Initially, we turn on
+% residual printouts.
+indhopf2=indbifhopf(find(strcmp('hoho',bifhopftypes),1,'first'));
+[branch3,suc]=SetupHopf(funcs,hopf_branch_wbifs,indhopf2,'contpar',[ind.a21,ind.taus],...
+    'dir',ind.a21,'step',-0.05,'print_residual_info',1);
+branch3.method.point.print_residual_info=0;
+[branch3,s,f,r]=br_contn(funcs,branch3,100,'plotaxis',ax1);
+branch3=br_rvers(branch3);
+[branch3,s,f,r]=br_contn(funcs,branch3,100,'plotaxis',ax1);
+xlabel('a21');ylabel('\tau_s');
+%% Figure: Continuation (predictions and corrections) of both Hopf bifurcations
+% Predictions and corrections in the $(a_{21},\tau_s)$-plane after
+% computation of second branch of Hopf bifurcations (superimposed on result
+% of first Hopf bifurcation).
+%% First Lyapunov coefficient L1 along both Hopf curves
+% After a Hopf curve is computed, |HopfLyapunovCoefficients| returns the
+% first Lyapunov coefficient L1, which determines if the Hopf bifurcation
+% is supercritical (L1<0) or subcritical (L1>0). Since L1 depends on
+% 3rd-order derivatives of |sys_rhs|, the default finite-difference
+% approximation |df_mfderiv| is susceptible to round-off errors. Hence,
+% |HopfLyapunovCoefficients| returns 2 results, the second one using a
+% lower-order approximation. The difference between both outputs gives an
+% error estimate. The results show that both curves are supercritical. When
+% a symbolic derivative is provided the reported error will be zero (as it
+% is not applicable).
+[hopf2_branch_wbifs,hopf2testfuncs,indbifhopf2,bifhopf2types]=...
+    LocateSpecialPoints(funcs,branch3);
+fprintf('maximal L1 along branch2: %g\n',max(hopftestfuncs.genh(1,:)))
+fprintf('  max error of L1 along branch2: %g\n',max(abs(diff(hopftestfuncs.genh))));
+fprintf('maximal L1 along branch3: %g\n',max(hopf2testfuncs.genh(1,:)))
+fprintf('  max error of L1 along branch3: %g\n',max(abs(diff(hopf2testfuncs.genh))));
+%% Error in normal form of double Hopf point
+% Similar to the L1 coefficients, the normal form coefficients of a
+% Hopf-Hopf point depend on 3rd-order derivatives of |sys_rhs|. Thus, the
+% function computing the normal form returns two values, the difference of
+% which is an error estimate. The output of |HopfHopfNormalform| is an
+% entire point structure of kind 'hoho'. The field nmfm contains normal
+% form coefficients. Other fields of interest are |omega1| and |omega2|.
+[hoho,hoho_low]=HopfHopfNormalform(funcs,hopf_branch_wbifs,indhopf2+[-1,1]);
+fprintf(['Normal form coefficients of Hopf-Hopf point\n',...
+    'at (a_21,tau_s)=(%g,%g) with omega1=%g, omega2=%g:\n'],...
+    hoho.parameter(ind.a21),hoho.parameter(ind.taus),...
+    hoho.nvec.omega(1),hoho.nvec.omega(2));
+disp(hoho.nmfm);
+fprintf('Error of normal form coefficients: %g\n',...
+     norm(structfun(@(x)x,hoho.nmfm)-structfun(@(x)x,hoho_low.nmfm),'inf'));
+%% Two-parameter bifurcation diagram of Hopf bifurcations
+% with codimension-two points
+figure(3);clf;
+subplot(3,3,[1,2,4,5]);
+ax3=gca;hold(ax3,'on');
+args={'ax',ax3,'stability',0.75};
+lbp=plot(ax3,a21_Takens*[1,1],[0,10],'r','linewidth',2);
+lg={lbp,{'branch point'}};
+legend(ax3,lg{1},lg{2});
+lg=Plot2dBranch(hopf_branch_wbifs,'oldlegend',lg,args{:});
+lg=Plot2dBranch(hopf2_branch_wbifs,'oldlegend',lg,args{:});
+set(findobj(get(ax3,'parent'),'type','legend'),'position',[0.7,0.1,0.2,0.2])
+grid on
+xlabel('a_{21}');
+ylabel('\tau_s');
+title('(Repeated) two-parameter Hopf curves');
+drawnow;
+a21lim=get(ax3,'xlim');
+tauslim=get(ax3,'ylim');
+%% PLot Lyapunov coefficients
+a21_h1 =getp(hopf_branch_wbifs,'a21');
+taus_h1=getp(hopf_branch_wbifs,'taus');
+a21_h2 =getp(hopf2_branch_wbifs,'a21');
+taus_h2=getp(hopf2_branch_wbifs,'taus');
+figure(3);
+subplot(3,3,[3,6]);
+plot(hopftestfuncs.genh(1,:),taus_h1,'.-');
+set(gca,'ylim',tauslim,'xlim',[-0.6,0]);
+grid on
+ylabel('\tau_s');
+xlabel('L1');
+title('L1 branch2');
+subplot(3,3,[7,8]);
+plot(a21_h2,hopf2testfuncs.genh(1,:),'.-','color',[0,0.5,0]);
+set(gca,'ylim',[-0.1,0],'xlim',a21lim);
+grid on
+xlabel('a_{21}');
+ylabel('L1');
+title('First Lyapunov coefficient along branch3');
+%% Periodic orbit continuation
+% The convenience function |SetupPsol| creates the initial branch of
+% periodic orbits. Its first arguments are |funcs|, the Hopf or
+% steady-state branch along which a Hopf bifurcation was detected, and the
+% index of the Hopf point along the branch where one wants to branch off
+% point.
+% Important additional parameters:
+%
+% * |'radius'|: amplitude of initial periodic orbit (default 1e-3),
+% * |'contpar'|: index of continuation parameter (otherwise taken from input branch),
+% * |'degree'|: degree of collocation polynomials (default 3)
+% * |'intervals'|: number of collocation intervals (default 20)
+% * |'hopfcorrection'|: apply Newton iteration to find correct Hopf point
+% before branching off. This is recommended if the point provided is
+% not of kind |'hopf'|.
+%
+% All other parameters are passed on to the resulting output branch of
+% periodic orbits (here |branch4|). The parameter field of the output
+% branch is inherited from the input branch (before optional parameters are
+% taken into account).
+[branch4,suc]=SetupPsol(funcs,branch1,indhopf,'degree',4,'intervals',40,...
+    'max_step',[ind.a21,0.1]);
+figure(2); clf;ax2=gca;
+[branch4,s,f,r]=br_contn(funcs,branch4,50,'plotaxis',ax2);
+% look at the period along the branch:
+a21_per=arrayfun(@(x)x.parameter(ind.a21),branch4.point);
+periods=[branch4.point.period];
+figure(4); clf;
+plot(a21_per,periods,'b.-');
+xlabel('a21');
+ylabel('period');
+%% Figure: family of periodic orbits
+% Branch of periodic solutions emanating from a Hopf point. The
+% branch turns at the far right.
+
+%% Floquet multipliers of periodic orbits
+% The function |GetStability| can be used for periodic orbits as well.
+[nunst_per,dom,trivdef_per,branch4.point]=GetStability(branch4,...
+    'funcs',funcs,'exclude_trivial',true);
+fprintf('Loss of stability at point %d\n',find(nunst_per,1,'first'));
+%% Continuation of folds of periodic orbits
+% See <demo1_POfold.html> for extensive explanation.
+% find inital approximate fold
+[dummy,indmax]=max(arrayfun(@(x)x.parameter(ind.a21),branch4.point));
+% initialize problem functions and branch
+[foldfuncs,branch5]=SetupPOfold(funcs,branch4,indmax,'contpar',[ind.a21,ind.taus],...
+    'dir',ind.taus,'print_residual_info',1,'step',0.01,'plot_measure',[],...
+    parbd{:});
+% do not print residuals along branch
+%branch5.method.point.print_residual_info=0;
+% continue branch
+figure(1);
+branch5=br_contn(foldfuncs,branch5,100);
+branch5=br_rvers(branch5);
+branch5=br_contn(foldfuncs,branch5,60);
+xlabel('a21');ylabel('tau_s');
+title('Continuation of fold of periodic orbits');
+%% Floquet multipliers of fold periodic orbits
+[nunst_pf,dom,triv_defect,branch5.point]=GetStability(branch5,'funcs',foldfuncs,...
+    'exclude_trivial',true);
+fprintf('max number of unstable Floquet multipliers: %d\n',max(nunst_pf));
+%% Defect of trivial Floquet multipliers
+% plot the defect of the trivial Floquet multiplier as computed by
+% GetStability
+n_orbits=length(branch5.point);
+figure(5);
+a21_pfold=getp(branch5,'a21');
+taus_pfold=getp(branch5,'taus');
+plot(1:n_orbits,triv_defect);
+xlabel('point number');
+ylabel('defect of trivial Floquet multiplier');
+title('Comparison of Floquet multiplier computation with extended system');
+%% Add fold of periodic orbits to Two-parameter bifurcation diagram
+lg=Plot2dBranch(branch5,'funcs',foldfuncs,args{:},'oldlegend',lg);
+%% save data:
+save('demo1_simple_results.mat');
+
+##### SOURCE END #####
+--></body></html>

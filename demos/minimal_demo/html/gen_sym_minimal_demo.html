@@ -1,0 +1,201 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>DDE-BIFTOOL Minimal demo for continuation of local bifurcations of periodic orbits</title><meta name="generator" content="MATLAB 9.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-07-14"><meta name="DC.source" content="gen_sym_minimal_demo.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>DDE-BIFTOOL Minimal demo for continuation of local bifurcations of periodic orbits</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Create a right-hand side from symbolic expressions</a></li><li><a href="#2">Add paths and load sym package if octave is used</a></li><li><a href="#3">Set number of delays and create parameter names as strings</a></li><li><a href="#4">Create symbols for parameters, states and delays states</a></li><li><a href="#5">Define system using symbolic algebra</a></li><li><a href="#6">Differentiate and generate code, exporting it to sym_minimal_demo</a></li><li><a href="#7">Detailed description of <tt>dde_sym2funcs</tt></a></li><li><a href="#8">Inputs:</a></li><li><a href="#9">Common optional name-value input pairs</a></li><li><a href="#10">Outputs (often not needed)</a></li><li><a href="#11">Warning</a></li><li><a href="#12">The following trick creates an index struct <tt>ind</tt> of parameter names</a></li><li><a href="#13">Bifurcation analysis</a></li></ul></div><h2 id="1">Create a right-hand side from symbolic expressions</h2><p>
+$Id: gen_sym_minimal_demo.html 365 2019-07-14 17:40:55Z jansieber $
+</p><p>This file demonstrates how one can use the symbolic toolbox to automatically create the right-hand side and all of its derivatives using the symbolic toolbox, using the routines in <tt>ddebiftool_extra_symbolic</tt>. The example is the Duffing oscillator with delayed feedback discussed in the large-delay limit by Yanchuk &amp; Perlikowski in (PRE79,0462211,2009):</p><p><img src="gen_sym_minimal_demo_eq12437432243563629385.png" alt="$$x''(t)+d x'(t)+a x(t)+x^3+b [x(t)-x(t-\tau)]=0$$"></p><p>The parameters are <img src="gen_sym_minimal_demo_eq09373209431020703788.png" alt="$(\tau,a,b,d)$"> (used in this order in the <tt>parameter</tt> vector).</p><h2 id="2">Add paths and load sym package if octave is used</h2><pre class="codeinput">clear
+addpath(<span class="string">'../../ddebiftool'</span>,<span class="keyword">...</span>
+    <span class="string">'../../ddebiftool_extra_symbolic'</span>);
+<span class="keyword">if</span> dde_isoctave()
+    pkg <span class="string">load</span> <span class="string">symbolic</span>
+<span class="keyword">end</span>
+</pre><h2 id="3">Set number of delays and create parameter names as strings</h2><p>The demo has the parameters <tt>tau</tt>, <tt>a</tt>, <tt>b</tt> and <tt>d</tt>.</p><pre class="codeinput">parnames={<span class="string">'tau'</span>,<span class="string">'a'</span>,<span class="string">'b'</span>,<span class="string">'d'</span>};
+</pre><h2 id="4">Create symbols for parameters, states and delays states</h2><p>The array <tt>par</tt> is the array of symbols in the same order as parnames. Due to the following two lines we may, for example, use either tau or par(1) to refer to the delay.</p><pre class="codeinput">syms(parnames{:});       <span class="comment">% create symbols for tau, a, b, d</span>
+par=cell2sym(parnames);  <span class="comment">% now tau is par(1) etc</span>
+syms <span class="string">x</span> <span class="string">xt</span> <span class="string">xp</span> <span class="string">xpt</span>         <span class="comment">% create symbols for x(t) x(t-tau), x'(t), x'(t-tau)</span>
+</pre><h2 id="5">Define system using symbolic algebra</h2><p>using the variables created above. The left-hand side will be a symbol, with the value given by the expression on the right-hand side if the right-hand side contains symbols.</p><pre class="codeinput">dx_dt = xp;
+dxp_dt=-d*xp-a*x-x^3-b*(x-xt);
+</pre><h2 id="6">Differentiate and generate code, exporting it to sym_minimal_demo</h2><pre class="codeinput">[fstr,derivs]=dde_sym2funcs(<span class="keyword">...</span>
+    [dx_dt;dxp_dt],<span class="keyword">...</span><span class="comment"> % n x 1 array of derivative symbolic expressions</span>
+    [x,xt; xp,xpt],<span class="keyword">...</span><span class="comment"> % n x (ntau+1) array of symbols for states (current &amp; delayed)</span>
+    par,<span class="keyword">...</span><span class="comment">            % 1 x np (or np x 1) array of symbols used for parameters</span>
+    <span class="string">'filename'</span>,<span class="string">'sym_minimal_demo'</span>,<span class="keyword">...</span><span class="comment"> % optional argument specifying output file</span>
+    <span class="string">'directional_derivative'</span>,true);
+</pre><h2 id="7">Detailed description of <tt>dde_sym2funcs</tt></h2><p>The function <tt>dde_sym2funcs</tt> has the header</p><pre class="language-matlab"><span class="keyword">function</span> [funcstr,derivatives]=dde_sym2funcs(fs,xxs,ps,<span class="keyword">...</span><span class="comment">)</span>
+</pre><p>It converts the input fs (an array of symbolc expressions) into a right-hand side function and its derivatives that can be used for DDE-Biftool. The wrapper <tt>set_symfuncs</tt> around <tt>set_funcs</tt> can be used to create a structure containing right-hand sides and derivatives.</p><h2 id="8">Inputs:</h2><div><ul><li><tt>fs</tt>:  n x 1 array of symbolic expressions, defining the right-hand side</li><li><tt>xxs</tt>: n x (ntau+1) array of symbols for states, <tt>xxs(j,k)</tt> is the <img src="gen_sym_minimal_demo_eq14823424822217362076.png" alt="$x_j(t-\tau_{k-1})$">, and <tt>xxs(j,1)</tt>=$x_j(t)$.</li><li><tt>par</tt>: 1 x np (or np x 1) array of symbols for parameters, <tt>par(j)</tt> is the |j|the parameter.</li></ul></div><h2 id="9">Common optional name-value input pairs</h2><div><ul><li><tt>'sd_delay'</tt> (default <tt>sym([]))</tt>): ntau x 1 (or 1 x ntau) array tau of symbolic expressions depending on symbols in <tt>xxs</tt> and <tt>par</tt>. Entry <tt>tau(k)</tt> is delay number <tt>k</tt> (<img src="gen_sym_minimal_demo_eq03425917741342438727.png" alt="$\tau_{k}(x,p)$">) and may depend on <tt>xxs(:,nu)</tt> for <tt>nu=1..k</tt>.</li><li><tt>'write'</tt> (default <tt>true</tt>): write output to file?</li><li><tt>'filename'</tt> (default <tt>'sys'</tt>): results are written to function file with this name.</li><li><tt>'maxorder'</tt> (default 5): maximal order of derivatives to be computed.</li></ul></div><h2 id="10">Outputs (often not needed)</h2><div><ul><li><tt>fstr</tt>: string containing the code for writing the function.</li><li><tt>derivatives</tt>: symbolic expressions for all dervatives (a structure, containing the fields <tt>df</tt>, <tt>xx</tt>, <tt>parameter</tt>, <tt>dx</tt> and <tt>dp</tt>. <tt>df</tt> contains the expressions, <tt>xx</tt>, <tt>parameter</tt>, <tt>dx</tt> and <tt>dp</tt> the symbols used in these expressions.</li></ul></div><p>The routine will create a vectorized matlab function <tt>y=f(xx,p)</tt> from the expressions in <tt>fs</tt>, and its directional derivatives up to a maximum order (default 5). For state-dependent delays (optional argument <tt>sd_delay</tt> non-empty), it also computes the values and directional derivatives of all delays.</p><h2 id="11">Warning</h2><p>The function dde_sym2funcs will write to temporary files, since matlabFunction can only write to files.</p><h2 id="12">The following trick creates an index struct <tt>ind</tt> of parameter names</h2><p>without manual counting. The indices can be accessed as <tt>ind.tau</tt>, <tt>ind.a</tt>, <tt>ind.b</tt>, <tt>ind.d</tt>. We save the structure and the names in a mat file</p><pre class="codeinput">cind=[parnames;num2cell(1:length(parnames))];
+ind=struct(cind{:});
+save(<span class="string">'minimal_demo_parnames.mat'</span>,<span class="string">'-v7'</span>,<span class="string">'parnames'</span>,<span class="string">'ind'</span>);
+</pre><h2 id="13">Bifurcation analysis</h2><p>DDE-Biftool itself does not rely on the symbolic toolbox, but only on its generated code. See <a href="minimal_demo.html">minimal_demo.html</a> for the start of the demo.</p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% DDE-BIFTOOL Minimal demo for continuation of local bifurcations of periodic orbits
+%% Create a right-hand side from symbolic expressions
+%
+% <html>
+% $Id: gen_sym_minimal_demo.html 365 2019-07-14 17:40:55Z jansieber $
+% </html>
+%
+% This file demonstrates how one can use the symbolic toolbox
+% to automatically create the right-hand side and all of its derivatives
+% using the symbolic toolbox, using the routines in
+% |ddebiftool_extra_symbolic|. The example is the Duffing oscillator with
+% delayed feedback discussed in the large-delay limit by Yanchuk &
+% Perlikowski in (PRE79,0462211,2009):
+%
+% $$x''(t)+d x'(t)+a x(t)+x^3+b [x(t)-x(t-\tau)]=0$$
+%
+% The parameters are $(\tau,a,b,d)$ (used in this order in the |parameter|
+% vector).
+%% Add paths and load sym package if octave is used
+clear
+addpath('../../ddebiftool',...
+    '../../ddebiftool_extra_symbolic');
+if dde_isoctave()
+    pkg load symbolic
+end
+%% Set number of delays and create parameter names as strings
+% The demo has the parameters |tau|, |a|, |b| and |d|.
+parnames={'tau','a','b','d'};
+%% Create symbols for parameters, states and delays states
+% The array |par| is the array of symbols in the same order as parnames.
+% Due to the following two lines we may, for example, use either tau or
+% par(1) to refer to the delay.
+syms(parnames{:});       % create symbols for tau, a, b, d
+par=cell2sym(parnames);  % now tau is par(1) etc
+syms x xt xp xpt         % create symbols for x(t) x(t-tau), x'(t), x'(t-tau)
+%% Define system using symbolic algebra
+% using the variables created above. The left-hand side will be a symbol,
+% with the value given by the expression on the right-hand side if the
+% right-hand side contains symbols.
+dx_dt = xp;
+dxp_dt=-d*xp-a*x-x^3-b*(x-xt);
+%% Differentiate and generate code, exporting it to sym_minimal_demo
+[fstr,derivs]=dde_sym2funcs(...
+    [dx_dt;dxp_dt],... % n x 1 array of derivative symbolic expressions
+    [x,xt; xp,xpt],... % n x (ntau+1) array of symbols for states (current & delayed)
+    par,...            % 1 x np (or np x 1) array of symbols used for parameters
+    'filename','sym_minimal_demo',... % optional argument specifying output file
+    'directional_derivative',true);
+%% Detailed description of |dde_sym2funcs|
+% The function |dde_sym2funcs| has the header
+%
+%   function [funcstr,derivatives]=dde_sym2funcs(fs,xxs,ps,...) 
+%
+% It converts the input fs (an array of symbolc expressions) into a
+% right-hand side function and its derivatives that can be used for
+% DDE-Biftool. The wrapper |set_symfuncs| around |set_funcs| can be used to
+% create a structure containing right-hand sides and derivatives.
+%
+%% Inputs:
+%
+% * |fs|:  n x 1 array of symbolic expressions, defining the right-hand side
+% * |xxs|: n x (ntau+1) array of symbols for states, |xxs(j,k)| is the
+% $x_j(t-\tau_{k-1})$, and |xxs(j,1)|=$x_j(t)$.
+% * |par|: 1 x np (or np x 1) array of symbols for parameters, |par(j)| is
+% the |j|the parameter.
+%
+%% Common optional name-value input pairs
+%
+% * |'sd_delay'| (default |sym([]))|): ntau x 1 (or 1 x ntau) array tau of
+% symbolic expressions depending on symbols in |xxs| and |par|. Entry
+% |tau(k)| is delay number |k| ($\tau_{k}(x,p)$) and may depend on
+% |xxs(:,nu)| for |nu=1..k|.
+% * |'write'| (default |true|): write output to file?
+% * |'filename'| (default |'sys'|): results are written to function file
+% with this name.
+% * |'maxorder'| (default 5): maximal order of derivatives to be computed.
+%
+%% Outputs (often not needed)
+%
+% * |fstr|: string containing the code for writing the function.
+% * |derivatives|: symbolic expressions for all dervatives (a structure,
+% containing the fields |df|, |xx|, |parameter|, |dx| and |dp|. |df|
+% contains the expressions, |xx|, |parameter|, |dx| and |dp| the symbols
+% used in these expressions. 
+%
+% The routine will create a vectorized matlab
+% function |y=f(xx,p)| from the expressions in |fs|, and its directional
+% derivatives up to a maximum order (default 5). For state-dependent delays
+% (optional argument |sd_delay| non-empty), it also computes the values and
+% directional derivatives of all delays.
+%% Warning
+% The function dde_sym2funcs will write to temporary files, since
+% matlabFunction can only write to files.
+% 
+%% The following trick creates an index struct |ind| of parameter names
+% without manual counting. The indices can be accessed as |ind.tau|,
+% |ind.a|, |ind.b|, |ind.d|. We save the structure and the names in a mat
+% file
+cind=[parnames;num2cell(1:length(parnames))];
+ind=struct(cind{:});
+save('minimal_demo_parnames.mat','-v7','parnames','ind');
+%% Bifurcation analysis
+% DDE-Biftool itself does not rely on the symbolic toolbox, but only on its
+% generated code. See <minimal_demo.html> for the start of the demo.
+
+##### SOURCE END #####
+--></body></html>

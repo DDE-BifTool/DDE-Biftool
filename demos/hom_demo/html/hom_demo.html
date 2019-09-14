@@ -1,0 +1,590 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>DDE-Biftool demo -- Connecting orbits</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-04-10"><meta name="DC.source" content="hom_demo.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+
+  </style></head><body><div class="content"><h1>DDE-Biftool demo -- Connecting orbits</h1><!--introduction--><p>
+% $Id: hom_demo.html 20 2014-04-11 19:27:33Z jan.sieber $
+</p><p>This demo describes how to use <tt>DDE-Biftool</tt> to perform a bifurcation analysis on equations with several constant delays which exhibit connecting orbits.</p><p>As shown at the end of the neuron demo <a href="../../neuron/html/demo1_hcli.html">../../neuron/html/demo1_hcli.html</a>, one can compute connecting orbits using a direct method, when the delays are not state-dependent. In order to show the use of this method, we will now investigate a model of neural activity, described in [F Giannakopoulos and O. Oster, 1997].</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Initialization</a></li><li><a href="#2">Differential equations</a></li><li><a href="#3">Load pre-computed results of steady-state bifurcation analysis</a></li><li><a href="#4">Figure: Bifurcations of equilibria in two-parameter plane</a></li><li><a href="#5">Periodic orbits</a></li><li><a href="#7">Figure: Period of the periodic orbits, as a function of the parameter <tt>q12</tt>.</a></li><li><a href="#8">Figure: Time profile of last computed periodic orbit</a></li><li><a href="#9">Conversion to homoclinic</a></li><li><a href="#10">Figure: Time profile of uncorrected homoclinic</a></li><li><a href="#11">Correction of initial homoclinic</a></li><li><a href="#12">Figure: Remeshed and corrected profile of the same homoclinic orbit</a></li><li><a href="#13">Creation of initial piece of branch</a></li><li><a href="#14">Figure: Two-parameter bifurcation diagram in q12 and e1</a></li><li><a href="#15">Second branch of homoclinic connections</a></li><li><a href="#16">Figure: Two-parameter bifurcation diagram in q12 and e1</a></li><li><a href="#17">Double homoclinic for symmetric system</a></li><li><a href="#18">Figure: Evolution of parameter <tt>e1</tt> vs. point number</a></li><li><a href="#19">Figure: Phase portrait of the double homoclinic orbit for <tt>e1=-1.3</tt>.</a></li><li><a href="#20">Takens-Bogdanov points</a></li><li><a href="#21">Figure: Dominant eigenvalues of the saddle</a></li><li><a href="#22">Refinement of homoclinic branch</a></li><li><a href="#23">Figure: Dominant eigenvalues of the saddle</a></li><li><a href="#24">End of demo - save results</a></li></ul></div><h2>Initialization<a name="1"></a></h2><pre class="codeinput">clear;                           <span class="comment">% clear variables</span>
+format <span class="string">compact</span>
+close <span class="string">all</span>;                       <span class="comment">% close figures</span>
+addpath(<span class="string">'../../ddebiftool/'</span>);    <span class="comment">% add ddebiftool folder to path</span>
+<span class="comment">%#ok&lt;*ASGLU,*NOPTS,*NASGU&gt;</span>
+</pre><h2>Differential equations<a name="2"></a></h2><p>The model is given as a two-dimensional system of differential equations</p><p><img src="hom_demo_eq04885.png" alt="$$&#xA;\begin{array}[t]{rcl}&#xA;\dot{x}_{1}(t)&amp;=&amp;-x_{1}(t)+q_{11}\frac{1}{1+\mathrm{e}^{-4x_{1}(t-\tau)}}&#xA;  -q_{12}x_2(t-\tau) +e_1\\&#xA;\dot{x}_{2}(t)&amp;=&amp;-x_2(t)+q_{21}\frac{1}{1+e^{-4x_{1}(t-\tau)}}+e_2&#xA;\end{array}&#xA;$$"></p><p>The parameters of the system are <img src="hom_demo_eq53164.png" alt="$[q_{11},q_{12}, q_{21}, e_1, e_2,\tau]$"> (in this order in the <tt>parameter</tt> vector). Our main bifurcation parameters are <img src="hom_demo_eq24128.png" alt="$q_{12}$"> (<tt>q12</tt>) and <img src="hom_demo_eq99626.png" alt="$e_1$"> (<tt>e1</tt>).</p><pre class="codeinput">g=@(xx)1/(1+exp(-4*xx(1,2)));
+hom_rhs=@(xx,par)[<span class="keyword">...</span>
+    -xx(1,1)+par(1)*g(xx)-par(2)*xx(2,2)+par(4);<span class="keyword">...</span>
+    -xx(2,1)+par(3)*g(xx)+par(5)];
+ind_tau=6;
+ind_q12=2;
+ind_e1=4;
+funcs=set_funcs(<span class="string">'sys_rhs'</span>,hom_rhs,<span class="string">'sys_tau'</span>,@()ind_tau);
+</pre><h2>Load pre-computed results of steady-state bifurcation analysis<a name="3"></a></h2><p>The focus will be on the analysis of the homoclinic orbits in this system.  Therefore, we will not repeat the standard bifurcation analysis. The reader is advised to run through the neuron demo <a href="../../neuron/html/demo1.html">../../neuron/html/demo1.html</a> to become more familiar with the analysis. For the purpose of this demo, we start at a point where branches of Hopf points and fold points have already been computed. The figure below shows branches of fold and Hopf points, plotted with respect to the two free parameters of the system, <img src="hom_demo_eq24128.png" alt="$q_{12}$"> and <img src="hom_demo_eq99626.png" alt="$e_1$">.  To obtain this figure, we first load the precomputed (and saved) branches from the file <tt>hom_demo.mat</tt>. We choose to  plot the branches with respect to their default measure.</p><pre class="codeinput">load(<span class="string">'hom_demo_precomputed'</span>);
+figure(1);
+[xm,ym]=df_measr(0,fold_branch);
+br_plot(fold_branch,xm,ym,<span class="string">':'</span>);
+axis([1.28 1.62 -1.36 -1.24]);
+hold <span class="string">on</span>;
+br_plot(hopf1_branch,xm,ym,<span class="string">'-.'</span>);
+br_plot(hopf2_branch,xm,ym,<span class="string">'-.'</span>);
+xlabel(<span class="string">'q12'</span>);ylabel(<span class="string">'e1'</span>);
+</pre><img vspace="5" hspace="5" src="hom_demo_01.png" alt=""> <h2>Figure: Bifurcations of equilibria in two-parameter plane<a name="4"></a></h2><p>Branches of fold (dots) and Hopf (dashed) points.</p><h2>Periodic orbits<a name="5"></a></h2><p>We then select a Hopf point somewhere on the lower branch, and start the branch of periodic solutions that emanates from it.  For this purpose, we create a branch of periodic solutions with two points. We choose to plot the period versus the free parameter while continuing, in order to visualize the approaching of the homoclinic orbit.</p><pre class="codeinput">hopf=hopf1_branch.point(27);
+[psol,stp]=p_topsol(funcs,hopf,1e-2,3,27)
+</pre><pre class="codeoutput">psol = 
+         kind: 'psol'
+    parameter: [2.6000 1.3428 1 -1.3398 -0.5000 1]
+         mesh: [1x82 double]
+       degree: 3
+      profile: [2x82 double]
+       period: 55.2714
+stp = 
+         kind: 'psol'
+    parameter: [0 0 0 0 0 0]
+         mesh: [1x82 double]
+       degree: 3
+      profile: [2x82 double]
+       period: 0
+</pre><pre class="codeinput">mpsol=df_mthod(funcs,<span class="string">'psol'</span>);
+[psol,s]=p_correc(funcs,psol,ind_e1,stp,mpsol.point);
+psol_branch=df_brnch(funcs,ind_e1,<span class="string">'psol'</span>);
+psol_branch.point=psol;
+[psol,stp]=p_topsol(funcs,hopf,2e-2,3,27);
+[psol,s]=p_correc(funcs,psol,ind_e1,stp,mpsol.point);
+psol_branch.point(2)=psol;
+figure(2);clf;
+[xm,ym]=df_measr(0,psol_branch);
+ym.field=<span class="string">'period'</span>;
+ym.col=1;
+ym.row=1;
+psol_branch.method.continuation.plot_measure.x=xm;
+psol_branch.method.continuation.plot_measure.y=ym;
+[psol_branch,s,r,f]=br_contn(funcs,psol_branch,20);
+xlabel(<span class="string">'e1'</span>);ylabel(<span class="string">'period'</span>);
+</pre><img vspace="5" hspace="5" src="hom_demo_02.png" alt=""> <h2>Figure: Period of the periodic orbits, as a function of the parameter <tt>q12</tt>.<a name="7"></a></h2><pre class="codeinput">figure(3);clf;
+psol=psol_branch.point(end)
+p_pplot(psol);
+xlabel(<span class="string">'time/period'</span>);ylabel(<span class="string">'x1,x2'</span>);
+</pre><pre class="codeoutput">psol = 
+         kind: 'psol'
+    parameter: [2.6000 1.3428 1 -1.3392 -0.5000 1]
+         mesh: [1x82 double]
+       degree: 3
+      profile: [2x82 double]
+       period: 214.6858
+</pre><img vspace="5" hspace="5" src="hom_demo_03.png" alt=""> <h2>Figure: Time profile of last computed periodic orbit<a name="8"></a></h2><p>The last point of this branch of periodic solutions has a large period, and is, thus,  is close to a homoclinic orbit.</p><h2>Conversion to homoclinic<a name="9"></a></h2><p>We convert this point to a point of homoclinic type. This yields an (initially uncorrected) initial homoclinic profile.  Note that the steady state is also uncorrected.</p><pre class="codeinput">hcli=p_tohcli(funcs,psol)
+figure(4);clf;
+p_pplot(hcli);
+xlabel(<span class="string">'time/period'</span>);ylabel(<span class="string">'x1,x2'</span>);
+</pre><pre class="codeoutput">hcli = 
+         kind: 'hcli'
+    parameter: [2.6000 1.3428 1 -1.3392 -0.5000 1]
+         mesh: [1x79 double]
+       degree: 3
+      profile: [2x79 double]
+       period: 182.1633
+           x1: [2x1 double]
+           x2: [2x1 double]
+     lambda_v: 0.1691
+     lambda_w: 0.1691
+            v: [2x1 double]
+            w: [2x1 double]
+        alpha: -1
+      epsilon: 5.2584e-06
+</pre><img vspace="5" hspace="5" src="hom_demo_04.png" alt=""> <h2>Figure: Time profile of uncorrected homoclinic<a name="10"></a></h2><h2>Correction of initial homoclinic<a name="11"></a></h2><p>We correct this point (adjusting <tt>e1</tt>), after remeshing it on an adaptive mesh with 50 intervals.  We plot this point before and after correction, see Figure below.</p><pre class="codeinput">mhcli=df_mthod(funcs,<span class="string">'hcli'</span>);
+[hcli,s]=p_correc(funcs,hcli,ind_e1,[],mhcli.point);  <span class="comment">% correct</span>
+hcli=p_remesh(hcli,3,50);                             <span class="comment">% remesh it and</span>
+[hcli,s]=p_correc(funcs,hcli,ind_e1,[],mhcli.point)   <span class="comment">% correct it again</span>
+figure(5);clf;
+p_pplot(hcli);                    <span class="comment">% plot it after remeshing &amp; correction</span>
+xlabel(<span class="string">'time/period'</span>);ylabel(<span class="string">'x1,x2'</span>);
+</pre><pre class="codeoutput">hcli = 
+         kind: 'hcli'
+    parameter: [2.6000 1.3428 1 -1.3392 -0.5000 1]
+         mesh: [1x151 double]
+       degree: 3
+      profile: [2x151 double]
+       period: 188.0558
+           x1: [2x1 double]
+           x2: [2x1 double]
+     lambda_v: 0.1691
+     lambda_w: 0.1691
+            v: [2x1 double]
+            w: [2x1 double]
+        alpha: -1
+      epsilon: 5.2584e-06
+s =
+     1
+</pre><img vspace="5" hspace="5" src="hom_demo_05.png" alt=""> <h2>Figure: Remeshed and corrected profile of the same homoclinic orbit<a name="12"></a></h2><h2>Creation of initial piece of branch<a name="13"></a></h2><p>We slightly change parameter value <tt>e1</tt> of this homoclinic orbit, and compute a second homoclinic orbit for the new value of <tt>e1</tt>.  With these two homoclinic solutions, we then  create a branch, which is continued in two free parameters (<tt>e1</tt> and <tt>q12</tt>). Finally we reverse the branch and continue it in the other direction.</p><pre class="codeinput">hcli_br=df_brnch(funcs,[ind_q12, ind_e1],<span class="string">'hcli'</span>);
+hcli_br.point=hcli;
+hcli.parameter(ind_q12)=hcli.parameter(ind_q12)+6e-3;
+[hcli,s]=p_correc(funcs,hcli,ind_e1,[],mhcli.point);
+hcli_br.point(ind_q12)=hcli;
+figure(1);
+[hcli_br,s,r,f]=br_contn(funcs,hcli_br,85)
+hcli_br=br_rvers(hcli_br);
+[hcli_br,s,r,f]=br_contn(funcs,hcli_br,10)
+xlabel(<span class="string">'q12'</span>);ylabel(<span class="string">'e1'</span>);
+</pre><pre class="codeoutput">hcli_br = 
+       method: [1x1 struct]
+    parameter: [1x1 struct]
+        point: [1x71 struct]
+s =
+    70
+r =
+    16
+f =
+     0
+hcli_br = 
+       method: [1x1 struct]
+    parameter: [1x1 struct]
+        point: [1x81 struct]
+s =
+    11
+r =
+     0
+f =
+     0
+</pre><img vspace="5" hspace="5" src="hom_demo_06.png" alt=""> <h2>Figure: Two-parameter bifurcation diagram in q12 and e1<a name="14"></a></h2><p>Now also showing one branch of homoclinic solutions (predictions and corrections).</p><h2>Second branch of homoclinic connections<a name="15"></a></h2><p>We do exactly the same for the second branch of Hopf points.  Since the bifurcation diagram of this system is completely symmetric, we also approach homoclinic orbits when we jump onto the branches of periodic solutions emanating from those Hopf points.  The commands are the same as in the above case, so we simply list them, without further explanation. We also do not plot the branch of periodic solutions while continuing.</p><pre class="codeinput"><span class="comment">% branch off from Hopf point 27 and continue periodic orbits to large</span>
+<span class="comment">% period</span>
+hopf=hopf2_branch.point(27);
+[psol,stp]=p_topsol(funcs,hopf,1e-2,3,27);
+mpsol=df_mthod(funcs,<span class="string">'psol'</span>);
+[psol,s]=p_correc(funcs,psol,ind_e1,stp,mpsol.point);
+psol_branch=df_brnch(funcs,ind_e1,<span class="string">'psol'</span>);
+psol_branch.point=psol;
+[psol,stp]=p_topsol(funcs,hopf,2e-2,3,27);
+[psol,s]=p_correc(funcs,psol,ind_e1,stp,mpsol.point);
+psol_branch.point(2)=psol;
+psol_branch.method.continuation.plot=0;
+psol_branch.method.continuation.plot_progress=0;
+[psol_branch,s,r,f]=br_contn(funcs,psol_branch,20);
+
+<span class="comment">% again the last point is close to a homoclinic</span>
+<span class="comment">% so we convert it to a point of homoclinic type.</span>
+
+psol=psol_branch.point(end);
+hcli=p_tohcli(funcs,psol);
+
+<span class="comment">% correct it</span>
+mhcli=df_mthod(funcs,<span class="string">'hcli'</span>);
+[hcli,s]=p_correc(funcs,hcli,ind_e1,[],mhcli.point);
+
+<span class="comment">% remesh it and correct it</span>
+hcli=p_remesh(hcli,3,50);
+[hcli,s]=p_correc(funcs,hcli,ind_e1,[],mhcli.point);
+
+<span class="comment">% we now continue this second  branch of homoclinic solutions in two-parameter</span>
+<span class="comment">% space, and show this on the first figure.</span>
+hcli2_br=df_brnch(funcs,[ind_q12,ind_e1],<span class="string">'hcli'</span>);
+hcli2_br.point=hcli;
+hcli.parameter(ind_q12)=hcli.parameter(ind_q12)+6e-3;
+[hcli,s]=p_correc(funcs,hcli,ind_e1,[],mhcli.point);
+hcli2_br.point(2)=hcli;
+figure(1);
+hcli2_br=br_contn(funcs,hcli2_br,85);
+hcli2_br=br_rvers(hcli2_br);
+[hcli2_br,s,r,f]=br_contn(funcs,hcli2_br,10)
+xlabel(<span class="string">'q12'</span>);ylabel(<span class="string">'e1'</span>);
+</pre><pre class="codeoutput">hcli2_br = 
+       method: [1x1 struct]
+    parameter: [1x1 struct]
+        point: [1x80 struct]
+s =
+    11
+r =
+     0
+f =
+     0
+</pre><img vspace="5" hspace="5" src="hom_demo_07.png" alt=""> <h2>Figure: Two-parameter bifurcation diagram in q12 and e1<a name="16"></a></h2><p>Now also showing two branches of homoclinic solutions (predictions and corrections). They both end at the branch of fold points, as the stability of the steady state changes at this point.</p><h2>Double homoclinic for symmetric system<a name="17"></a></h2><p>At <tt>e1=-1.3</tt>, a double homoclinic orbit exists. This is easily shown as follows. First, we look for the point on the branch where <tt>e1=-1.3</tt>. As the following figure shows, both branches intersect the horizontal line <tt>e1=-1.3</tt>. We find the intersection for both branches and name them <tt>i_hcli_intersect1</tt> and <tt>i_hcli_intersect2</tt>.</p><pre class="codeinput">[dum,i_hcli_intersect]=min(abs(arrayfun(@(p)p.parameter(ind_e1),hcli_br.point)+1.3));
+[dum,i_hcli2_intersect]=min(abs(arrayfun(@(p)p.parameter(ind_e1),hcli2_br.point)+1.3));
+i_max=max([i_hcli_intersect,i_hcli2_intersect])+20;
+figure(6);
+[xm,ym]=df_measr(0,hcli_br);
+hold <span class="string">on</span>;
+br_plot(hcli2_br,[],ym);
+br_plot(hcli_br,[],ym,<span class="string">'--'</span>);
+plot([0 i_max],[-1.3 -1.3],<span class="string">'r-.'</span>,<span class="keyword">...</span>
+    i_hcli_intersect,-1.3,<span class="string">'kx'</span>,i_hcli2_intersect,-1.3,<span class="string">'kx'</span>);
+axis([0,i_max,-1.31,-1.29]);
+grid <span class="string">on</span>
+xlabel(<span class="string">'point number'</span>);ylabel(<span class="string">'e1'</span>);
+</pre><img vspace="5" hspace="5" src="hom_demo_08.png" alt=""> <h2>Figure: Evolution of parameter <tt>e1</tt> vs. point number<a name="18"></a></h2><p>along the  first (dashed) and second (solid) branches of homoclinic orbits. Both approximate double homoclinic orbit are plotted below.</p><pre class="codeinput">figure(7);
+plot(hcli2_br.point(i_hcli2_intersect).profile(1,:),<span class="keyword">...</span>
+    hcli2_br.point(i_hcli2_intersect).profile(2,:));
+hold <span class="string">on</span>;
+plot(hcli_br.point(i_hcli_intersect).profile(1,:),<span class="keyword">...</span>
+    hcli_br.point(i_hcli_intersect).profile(2,:));
+</pre><img vspace="5" hspace="5" src="hom_demo_09.png" alt=""> <h2>Figure: Phase portrait of the double homoclinic orbit for <tt>e1=-1.3</tt>.<a name="19"></a></h2><p>The two loops are mirror images of each other.</p><h2>Takens-Bogdanov points<a name="20"></a></h2><p>Both branches of homoclinic orbits emanate from a Takens-Bogdanov bifurcation. As the amplitude of the homoclinic orbits along the branch goes to zero, the steady state approaches a Takens-Bogdanov-point. To illustrate this, the figure below shows the stability information of the last computed point on the branch. We see two small eigenvalues, but we are still at some distance from the Takens-Bogdanov point.</p><pre class="codeinput">figure(8);
+stst=p_tostst(funcs,hcli_br.point(end));
+stst=stst(1);
+mstst=df_mthod(funcs,<span class="string">'stst'</span>);
+stst.stability=p_stabil(funcs,stst,mstst.stability);
+p_splot(stst);
+xlabel(<span class="string">'\Re\lambda'</span>);ylabel(<span class="string">'\Im\lambda'</span>);
+</pre><img vspace="5" hspace="5" src="hom_demo_10.png" alt=""> <h2>Figure: Dominant eigenvalues of the saddle<a name="21"></a></h2><p>of the last point on the first branch of homoclinic orbits, near a Takens-Bogdanov bifurcation.</p><h2>Refinement of homoclinic branch<a name="22"></a></h2><p>In order to be able to continue the branch of homoclinic orbits closer to this Takens-Bogdanov point, we form a new branch, starting from the last point (with the profile remeshed on a finer mesh), and using a much smaller step size.  If we would not do this, the steplength selection strategy (see manual) will take too large steps, resulting in a turnaround and a backward computation of the same branch.</p><p>We continue this new branch.  During this continuation, it is possible that Matlab displays a warning concerning the near-singular character of the system being solved.  This is an indication that we are close to the Takens-Bogdanov singularity.  We then look again to the dominant eigenvalues of the last point, see figure below.</p><pre class="codeinput">hcli=hcli_br.point(end);
+hcli=p_remesh(hcli,3,70);
+[hcli,s]=p_correc(funcs,hcli,ind_e1,[],mhcli.point);
+to_tb_branch=df_brnch(funcs,[ind_q12,ind_e1],<span class="string">'hcli'</span>);
+to_tb_branch.point=hcli;
+hcli.parameter(ind_q12)=hcli.parameter(ind_q12)-1e-4;
+hcli=p_remesh(hcli,3,70);
+[hcli,s]=p_correc(funcs,hcli,ind_e1,[],mhcli.point);
+to_tb_branch.point(2)=hcli;
+
+to_tb_branch.method.continuation.plot=0;
+to_tb_branch.method.continuation.plot_progress=0;
+[to_tb_branch,s,r,f]=br_contn(funcs,to_tb_branch,40);
+
+figure(9);
+stst=p_tostst(funcs,to_tb_branch.point(end));
+stst=stst(1);
+mstst=df_mthod(funcs,<span class="string">'stst'</span>);
+stst.stability=p_stabil(funcs,stst,mstst.stability);
+p_splot(stst);
+xlabel(<span class="string">'\Re\lambda'</span>);ylabel(<span class="string">'\Im\lambda'</span>);
+</pre><pre class="codeoutput">Warning: Matrix is close to singular or badly scaled. Results may
+be inaccurate. RCOND =  1.403289e-16. 
+</pre><img vspace="5" hspace="5" src="hom_demo_11.png" alt=""> <h2>Figure: Dominant eigenvalues of the saddle<a name="23"></a></h2><p>of the last point on the more accurate branch of homoclinic orbits, near a Takens-Bogdanov bifurcation.</p><h2>End of demo - save results<a name="24"></a></h2><pre class="codeinput">save(<span class="string">'hom_demo_results.mat'</span>);
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.14<br></p></div><!--
+##### SOURCE BEGIN #####
+%% DDE-Biftool demo REPLACE_WITH_DASH_DASH Connecting orbits
+%
+% <html>
+% $Id: hom_demo.html 20 2014-04-11 19:27:33Z jan.sieber $
+% </html>
+%
+% This demo describes how to use |DDE-Biftool| to perform a bifurcation
+% analysis on equations with several constant delays which exhibit
+% connecting orbits.
+%
+% As shown at the end of the neuron demo
+% <../../neuron/html/demo1_hcli.html>, one can compute connecting orbits
+% using a direct method, when the delays are not state-dependent. In order
+% to show the use of this method, we will now investigate a model of neural
+% activity, described in [F Giannakopoulos and O. Oster, 1997].
+
+%% Initialization
+clear;                           % clear variables
+format compact
+close all;                       % close figures
+addpath('../../ddebiftool/');    % add ddebiftool folder to path
+%#ok<*ASGLU,*NOPTS,*NASGU>
+%% Differential equations
+% The model is given as a two-dimensional system of differential equations
+%
+% $$
+% \begin{array}[t]{rcl}
+% \dot{x}_{1}(t)&=&-x_{1}(t)+q_{11}\frac{1}{1+\mathrm{e}^{-4x_{1}(t-\tau)}}
+%   -q_{12}x_2(t-\tau) +e_1\\
+% \dot{x}_{2}(t)&=&-x_2(t)+q_{21}\frac{1}{1+e^{-4x_{1}(t-\tau)}}+e_2
+% \end{array}
+% $$
+%
+% The parameters of the system are $[q_{11},q_{12}, q_{21}, e_1, e_2,\tau]$ (in
+% this order in the |parameter| vector). Our main bifurcation parameters
+% are $q_{12}$ (|q12|) and $e_1$ (|e1|).
+%
+g=@(xx)1/(1+exp(-4*xx(1,2)));
+hom_rhs=@(xx,par)[...
+    -xx(1,1)+par(1)*g(xx)-par(2)*xx(2,2)+par(4);...
+    -xx(2,1)+par(3)*g(xx)+par(5)];
+ind_tau=6;
+ind_q12=2;
+ind_e1=4;
+funcs=set_funcs('sys_rhs',hom_rhs,'sys_tau',@()ind_tau);
+
+%% Load pre-computed results of steady-state bifurcation analysis
+% The focus will be on the analysis of the homoclinic orbits in 
+% this system.  Therefore, we will not repeat the standard bifurcation analysis.
+% The reader is advised to run through the neuron demo
+% <../../neuron/html/demo1.html> to become more familiar with the analysis.
+% For the purpose of this demo, we start at a point where branches of Hopf
+% points and fold points have already been computed. The figure below
+% shows branches of fold and Hopf points, plotted with respect to the two
+% free parameters of the system, $q_{12}$ and $e_1$.  To obtain this
+% figure, we first load the precomputed (and saved) branches from the file
+% |hom_demo.mat|. We choose to  plot the branches with respect to
+% their default measure.
+load('hom_demo_precomputed');
+figure(1);
+[xm,ym]=df_measr(0,fold_branch);
+br_plot(fold_branch,xm,ym,':');
+axis([1.28 1.62 -1.36 -1.24]);
+hold on;
+br_plot(hopf1_branch,xm,ym,'-.');
+br_plot(hopf2_branch,xm,ym,'-.');
+xlabel('q12');ylabel('e1');
+%% Figure: Bifurcations of equilibria in two-parameter plane
+% Branches of fold (dots) and Hopf (dashed) points.
+
+%% Periodic orbits
+% We then select a Hopf point somewhere on the lower branch, 
+% and start the branch of periodic solutions that emanates from it.  For
+% this purpose, we create a branch of periodic solutions with two points.
+% We choose to plot the period versus the free parameter while continuing,
+% in order to visualize the approaching of the homoclinic orbit.
+hopf=hopf1_branch.point(27);
+[psol,stp]=p_topsol(funcs,hopf,1e-2,3,27)
+
+%%
+mpsol=df_mthod(funcs,'psol');
+[psol,s]=p_correc(funcs,psol,ind_e1,stp,mpsol.point);
+psol_branch=df_brnch(funcs,ind_e1,'psol');
+psol_branch.point=psol;
+[psol,stp]=p_topsol(funcs,hopf,2e-2,3,27);
+[psol,s]=p_correc(funcs,psol,ind_e1,stp,mpsol.point);
+psol_branch.point(2)=psol;
+figure(2);clf;
+[xm,ym]=df_measr(0,psol_branch);
+ym.field='period';
+ym.col=1;
+ym.row=1;
+psol_branch.method.continuation.plot_measure.x=xm;
+psol_branch.method.continuation.plot_measure.y=ym;
+[psol_branch,s,r,f]=br_contn(funcs,psol_branch,20);
+xlabel('e1');ylabel('period');
+%% Figure: Period of the periodic orbits, as a function of the parameter |q12|.
+figure(3);clf;
+psol=psol_branch.point(end)
+p_pplot(psol);
+xlabel('time/period');ylabel('x1,x2');
+%% Figure: Time profile of last computed periodic orbit
+% The last point of this branch of periodic solutions has a large period,
+% and is, thus,  is close to a homoclinic orbit.
+
+%% Conversion to homoclinic
+% We convert this point to a point of homoclinic type. This yields an
+% (initially uncorrected) initial homoclinic profile.  Note that the steady
+% state is also uncorrected.
+hcli=p_tohcli(funcs,psol)
+figure(4);clf;
+p_pplot(hcli);
+xlabel('time/period');ylabel('x1,x2');
+%% Figure: Time profile of uncorrected homoclinic
+%% Correction of initial homoclinic
+% We correct this point (adjusting |e1|), after remeshing it on an
+% adaptive mesh with 50 intervals.  We plot this point before and after
+% correction, see Figure below.
+mhcli=df_mthod(funcs,'hcli');
+[hcli,s]=p_correc(funcs,hcli,ind_e1,[],mhcli.point);  % correct 
+hcli=p_remesh(hcli,3,50);                             % remesh it and
+[hcli,s]=p_correc(funcs,hcli,ind_e1,[],mhcli.point)   % correct it again
+figure(5);clf;
+p_pplot(hcli);                    % plot it after remeshing & correction
+xlabel('time/period');ylabel('x1,x2');
+%% Figure: Remeshed and corrected profile of the same homoclinic orbit
+%% Creation of initial piece of branch
+% We slightly change parameter value |e1| of this homoclinic orbit, and
+% compute a second homoclinic orbit for the new value of |e1|.  With these
+% two homoclinic solutions, we then  create a branch, which is continued in
+% two free parameters (|e1| and |q12|). Finally we reverse the branch and
+% continue it in the other direction.
+hcli_br=df_brnch(funcs,[ind_q12, ind_e1],'hcli');
+hcli_br.point=hcli;
+hcli.parameter(ind_q12)=hcli.parameter(ind_q12)+6e-3;
+[hcli,s]=p_correc(funcs,hcli,ind_e1,[],mhcli.point);
+hcli_br.point(ind_q12)=hcli;
+figure(1);
+[hcli_br,s,r,f]=br_contn(funcs,hcli_br,85)
+hcli_br=br_rvers(hcli_br);
+[hcli_br,s,r,f]=br_contn(funcs,hcli_br,10)
+xlabel('q12');ylabel('e1');
+%% Figure: Two-parameter bifurcation diagram in q12 and e1
+% Now also showing one branch of homoclinic solutions (predictions and
+% corrections).
+%% Second branch of homoclinic connections
+% We do exactly the same for the second branch of Hopf points.  Since the
+% bifurcation diagram of this system is completely symmetric, we also
+% approach homoclinic orbits when we jump onto the branches of periodic
+% solutions emanating from those Hopf points.  The commands are the same as
+% in the above case, so we simply list them, without further explanation.
+% We also do not plot the branch of periodic solutions while continuing.
+
+% branch off from Hopf point 27 and continue periodic orbits to large
+% period
+hopf=hopf2_branch.point(27);
+[psol,stp]=p_topsol(funcs,hopf,1e-2,3,27);
+mpsol=df_mthod(funcs,'psol');
+[psol,s]=p_correc(funcs,psol,ind_e1,stp,mpsol.point);
+psol_branch=df_brnch(funcs,ind_e1,'psol');
+psol_branch.point=psol;
+[psol,stp]=p_topsol(funcs,hopf,2e-2,3,27);
+[psol,s]=p_correc(funcs,psol,ind_e1,stp,mpsol.point);
+psol_branch.point(2)=psol;
+psol_branch.method.continuation.plot=0;
+psol_branch.method.continuation.plot_progress=0;
+[psol_branch,s,r,f]=br_contn(funcs,psol_branch,20);
+
+% again the last point is close to a homoclinic
+% so we convert it to a point of homoclinic type.
+
+psol=psol_branch.point(end);
+hcli=p_tohcli(funcs,psol);
+
+% correct it
+mhcli=df_mthod(funcs,'hcli');
+[hcli,s]=p_correc(funcs,hcli,ind_e1,[],mhcli.point);
+
+% remesh it and correct it
+hcli=p_remesh(hcli,3,50);
+[hcli,s]=p_correc(funcs,hcli,ind_e1,[],mhcli.point);
+
+% we now continue this second  branch of homoclinic solutions in two-parameter
+% space, and show this on the first figure.
+hcli2_br=df_brnch(funcs,[ind_q12,ind_e1],'hcli');
+hcli2_br.point=hcli;
+hcli.parameter(ind_q12)=hcli.parameter(ind_q12)+6e-3;
+[hcli,s]=p_correc(funcs,hcli,ind_e1,[],mhcli.point);
+hcli2_br.point(2)=hcli;
+figure(1);
+hcli2_br=br_contn(funcs,hcli2_br,85);
+hcli2_br=br_rvers(hcli2_br);
+[hcli2_br,s,r,f]=br_contn(funcs,hcli2_br,10)
+xlabel('q12');ylabel('e1');
+%% Figure: Two-parameter bifurcation diagram in q12 and e1
+% Now also showing two branches of homoclinic solutions (predictions and
+% corrections). They both end at the branch of fold points, as the
+% stability of the steady state changes at this point.
+
+%% Double homoclinic for symmetric system
+% At |e1=-1.3|, a double homoclinic orbit exists. This is easily shown as
+% follows. First, we look for the point on the branch where |e1=-1.3|. As
+% the following figure shows, both branches intersect the horizontal line
+% |e1=-1.3|. We find the intersection for both branches and name them
+% |i_hcli_intersect1| and |i_hcli_intersect2|.
+[dum,i_hcli_intersect]=min(abs(arrayfun(@(p)p.parameter(ind_e1),hcli_br.point)+1.3));
+[dum,i_hcli2_intersect]=min(abs(arrayfun(@(p)p.parameter(ind_e1),hcli2_br.point)+1.3));
+i_max=max([i_hcli_intersect,i_hcli2_intersect])+20;
+figure(6);
+[xm,ym]=df_measr(0,hcli_br);
+hold on;
+br_plot(hcli2_br,[],ym);
+br_plot(hcli_br,[],ym,'REPLACE_WITH_DASH_DASH');
+plot([0 i_max],[-1.3 -1.3],'r-.',...
+    i_hcli_intersect,-1.3,'kx',i_hcli2_intersect,-1.3,'kx');
+axis([0,i_max,-1.31,-1.29]);
+grid on
+xlabel('point number');ylabel('e1');
+%% Figure: Evolution of parameter |e1| vs. point number
+% along the  first (dashed) and second (solid) branches of homoclinic
+% orbits. Both approximate double homoclinic orbit are plotted below.
+figure(7);
+plot(hcli2_br.point(i_hcli2_intersect).profile(1,:),...
+    hcli2_br.point(i_hcli2_intersect).profile(2,:));
+hold on;
+plot(hcli_br.point(i_hcli_intersect).profile(1,:),...
+    hcli_br.point(i_hcli_intersect).profile(2,:));
+%% Figure: Phase portrait of the double homoclinic orbit for |e1=-1.3|.
+% The two loops are mirror images of each other.
+%% Takens-Bogdanov points
+% Both branches of homoclinic orbits emanate from a Takens-Bogdanov
+% bifurcation. As the amplitude of the homoclinic orbits along the branch
+% goes to zero, the steady state approaches a Takens-Bogdanov-point. To
+% illustrate this, the figure below shows the stability information of
+% the last computed point on the branch. We see two small eigenvalues, but
+% we are still at some distance from the Takens-Bogdanov point.
+figure(8);
+stst=p_tostst(funcs,hcli_br.point(end));
+stst=stst(1);
+mstst=df_mthod(funcs,'stst');
+stst.stability=p_stabil(funcs,stst,mstst.stability);
+p_splot(stst);
+xlabel('\Re\lambda');ylabel('\Im\lambda');
+%% Figure: Dominant eigenvalues of the saddle 
+% of the last point on the first branch of homoclinic orbits, near a
+% Takens-Bogdanov bifurcation.
+
+%% Refinement of homoclinic branch
+% In order to be able to continue the branch of homoclinic orbits closer to
+% this Takens-Bogdanov point, we form a new branch, starting from the last
+% point (with the profile remeshed on a finer mesh), and using a much
+% smaller step size.  If we would not do this, the steplength selection
+% strategy (see manual) will take too large steps, resulting in a
+% turnaround and a backward computation of the same branch.
+%
+% We continue this new branch.  During this continuation, it is possible
+% that Matlab displays a warning concerning the near-singular character of
+% the system being solved.  This is an indication that we are close to the
+% Takens-Bogdanov singularity.  We then look again to the dominant
+% eigenvalues of the last point, see figure below.
+hcli=hcli_br.point(end);
+hcli=p_remesh(hcli,3,70);
+[hcli,s]=p_correc(funcs,hcli,ind_e1,[],mhcli.point);
+to_tb_branch=df_brnch(funcs,[ind_q12,ind_e1],'hcli');
+to_tb_branch.point=hcli;
+hcli.parameter(ind_q12)=hcli.parameter(ind_q12)-1e-4;
+hcli=p_remesh(hcli,3,70);
+[hcli,s]=p_correc(funcs,hcli,ind_e1,[],mhcli.point);
+to_tb_branch.point(2)=hcli;
+
+to_tb_branch.method.continuation.plot=0;
+to_tb_branch.method.continuation.plot_progress=0;
+[to_tb_branch,s,r,f]=br_contn(funcs,to_tb_branch,40);
+
+figure(9);
+stst=p_tostst(funcs,to_tb_branch.point(end));
+stst=stst(1);
+mstst=df_mthod(funcs,'stst');
+stst.stability=p_stabil(funcs,stst,mstst.stability);
+p_splot(stst);
+xlabel('\Re\lambda');ylabel('\Im\lambda');
+%% Figure: Dominant eigenvalues of the saddle
+% of the last point on the more accurate branch of homoclinic orbits, near
+% a Takens-Bogdanov bifurcation.
+%% End of demo - save results
+save('hom_demo_results.mat');
+
+##### SOURCE END #####
+--></body></html>

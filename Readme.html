@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- $Id: Readme.html 374 2019-09-14 14:02:58Z jansieber $ -->
+<head>
+  <title>Installation instructions and Readme DDE-BIFTOOL</title>
+  <meta name="GENERATOR" content="Quanta Plus">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+<h1> DDE-BIFTOOL v. |version|</h1>
+<ul>
+<li><a href="#install">Installation</a></li>
+<li><a href="#refdoc">Reference and documentation</a></li>
+<li><a href="#authors">Contributors</a></li>
+<li><a href="#citation">Citation</a></li>
+<li><a href="#copyright">Copyright, License and No-warranty notice</a></li>
+</ul>
+<hr>
+<a name="install"></a>
+<h2>Installation</h2>
+<ul><li>Unzipping ddebiftool.zip creates a "dde_biftool" directory (named "dde_biftool") containing the subfolders:
+<ul>
+<li><a href="ddebiftool/index.html">ddebiftool</a> (basic DDE-BIFTOOL routines),</li>
+<li><a href="demos/index.html">demos</a> (example scripts illustrating the use of DDE-BIFTOOL),</li>
+<li><a href="ddebiftool_extra_psol/html/index.html">ddebiftool_extra_psol</a> (extension for local bifurcations of periodic orbits),</li>
+<li><a href="ddebiftool_extra_nmfm/index.html">ddebiftool_extra_nmfm</a> (extension for normal form coefficient computations at local bifurcations of equilibria in DDEs with constant delay),</li>
+<li><a href="ddebiftool_utilities/html/index.html">ddebiftool_utilities</a> (auxiliary functions),</li>
+<li><a href="ddebiftool_extra_rotsym/html/index.html">ddebiftool_extra_rotsym</a> (extension for systems with rotational symmetry).</li>
+<li><a href="external_tools/Readme.html">external_tools</a> (support scripts, such as a Mathematica and a Maple script for generating derivative functions used in DDE-BIFTOOL).</li>
+</ul></li>
+<li>To test the tutorial demo "<a href="demos/neuron/html/demo1.html">neuron</a>" (the instructions below assume familiarity with Matlab or octave):</li>
+<ul>
+<LI>Start Matlab (version 7.0 or higher) or octave (tested with version 3.8.1)</LI>
+<li>Inside Matlab or octave change working directory to demos/neuron using the "cd" command</li>
+<li>Execute script "rundemo" to perform all steps of the tutorial demo</li>
+<li>Compare the outputs on screen and in figure windows with the published output in <a href="demos/neuron/html/demo1.html">demos/neuron/html/demo1.html</a>.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<a name="refdoc"></a>
+<h2>Reference and documentation</h2>
+<dl>
+<dt>Current download URL on Sourceforge (including access to versions from 3.1 onward)</dt><dd><a href="https://sourceforge.net/projects/ddebiftool/"> https://sourceforge.net/projects/ddebiftool/<a></dd>
+<dt>URL of original DDE-BIFTOOL website (including access to versions
+up to
+3.0)</dt><dd><a href="http://twr.cs.kuleuven.be/research/software/delay/ddebiftool.shtml">
+http://twr.cs.kuleuven.be/research/software/delay/ddebiftool.shtml<a></dd>
+<dt>Contact (bug reports, questions etc)</dt><dd><a href="https://sourceforge.net/projects/ddebiftool/support">https://sourceforge.net/projects/ddebiftool/support</a></dd>
+<dt>Manual for version 2.0x</dt><dd>K. Engelborghs, T. Luzyanina, G. Samaey. DDE-BIFTOOL v. 2.00: 
+         a Matlab package for bifurcation analysis of delay differential
+         equations. Technical Report TW-330</dd>
+<dt>Manual for current version</dt><dd><a href="doc/manual.pdf">manual.pdf</a> (v. |version|), stored on arxiv: <a href="http://arxiv.org/abs/1406.7144">arxiv.org/abs/1406.7144</a></dd>
+<dt>Changes for v. 2.03</dt><dd><a href="doc/Addendum_Manual_DDE-BIFTOOL_2_03.pdf">Addendum_Manual_DDE-BIFTOOL_2_03.pdf</a> (by K. Verheyden)</dd>
+<dt>Changes for v. 3.0</dt><dd><a href="doc/Changes-v3.pdf">Changes-v3.pdf</a> (by J. Sieber)</dd>
+<dt>Description of extensions ddebiftool_extra_psol and ddebiftool_extra_rotsym</dt><dd><a href="doc/Extra_psol_extension.pdf">Extra_psol_extension.pdf</a> (by J. Sieber)</dd>
+<dt>Description of the extention ddebiftool_extra_nmfm<br>
+</dt>
+<dd><a href="doc/nmfm_extension_description.pdf">nmfm_extension_desctiption.pdf</a>
+        (by M. Bosschaert, B. Wage,&nbsp; Yu.A. Kuznetsov)</dd>
+<dt>Overview of documented demos</dt><dd><a href="demos/index.html">demos/index.html</a></dd>
+</dl>
+<hr>
+<a name="authors"></a>
+<h2> Contributors</h2>
+<h5>Original code and documentation (v. 2.03)</h5>
+K. Engelborghs, T. Luzyanina, G. Samaey. D. Roose, K. Verheyden<br>
+K.U.Leuven<br>
+Department of Computer Science<br>
+Celestijnenlaan 200A<br>
+B-3001 Leuven<br>
+Belgium<br>
+
+<h5>Revision for v. 3.0, 3.1.x</h5>
+<h5> Bifurcations of periodic orbits</h5>
+J. Sieber<br>
+College for Engineering, Mathematics and Physical Sciences, University of Exeter (UK),<br>
+<a href="http://emps.exeter.ac.uk/mathematics/staff/js543">emps.exeter.ac.uk/mathematics/staff/js543</a>
+
+<h5>Normal form coefficients for bifurcations of equilibria</h5>
+S. Janssens, B. Wage, M. Bosschaert, Yu.A. Kuznetsov<br>
+    Utrecht University<br>
+    Department of Mathematics<br>
+    Budapestlaan 6<br>
+3584 CD Utrecht<br>
+The Netherlands<br>
+<a href="http://www.staff.science.uu.nl/%7Ekouzn101/">www.staff.science.uu.nl/~kouzn101/ ((Y.A. Kuznetsov)</a>
+
+<h5>Revision for v. 3.2a</h5>
+<h5>Code generation with symbolic Matlab/octave toolbox</h5>
+<h5>Branching off from steady-state codimension-2 bifurcation</h5>
+Maikel Bosschaert, Jan Sieber, Y. Kuznetsov
+<h5>Automatic generation of right-hand sides and derivatives in Mathematica</h5>
+D. Pieroux (Universite Libre de Bruxelles, ULB, Belgium)
+<h5>Demo for phase oscillator</h5>
+A. Yeldesbay (Potsdam University, Germany)
+<h5>Methods and parts of implementation for neutral DDEs and demo</h5>
+D.A.W. Barton (University of Bristol, UK)<br>
+Soizic Terrien (University of Auckland, NZ)<br>
+Dennis Hessel, Svetlana Gurevich (University of M&uuml;nster, Germany)<br>
+Julien Javaloyes (University of Palma de Mallorca, Spain)<br>
+<h5>External code</h5>
+(included)<br>
+<a href="http://www.chebfun.org">chebfun</a> (legpts.m)<br>
+<a href="http://csclab.murraystate.edu/bob.pilgrim/445/munkres.html">Munkres'
+Assignment Algorithm, Modified for Rectangular Matrices</a> (munkres.m) version
+2.3 by Yi Cao at Cranfield University on 11th September 2011
+<hr>
+<a name="citation"></a>
+<h2>Citation</h2>
+Scientific publications, for which the package DDE-BIFTOOL has been used, shall mention usage of the package DDE-BIFTOOL, and shall cite the following publications to ensure proper attribution and reproducibility:
+<ul>
+<li> K. Engelborghs, T. Luzyanina, and D. Roose, Numerical bifurcation analysis of delay differential equations using DDE-BIFTOOL,  ACM Trans. Math. Softw. 28 (1), pp. 1-21, 2002.</li>
+<li> K. Engelborghs, T. Luzyanina, G. Samaey. DDE-BIFTOOL v. 2.00: a Matlab  package for bifurcation analysis of delay differential equations.  Technical Report TW-330, Department of Computer Science, K.U.Leuven,  Leuven, Belgium, 2001.</li>
+<li>[Manual of current version, permanent link]<br> J. Sieber, K. Engelborghs, T. Luzyanina, G. Samaey, D. Roose: DDE-BIFTOOL Manual - Bifurcation analysis of delay differential equations. <a href="http://arxiv.org/abs/1406.7144">arxiv.org/abs/1406.7144</a>.</li>
+<li>[Theoretical background for computation of normal form
+  coefficients, permanent link]<br clear="all">
+  Sebastiaan Janssens: On a Normalization Technique for
+  Codimension Two Bifurcations of Equilibria of Delay Differential
+  Equations. Master Thesis, Utrecht University (NL), supervised by
+  Yu.A. Kuznetsov and O. Diekmann, <a href="http://dspace.library.uu.nl/handle/1874/312252">dspace.library.uu.nl/handle/1874/312252</a>,
+  2010.<br>
+</li>
+<li>[Normal form implementation for Hopf-related cases, permanent
+  link]<br clear="all">
+Bram Wage: Normal form computations for Delay Differential Equations in DDE-BIFTOOL. Master Thesis, Utrecht University (NL), supervised by Y.A. Kuznetsov, 
+<a href="http://dspace.library.uu.nl/handle/1874/296912">dspace.library.uu.nl/handle/1874/296912</a>, 2014.<br/>
+</li>
+<li> [Switching from codim-2 bifurcations]<br clear="all">
+  M. M. Bosschaert, S. G. Janssens, Y. A. Kuznetsov: Switching to nonhyperbolic cycles from codimension two bifurcations of equilibria of delay differential equations. Preprint <a href="https://arxiv.org/abs/1903.08276">arxiv</a>, 2017.
+</li>
+<li> [Collocation of neutral DDEs]<br clear="all">
+  D.A.W. Barton, B. KrauskopF, and R. E. Wilson: Collocation schemes for periodic solutions of neutral delay
+  differential equations. Journal of Difference Equations and Applications
+  12(11):1087-1101, 2006.</li>
+</ul>
+<hr>
+<a name="copyright"></a>
+<h2>Copyright, License and No-warranty Notice</h2>
+<p>
+|license|
+</p>
+</body>
+</html>

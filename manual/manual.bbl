@@ -1,0 +1,305 @@
+\begin{thebibliography}{10}
+
+\bibitem{Argy94}
+J.~Argyris, G.~Faust, and M.~Haase.
+\newblock {\em An Exploration of Chaos --- An Introduction for Natural
+  Scientists and Engineers}.
+\newblock North Holland Amsterdam, 1994.
+
+\bibitem{Azbe91}
+N.~V. Azbelev, V.~P. Maksimov, and L.~F. Rakhmatullina.
+\newblock {\em Introduction to the Theory of Functional Differential
+  Equations}.
+\newblock Nauka, Moscow, 1991.
+\newblock (in Russian).
+
+\bibitem{Barton06}
+D.A.W. Barton, B.~Krauskopf, and R.E. Wilson.
+\newblock {Collocation schemes for periodic solutions of neutral delay
+  differential equations}.
+\newblock {\em Journal of Difference Equations and Applications},
+  12(11):1087--1101, 2006.
+
+\bibitem{Bell63}
+R.~Bellman and K.~L. Cooke.
+\newblock {\em Differential-Difference Equations}, volume~6 of {\em Mathematics
+  in science and engineering}.
+\newblock {A}cademic {P}ress, 1963.
+
+\bibitem{breda09}
+D.~Breda, S.~Maset, and R.~Vermiglio.
+\newblock {TRACE-DDE}{\normalfont\rmfamily :} a tool for robust analysis and
+  characteristic equations for delay differential equations.
+\newblock In J.J. Loiseau, W.~Michiels, S.-I. Niculescu, and R.~Sipahi,
+  editors, {\em Topics in Time Delay Systems{\normalfont\rmfamily :} Analysis,
+  Algorithms, and Control}, volume 388 of {\em Lecture Notes in Control and
+  Information Sciences}, pages 145--155, New York, 2009. Springer.
+
+\bibitem{Chow82}
+S.-N. Chow and J.~K. Hale.
+\newblock {\em Methods of Bifurcation Theory}.
+\newblock Springer-Verlag, 1982.
+
+\bibitem{Thom97}
+S.~P. Corwin, D.~Sarafyan, and S.~Thompson.
+\newblock {DKLAG6}: A code based on continuously imbedded sixth order
+  {R}unge-{K}utta methods for the solution of state dependent functional
+  differential equations.
+\newblock {\em Applied Numerical Mathematics}, 24(2--3):319--330, 1997.
+
+\bibitem{DS13}
+H.~Dankowicz and F.~Schilder.
+\newblock {\em Recipes for Continuation}.
+\newblock Computer Science and Engineering. SIAM, 2013.
+
+\bibitem{DGK03}
+A~Dhooge, W~Govaerts, and Y~A Kuznetsov.
+\newblock {{MatCont}{\normalfont\rmfamily :} A {Matlab} package for numerical
+  bifurcation analysis of {ODEs}}.
+\newblock {\em ACM Transactions on Mathematical Software}, 29(2):141--164,
+  2003.
+
+\bibitem{Diek95}
+O.~Diekmann, S.~A. van Gils, S.~M. Verduyn~Lunel, and H.-O. Walther.
+\newblock {\em Delay Equations: {Functional-,} {Complex-,} and Nonlinear
+  Analysis}, volume 110 of {\em Applied Mathematical Sciences}.
+\newblock Springer-Verlag, 1995.
+
+\bibitem{Doed07}
+E~J Doedel.
+\newblock {Lecture notes on numerical analysis of nonlinear equations}.
+\newblock In B~Krauskopf, H~M Osinga, and J~Gal\'{a}n-Vioque, editors, {\em
+  Numerical Continuation Methods for Dynamical Systems: Path following and
+  boundary value problems}, pages 1--49. Springer-{V}erlag, Dordrecht, 2007.
+
+\bibitem{Doed99}
+E.~J. Doedel, A.~R. Champneys, T.~F. Fairgrieve, Y.~A. Kuznetsov, B.~Sandstede,
+  and X.~Wang.
+\newblock {\em {AUTO97}: Continuation and bifurcation software for ordinary
+  differential equations; available by {FTP} from {ftp.cs.concordia.ca} in
+  directory {pub/doedel/auto}.}
+
+\bibitem{Driv77}
+R.~D. Driver.
+\newblock {\em Ordinary and Delay Differential Equations}, volume~20 of {\em
+  Applied Mathematical Science}.
+\newblock Springer-Verlag, 1977.
+
+\bibitem{El's73}
+L.~E. El'sgol'ts and S.~B. Norkin.
+\newblock {\em Introduction to the Theory and Application of Differential
+  Equations with Deviating Arguments}, volume 105 of {\em Mathematics in
+  science and engineering}.
+\newblock {A}cademic {P}ress, 1973.
+
+\bibitem{Enge00}
+K.~Engelborghs.
+\newblock {\em Numerical Bifurcation Analysis of Delay Differential Equations}.
+\newblock PhD thesis, Department of Computer Science, Katholieke Universiteit
+  Leuven, Leuven, Belgium, May 2000.
+
+\bibitem{en_d01}
+K.~Engelborghs and E.~Doedel.
+\newblock Stability of piecewise polynomial collocation for computing periodic
+  solutions of delay differential equations.
+\newblock {\em Numerische Mathematik}, 2001.
+\newblock Accepted.
+
+\bibitem{Enge99b}
+K.~Engelborghs, T.~Luzyanina, K.~J. in~{\'{}}t~Hout, and D.~Roose.
+\newblock Collocation methods for the computation of periodic solutions of
+  delay differential equations.
+\newblock {\em SIAM J. Sci. Comput.}, 22:1593--1609, 2000.
+
+\bibitem{Enge99a}
+K.~Engelborghs and D.~Roose.
+\newblock Numerical computation of stability and detection of {H}opf
+  bifurcations of steady state solutions of delay differential equations.
+\newblock {\em Advances in Computational Mathematics}, 10(3--4):271--289, 1999.
+
+\bibitem{engel01}
+K.~Engelborghs and D.~Roose.
+\newblock On stability of {LMS}-methods and characteristic roots of delay
+  differential equations.
+\newblock {\em SIAM J. Num. Analysis}, 2001.
+\newblock Accepted.
+
+\bibitem{Enri97}
+W.~H. Enright and H.~Hayashi.
+\newblock A delay differential equation solver based on a continuous
+  {R}unge-{K}utta method with defect control.
+\newblock {\em Numer. Algorithms}, 16:349--364, 1997.
+
+\bibitem{Erme98}
+B.~Ermentrout.
+\newblock {\em {XPPAUT}3.91 - The differential equations tool}.
+\newblock University of Pittsburgh, Pittsburgh,
+  (http://www.pitt.edu/{$\sim$}phase/) 1998.
+
+\bibitem{G00}
+W.J.F. Govaerts.
+\newblock {\em Numerical Methods for Bifurcations of Dynamical Equilibria}.
+\newblock Miscellaneous Titles in Applied Mathematics Series. SIAM, 2000.
+
+\bibitem{Guck83}
+J.~Guckenheimer and P.~Holmes.
+\newblock {\em Nonlinear Oscillations, Dynamical Systems and Bifurcations of
+  Vector Fields}.
+\newblock Springer-Verlag New York, 1983.
+
+\bibitem{Gugl07}
+N.~Guglielmi and E.~Hairer.
+\newblock Stiff delay equations.
+\newblock {\em Scholarpedia}, 2(11):2850, 2007.
+
+\bibitem{Hale77a}
+J.~K. Hale.
+\newblock {\em Theory of Functional Differential Equations}, volume~3 of {\em
+  Applied Mathematical Sciences}.
+\newblock Springer-Verlag, 1977.
+
+\bibitem{Hale93}
+J.~K. Hale and S.~M. Verduyn~Lunel.
+\newblock {\em Introduction to Functional Differential Equations}, volume~99 of
+  {\em Applied Mathematical Sciences}.
+\newblock Springer-Verlag, 1993.
+
+\bibitem{HKWW06}
+F.~Hartung, T.~Krisztin, H.-O. Walther, and J.~Wu.
+\newblock Functional differential equations with state-dependent
+  delays{\normalfont\rmfamily :} theory and applications.
+\newblock In P.~Dr{\'a}bek, A.~Ca{\~n}ada, and A.~Fonda, editors, {\em Handbook
+  of Differential Equations{\normalfont\rmfamily :} Ordinary Differential
+  Equations}, volume~3, chapter~5, pages 435--545. North-Holland, 2006.
+
+\bibitem{Hong96}
+T.~Hong-Jiong and K.~Jiao-Xun.
+\newblock The numerical stability of linear multistep methods for delay
+  differential equations with many delays.
+\newblock {\em SIAM Journal of Numerical Analysis}, 33(3):883--889, June 1996.
+
+\bibitem{Mat00}
+The~MathWorks Inc.
+\newblock {MATLAB}.
+\newblock Natick, Massachusetts, United States.
+
+\bibitem{Kolm92}
+V.~Kolmanovskii and A.~Myshkis.
+\newblock {\em Applied Theory of Functional Differential Equations}, volume~85
+  of {\em Mathematics and Its Applications}.
+\newblock Kluwer Academic Publishers, 1992.
+
+\bibitem{Kolm99}
+V.~B. Kolmanovskii and A.~Myshkis.
+\newblock {\em Introduction to the theory and application of functional
+  differential equations}, volume 463 of {\em Mathematics and its
+  applications}.
+\newblock Kluwer Academic Publishers, 1999.
+
+\bibitem{Kolm86}
+V.~B. Kolmanovskii and V.~R. Nosov.
+\newblock {\em Stability of functional differential equations}, volume 180 of
+  {\em Mathematics in Science and Engineering}.
+\newblock Academic Press, 1986.
+
+\bibitem{Kuzn04}
+Y.~A Kuznetsov.
+\newblock {\em {Elements of Applied Bifurcation Theory}}, volume 112 of {\em
+  Applied Mathematical Sciences}.
+\newblock Springer-Verlag, New York, third edition, 2004.
+
+\bibitem{luz01}
+T.~Luzyanina, K.~Engelborghs, and D.~Roose.
+\newblock Numerical bifurcation analysis of differential equations with
+  state-dependent delay.
+\newblock {\em Internat. J. Bifur. Chaos}, 11(3):737--754, 2001.
+
+\bibitem{Luzy96}
+T.~Luzyanina and D.~Roose.
+\newblock Numerical stability analysis and computation of {Hopf} bifurcation
+  points for delay differential equations.
+\newblock {\em Journal of Computational and Applied Mathematics}, 72:379--392,
+  1996.
+
+\bibitem{MN11}
+J.~Mallet-Paret and R.~D. Nussbaum.
+\newblock Stability of periodic solutions of state-dependent delay-differential
+  equations.
+\newblock {\em Journal of Differential Equations}, 250(11):4085 -- 4103, 2011.
+
+\bibitem{Paul95}
+C.~A.~H. Paul.
+\newblock A user-guide to {A}rchi - an explicit {R}unge-{K}utta code for
+  solving delay and neutral differential equations.
+\newblock Technical Report 283, The University of Manchester, Manchester Center
+  for Computational Mathematics, December 1997.
+
+\bibitem{RN17Julia}
+C.~Rackauckas and Q.~Nie.
+\newblock {DifferentialEquations.jl} - a performant and feature-rich ecosystem
+  for solving differential equations in {J}ulia.
+\newblock {\em Journal of Open Research Software}, 5(1):15, 2017.
+\newblock http://doi.org/10.5334/jors.151.
+
+\bibitem{RS07}
+D.~Roose and R.~Szalai.
+\newblock {Continuation and bifurcation analysis of delay differential
+  equations}.
+\newblock In B~Krauskopf, H~M Osinga, and J~Gal\'{a}n-Vioque, editors, {\em
+  Numerical Continuation Methods for Dynamical Systems{\normalfont\rmfamily :}
+  Path following and boundary value problems}, pages 51--75. Springer-{V}erlag,
+  Dordrecht, 2007.
+
+\bibitem{homoclinic}
+G.~Samaey, K.~Engelborghs, and D.~Roose.
+\newblock {N}umerical computation of connecting orbits in delay differential
+  equations.
+\newblock Report TW 329, Department of Computer Science, K.U.Leuven, Leuven,
+  Belgium, October 2001.
+
+\bibitem{Seyd94}
+R.~Seydel.
+\newblock {\em Practical Bifurcation and Stability Analysis --- From
+  Equilibrium to Chaos}, volume~5 of {\em Interdisciplinary Applied
+  Mathematics}.
+\newblock Springer-Verlag Berlin, 2 edition, 1994.
+
+\bibitem{Sham00}
+L.~F. Shampine and S.~Thompson.
+\newblock Solving delay differential equations with dde23.
+\newblock Submitted, 2000.
+
+\bibitem{Shay99}
+L.~P. Shayer and S.~A. Campbell.
+\newblock Stability, bifurcation and multistability in a system of two coupled
+  neurons with multiple time delays.
+\newblock {\em SIAM J. Applied Mathematics}, 61(2):673--700, 2000.
+
+\bibitem{S12}
+J.~Sieber.
+\newblock Finding periodic orbits in state-dependent delay differential
+  equations as roots of algebraic equations.
+\newblock {\em Discrete and Continuous Dynamical Systems A}, 32(8):2607--2651,
+  2012.
+
+\bibitem{SSH06}
+R.~Szalai, G.~St\'{e}p\'{a}n, and S.J. Hogan.
+\newblock {Continuation of bifurcations in periodic delay differential
+  equations using characteristic matrices}.
+\newblock {\em SIAM Journal on Scientific Computing}, 28(4):1301--1317, 2006.
+
+\bibitem{VLR08}
+K.~Verheyden, T.~Luzyanina, and D.~Roose.
+\newblock Efficient computation of characteristic roots of delay differential
+  equations using lms methods,.
+\newblock {\em Journal of Computational and Applied Mathematics}, 214:209--226,
+  2008.
+
+\bibitem{W14}
+Bram Wage.
+\newblock Normal form computations for delay differential equations in
+  {DDE-BIFTOOL}.
+\newblock Master's thesis, Utrecht University, 2014.
+\newblock supervised by Y.A. Kuznetsov.
+
+\end{thebibliography}

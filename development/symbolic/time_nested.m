@@ -1,0 +1,3 @@
+pf_ind0=find(abs(diff(pernunst))==1,1,'last');
+[tpfuncs,tpbr,tsuc]=SetupPOfold(f1,per,pf_ind0,'contpar',[1,2],'dir',1,...
+    'step',1e-3,pbounds{:},'print_residual_info',1);

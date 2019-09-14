@@ -1,0 +1,678 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>DDE-BIFTOOL  state-dependent delays sd-demo</title><meta name="generator" content="MATLAB 9.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-07-14"><meta name="DC.source" content="sd_demo.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>DDE-BIFTOOL  state-dependent delays sd-demo</h1><!--introduction--><p>This demo is an illustrative example, showing how to perform bifurcation analysis for a system with state-dependent delays.</p><p>The demo shows</p><div><ul><li>which functions the user has to provide and how to put them into the structure <tt>funcs</tt></li><li>continuation of equilibria and their linear stability,</li><li>detection and continuation of Hopf bifurcations,</li><li>branching off from Hopf bifurcation and continuation of periodic orbits</li></ul></div><p>
+$Id: sd_demo.html 362 2019-07-14 15:49:40Z jansieber $
+</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Differential equations</a></li><li><a href="#3">Specification of state-dependent delays</a></li><li><a href="#4">The number of delays</a></li><li><a href="#5">Assignment of user function fields</a></li><li><a href="#6">Automatic generation of right-hand side and derivatives</a></li><li><a href="#7">Select the r.h.s. to be tested</a></li><li><a href="#8">Define parameter names</a></li><li><a href="#9">Continuation and stability of Equilibria for state-dependent delays</a></li><li><a href="#10">Initial guess for steady state</a></li><li><a href="#11">Continuation of equilibria</a></li><li><a href="#12">Figure: branch of equilibria</a></li><li><a href="#13">Stability of equilibria and eigenvalues of linearization</a></li><li><a href="#14">Figure: Eigenvalues of linearization along branch</a></li><li><a href="#15">Detection and continuation of Hopf bifurcations</a></li><li><a href="#16">Continuation of Hopf points in two parameters</a></li><li><a href="#17">Continuation and stability of periodic orbits</a></li><li><a href="#18">Constructing an initial small-amplitude orbit near a Hopf bifurcation</a></li><li><a href="#19">Stopping criterion</a></li><li><a href="#20">Figure: Periodic orbit with state-dependent delay equal to 0</a></li><li><a href="#21">A second family of periodic orbits - correction of initial orbit</a></li><li><a href="#22">Figure: delay <img src="sd_demo_eq18018902420273956757.png" alt="$\tau_6=x_5$"> at last point of branch</a></li><li><a href="#23">Figure: Floquet multipliers of last periodic orbit in <tt>psol2br</tt></a></li><li><a href="#24">Save results, end of demo <tt>sd_demo</tt></a></li></ul></div><h2 id="1">Differential equations</h2><p>The differential equations for this example are</p><p><img src="sd_demo_eq04716780370712167111.png" alt="$$\begin{array}{l}&#xA;\frac{\mathrm{d}}{\mathrm{d} t}x_1(t)=\frac{1}{p_1+x_2(t)}\left(1-p_2x_1(t)x_1(t-\tau_3)&#xA;x_3(t-\tau_3)+p_3x_1(t-\tau_1)x_2(t-\tau_2)\right),\\&#xA;\frac{\mathrm{d}}{\mathrm{d} t}x_2(t)=\frac{p_4 x_1(t)}{p_1+x_2(t)}+&#xA;        p_5\tanh(x_2(t-\tau_5))-1,\\&#xA;\frac{\mathrm{d}}{\mathrm{d} t}x_3(t)=p_6(x_2(t)-x_3(t))-p_7(x_1(t-\tau_6)-x_2(t-\tau_4))e^{-p_8 \tau_5},\\&#xA;\frac{\mathrm{d}}{\mathrm{d} t}x_4(t)=x_1(t-\tau_4)e^{-p_1 \tau_5} -0.1,\\&#xA;\frac{\mathrm{d}}{\mathrm{d} t}x_5(t)=3(x_1(t-\tau_2)-x_5(t))-p_9,&#xA;\end{array} $$"></p><p>where <img src="sd_demo_eq18422924223242836946.png" alt="$\tau_1$"> and <img src="sd_demo_eq10838569786326464271.png" alt="$\tau_2$"> are constant delays and</p><p><img src="sd_demo_eq05081440838560941636.png" alt="$$&#xA;\begin{array}{l}&#xA;\tau_3=2+p_5\tau_1x_2(t)x_2(t-\tau_1),\\&#xA;\tau_4=1-\frac{1}{1+x_1(t)x_2(t-\tau_2)},\\&#xA;\tau_5=x_4(t),\\&#xA;\tau_6=x_5(t).&#xA;\end{array}&#xA;$$"></p><p>This system has five components <img src="sd_demo_eq15998228817611113019.png" alt="$(x_1,\ldots,x_5)$">, six delays <img src="sd_demo_eq03351112231038717199.png" alt="$(\tau_1,\ldots,\tau_6)$"> and eleven parameters <img src="sd_demo_eq07305098482497353881.png" alt="$(p_1,\ldots,p_{11})$">, where <img src="sd_demo_eq15857361121972971073.png" alt="$p_{10}=\tau_1$"> and <img src="sd_demo_eq01312249676493503629.png" alt="$p_{11}=\tau_2$">.</p><pre class="codeinput">clear;                           <span class="comment">% clear variables</span>
+<span class="comment">%close all;                       % close figures</span>
+base=[pwd(),<span class="string">'/../../'</span>];
+addpath([base,<span class="string">'ddebiftool/'</span>],<span class="keyword">...</span><span class="comment">  % add ddebiftool folders to path</span>
+    [base,<span class="string">'ddebiftool_extra_nmfm'</span>],<span class="keyword">...</span>
+    [base,<span class="string">'ddebiftool_extra_psol'</span>],<span class="keyword">...</span>
+    [base,<span class="string">'ddebiftool_utilities'</span>]);
+<span class="comment">%#ok&lt;*ASGLU,*NOPTS,*NASGU&gt;</span>
+</pre><h2 id="3">Specification of state-dependent delays</h2><p>The function <tt>sys_tau</tt> returns the value of the delay. <b>This is in contrast to</b> the definition of <tt>sys_tau</tt> for constant delays, where the delay's <i>position</i> in the parameter list is returned. For state-dependent delays, the header of the function <tt>sys_tau</tt>, defining the delays, has the format (see <a href="sd_tau.html">sd_tau.html</a> for the demo example):</p><pre class="language-matlab"><span class="keyword">function</span> tau=sys_tau(k,xx,par)
+</pre><p>it defines the <tt>k</tt> th delay <img src="sd_demo_eq13239521968568604028.png" alt="$\tau_k$">, which is allowed to depend on <tt>xx(:,1:k)</tt> (the states <img src="sd_demo_eq14833433867325483769.png" alt="$x(t)$">,..., <img src="sd_demo_eq01263991250146467050.png" alt="$x(t-\tau_{k-1})$">) and the parameter <tt>par</tt>. This definition of delays permits the user to create arbitrary levels of nesting. Note that, when <tt>sys_tau</tt> is called with first argument <tt>k</tt>, its second argument <tt>xx</tt> has column dimension <tt>k</tt>.</p><p><b>Note</b> The order of the delays corresponds to the order in which they appear in <tt>xx</tt> as passed to the functions <tt>sys_rhs</tt> and <tt>sys_deri</tt>.</p><p>Optionally, the user is encouraged to provide a function that  supplies derivatives of all delays with respect to the state and parameters. Its functionality is similar to the function <tt>sys_deri</tt>. Its header has the format</p><pre class="language-matlab"><span class="keyword">function</span> dtau=sys_dtau(delay_nr,xx,par,nx,np)
+</pre><p>Its format is similar to <tt>sys_deri</tt>. The result <tt>dtau</tt> is a scalar, vector or matrix of partial derivatives of the delay with number <tt>delay_nr</tt> which depends on the type of derivative requested via <tt>nx</tt> and <tt>np</tt>. See <a href="sd_dtau.html">sd_dtau.html</a> for an example.</p><h2 id="4">The number of delays</h2><p>For systems with state-dependent delays DDE-Biftool requires a separate function that provides the number of delays:</p><pre class="language-matlab"><span class="keyword">function</span> n=sys_ntau()
+</pre><p>returns the number <tt>n</tt> of delays. Accordingly, the argument <tt>xx</tt> of the right-hand side <tt>sys_rhs</tt> will have the column dimension <tt>n+1</tt>. The corresponding field in the array <tt>funcs</tt> defining the user functions is named <tt>'sys_ntau'</tt>.</p><h2 id="5">Assignment of user function fields</h2><p>The functions can have arbitrary names or can be anonymous. The above names are the field names in the structure containing th euser functions. Assign these fields automatically using <tt>set_funcs</tt>. Note that the flag <tt>tp_del</tt> is set to 1 for state-dependent delays. This is determined inside <tt>set_funcs</tt> using a try-catch enclosed call <tt>sys_tau()</tt>. Derivatives are optional and will be approximated by finite differences if not provided.</p><pre class="codeinput">ufuncs=set_funcs(<span class="string">'sys_rhs'</span>,@sd_rhs,<span class="string">'sys_tau'</span>,@sd_tau,<span class="keyword">...</span>
+    <span class="string">'sys_ntau'</span>,@()6,<span class="string">'sys_deri'</span>,@sd_deri,<span class="string">'sys_dtau'</span>,@sd_dtau,<span class="string">'x_vectorized'</span>,true)
+nfuncs=set_funcs(<span class="string">'sys_rhs'</span>,@sd_rhs,<span class="string">'sys_tau'</span>,@sd_tau,<span class="keyword">...</span>
+    <span class="string">'sys_ntau'</span>,@()6,<span class="string">'x_vectorized'</span>,true)
+</pre><pre class="codeoutput">ufuncs = 
+  struct with fields:
+
+                 sys_rhs: [function_handle]
+                sys_ntau: @()6
+                 sys_tau: [function_handle]
+                sys_cond: @dummy_cond
+                sys_deri: [function_handle]
+                sys_dtau: [function_handle]
+              sys_mfderi: {}
+             sys_dirderi: []
+             sys_dirdtau: []
+            x_vectorized: 1
+            p_vectorized: 0
+      sys_cond_reference: 0
+                  tp_del: 1
+       sys_deri_provided: 2
+    sys_dirderi_provided: 0
+       sys_dtau_provided: 2
+    sys_dirdtau_provided: 0
+nfuncs = 
+  struct with fields:
+
+                 sys_rhs: [function_handle]
+                sys_ntau: @()6
+                 sys_tau: [function_handle]
+                sys_cond: @dummy_cond
+                sys_deri: [function_handle]
+                sys_dtau: [function_handle]
+              sys_mfderi: {}
+             sys_dirderi: {[function_handle]  [function_handle]}
+             sys_dirdtau: {[function_handle]  [function_handle]}
+            x_vectorized: 1
+            p_vectorized: 0
+      sys_cond_reference: 0
+                  tp_del: 1
+       sys_deri_provided: 0
+    sys_dirderi_provided: 0
+       sys_dtau_provided: 0
+    sys_dirdtau_provided: 0
+</pre><h2 id="6">Automatic generation of right-hand side and derivatives</h2><p>Alternatively, one may generate the code for the right-hand side, the delays and their derivatives using the symbolic toolbox. See <a href="gen_sym_sd_demo.html">gen_sym_sd_demo.html</a>. Then the function definition structure can be defined using te wrapper <tt>set_symfuncs</tt>:</p><pre class="codeinput">sfuncs=set_symfuncs(<span class="string">'sym_sd_demo'</span>)
+</pre><pre class="codeoutput">sfuncs = 
+  struct with fields:
+
+                 sys_rhs: [function_handle]
+                sys_ntau: @()ntau
+                 sys_tau: [function_handle]
+                sys_cond: @dummy_cond
+                sys_deri: [function_handle]
+                sys_dtau: [function_handle]
+              sys_mfderi: {}
+             sys_dirderi: {1&times;5 cell}
+             sys_dirdtau: {1&times;5 cell}
+            x_vectorized: 1
+            p_vectorized: 1
+      sys_cond_reference: 0
+                  tp_del: 1
+       sys_deri_provided: 2
+    sys_dirderi_provided: 5
+       sys_dtau_provided: 2
+    sys_dirdtau_provided: 5
+</pre><h2 id="7">Select the r.h.s. to be tested</h2><pre class="codeinput">funcs=sfuncs;
+</pre><h2 id="8">Define parameter names</h2><pre class="codeinput">ntau=6;
+parnames=[strcat(<span class="string">'p'</span>,num2cell(<span class="string">'1'</span>:<span class="string">'9'</span>)),{<span class="string">'tau1'</span>,<span class="string">'tau2'</span>}];
+cind=[parnames;num2cell(1:length(parnames))];
+ip=struct(cind{:});
+</pre><h2 id="9">Continuation and stability of Equilibria for state-dependent delays</h2><p>Once the user-defined functions are prepared, DDE-Biftool can compute and continue equilibria of the DDE, and compute their linearized stability, thus detecting local bifurcations.</p><h2 id="10">Initial guess for steady state</h2><p>We define a steady state solution using the parameter values listed in <tt>p0</tt> and an initial guess given as named argument <tt>'x'</tt> to <tt>SetupStst</tt>. For the first steady-state branch the continuation parameter will be <tt>p5</tt> and it will be varied between <tt>-1</tt> and <tt>1</tt>. Note that a <tt>0</tt> in the first entry of the argument <tt>'max_step'</tt> refers to the predictor stepsize.</p><pre class="codeinput">p0([ip.p1,ip.p2,ip.p3,ip.p4,ip.p5,ip.p6,ip.p7,ip.p8,ip.p9,ip.tau1,ip.tau2])=<span class="keyword">...</span>
+   [  4.5, 0.04, -1.4,    6,-0.45,-0.01,    3,  0.3,  0.1,      1,    0.2];
+[stbr,suc]=SetupStst(funcs,<span class="string">'x'</span>,[1.4; 1.5; -25; 0.6; 1.4],<span class="string">'parameter'</span>,p0,<span class="keyword">...</span>
+    <span class="string">'contpar'</span>,ip.p5,<span class="string">'step'</span>,-0.1,<span class="keyword">...</span>
+    <span class="string">'min_bound'</span>,[ip.p5,-1],<span class="string">'max_bound'</span>,[ip.p5,1],<span class="string">'max_step'</span>,[0,0.1])
+</pre><pre class="codeoutput">stbr = 
+  struct with fields:
+
+       method: [1&times;1 struct]
+    parameter: [1&times;1 struct]
+        point: [1&times;2 struct]
+suc =
+  logical
+   1
+</pre><h2 id="11">Continuation of equilibria</h2><p>With two starting points and suitable method parameters we continue the branch <tt>stbr</tt> (with plotting) versus parameter <img src="sd_demo_eq10321396722993148096.png" alt="$p_5$">, see figure below. During continuation, 12 points were successfully computed before the state-dependent delay function <img src="sd_demo_eq11947981505643556596.png" alt="$\tau_3$"> crossed zero (signalled by a warning). The computed point with <img src="sd_demo_eq00146248339774845542.png" alt="$\tau_3<0$"> was not accepted. Instead, the point corresponding to <img src="sd_demo_eq15980644222376899449.png" alt="$\tau_3=0$"> was computed, see figure below. We check the value of <img src="sd_demo_eq11947981505643556596.png" alt="$\tau_3$"> at the last point in the branch using function <tt>p_tau</tt>.</p><p>In similar cases, it might happen that the computed value of a delay is a very small negative value. Because stability cannot be computed when there are negative delays, small negative delay values are automatically neglected when their value is larger than the value defined in the field <tt>method.stability.delay_accuracy</tt>.</p><pre class="codeinput">figure(1); clf;
+[stbr,s,f,r]=br_contn(funcs,stbr,50) <span class="comment">% continue with plotting the branch</span>
+hold <span class="string">on</span>
+plot(stbr.point(end).parameter(ip.p5),stbr.point(end).x(1),<span class="string">'o'</span>,<span class="string">'linewidth'</span>,2);
+xlabel(<span class="string">'p5'</span>);ylabel(<span class="string">'x(1)'</span>);
+fprintf(<span class="string">'delay %d=%g\n'</span>,3,p_tau(funcs,stbr.point(end),3));
+</pre><pre class="codeoutput">BR_CONTN warning: delay number_3 becomes negative.
+stbr = 
+  struct with fields:
+
+       method: [1&times;1 struct]
+    parameter: [1&times;1 struct]
+        point: [1&times;38 struct]
+s =
+    37
+f =
+     0
+r =
+     0
+delay 3=6.66134e-16
+</pre><img vspace="5" hspace="5" src="sd_demo_01.png" alt=""> <h2 id="12">Figure: branch of equilibria</h2><p>Output of <tt>br_contn</tt>: predictions and corrections after computation of a branch of steady state solutions versus parameter <img src="sd_demo_eq10321396722993148096.png" alt="$p_5$">. <tt>o</tt> - the last computed point in the branch (corresponding to <img src="sd_demo_eq15980644222376899449.png" alt="$\tau_3=0$">)</p><h2 id="13">Stability of equilibria and eigenvalues of linearization</h2><p>We compute the stability along the branch and after obtaining suitable measure structures we plot the real part of the corrected roots of the characteristic equation along the branch versus the point numbers, see figure below. From this figure it is not clear which real parts correspond to real roots respectively complex pairs of roots. We check the first point with unstable eigenvalues</p><pre class="codeinput">[nunst_stbr,~,~,stbr.point]=GetStability(stbr,<span class="string">'funcs'</span>,funcs);
+[xm,ym]=df_measr(1,stbr);
+figure(2); clf;
+br_plot(stbr,[],ym,<span class="string">'b.-'</span>);   <span class="comment">% stability along branch versus point number</span>
+<span class="comment">%br_plot(branch1,[],ym,'b.');</span>
+plot([0 10],[0 0],<span class="string">'-.'</span>);      <span class="comment">% axis</span>
+grid <span class="string">on</span>
+unst1=find(nunst_stbr&gt;0,1,<span class="string">'first'</span>);
+stbr.point(unst1).stability.l0 <span class="comment">% stability of point 5</span>
+xlabel(<span class="string">'point number'</span>);ylabel(<span class="string">'\Re(\lambda)'</span>);
+</pre><pre class="codeoutput">ans =
+  Columns 1 through 2
+   0.00088389 +    0.55005i   0.00088389 -    0.55005i
+  Columns 3 through 4
+    -0.095504 +          0i     -0.44985 +          0i
+  Column 5
+       -1.768 +          0i
+</pre><img vspace="5" hspace="5" src="sd_demo_02.png" alt=""> <h2 id="14">Figure: Eigenvalues of linearization along branch</h2><p>Real parts of the corrected roots of the characteristic equation along the branch.</p><h2 id="15">Detection and continuation of Hopf bifurcations</h2><p>The eigenvalues of the linearized system along branches of equilibria indicate potential bifurcations. In this demo complex conjugate pairs of eigenvalues cross the imaginary axis, corresponding to Hopf bifurcations. The convenience function <tt>LocateSpecialPoints</tt> refines the branch to locate the Hopf point more accurately and determines criticality (the first Lyapunov coefficient <tt>L1</tt>)</p><pre class="codeinput">[stbr_wbifs,tests,stbif_ind,stbif_type]=LocateSpecialPoints(funcs,stbr)
+</pre><pre class="codeoutput">StstCodimension1: calculate stability if not yet present
+StstCodimension1: (provisional) 1 Hopf  detected.
+br_insert: detected 1 of 1: hopf. Normalform:
+    L1: 0.033365
+stbr_wbifs = 
+  struct with fields:
+
+       method: [1&times;1 struct]
+    parameter: [1&times;1 struct]
+        point: [1&times;39 struct]
+tests = 
+  struct with fields:
+
+    fold: [1&times;39 double]
+    hopf: [1&times;39 double]
+stbif_ind =
+    16
+stbif_type =
+  1&times;1 cell array
+    {'hopf'}
+</pre><h2 id="16">Continuation of Hopf points in two parameters</h2><p>The demo will proceed to continue two of these Hopf bifurcations in two system parameters <img src="sd_demo_eq03052410687656979467.png" alt="$p_2$"> and <img src="sd_demo_eq10929678771676958296.png" alt="$p_9$">. We select the Hopf point and turn it into a Hopf bifurcation point type. Then we correct the Hopf-like point using appropriate method parameters and one free parameter (<img src="sd_demo_eq10321396722993148096.png" alt="$p_5$">).</p><pre class="codeinput">[hopfbr,suc]=SetupHopf(funcs,stbr_wbifs,stbif_ind,<span class="string">'contpar'</span>,[ip.p2,ip.p9],<span class="keyword">...</span>
+    <span class="string">'step'</span>,0.1,<span class="string">'dir'</span>,ip.p9,<span class="keyword">...</span>
+    <span class="string">'min_bound'</span>,[ip.p2,-1; ip.p9,-1],<span class="string">'max_bound'</span>,[ip.p2,0.053; ip.p9,10],<span class="keyword">...</span>
+    <span class="string">'max_step'</span>,[ip.p2,1;ip.p9,1])
+figure(3); clf;
+[hopfbr,s,f,r]=br_contn(funcs,hopfbr,30); <span class="comment">% continue with plotting Hopf branch</span>
+xlabel(<span class="string">'p2'</span>);ylabel(<span class="string">'p9'</span>);
+</pre><pre class="codeoutput">hopfbr = 
+  struct with fields:
+
+       method: [1&times;1 struct]
+    parameter: [1&times;1 struct]
+        point: [1&times;2 struct]
+suc =
+  logical
+   1
+BR_CONTN warning: boundary hit.
+</pre><img vspace="5" hspace="5" src="sd_demo_03.png" alt=""> <h2 id="17">Continuation and stability of periodic orbits</h2><p>DDE-biftool computes one-parameter families of periodic orbits (automatically determining their period) by solving periodic boundary-value problems approximately with collocation schemes. A typical starting point for a family of periodic orbits is a Hopf bifurcation.</p><h2 id="18">Constructing an initial small-amplitude orbit near a Hopf bifurcation</h2><p>We use the Hopf point in the <tt>stbr</tt> branch to construct a small amplitude (<tt>1e-1</tt>) periodic solution on an equidistant mesh of <tt>15</tt> intervals with piecewise polynomial degree <tt>3</tt> (these are optional arguments of <tt>SetupPsol</tt>. If we plan to change the continuation parameter, we have to explicitly provide it as the optional parameter <tt>'contpar'</tt>.</p><pre class="codeinput">[psolbr,suc]=SetupPsol(funcs,stbr_wbifs,stbif_ind,<span class="string">'contpar'</span>,ip.tau1,<span class="keyword">...</span>
+    <span class="string">'radius'</span>,0.1,<span class="string">'intervals'</span>,15,<span class="string">'degree'</span>,3,<span class="keyword">...</span>
+    <span class="string">'max_bound'</span>,[ip.tau1,10],<span class="string">'min_bound'</span>,[ip.tau1,0],<span class="string">'max_step'</span>,[ip.tau1,1e-2])
+figure(4); clf;hold <span class="string">on</span>
+[psolbr,s,f,r]=br_contn(funcs,psolbr,20); <span class="comment">% compute periodic solutions branch</span>
+point=psolbr.point(end);
+p_ampl=max(point.profile(1,:))-min(point.profile(1,:));
+plot(point.parameter(ip.tau1),p_ampl,<span class="string">'o'</span>);
+xlabel(<span class="string">'tau1'</span>);ylabel(<span class="string">'max(x1)-min(x1)'</span>);
+</pre><pre class="codeoutput">psolbr = 
+  struct with fields:
+
+       method: [1&times;1 struct]
+    parameter: [1&times;1 struct]
+        point: [1&times;2 struct]
+suc =
+  logical
+   1
+BR_CONTN warning: delay number_3 becomes negative.
+</pre><img vspace="5" hspace="5" src="sd_demo_04.png" alt=""> <h2 id="19">Stopping criterion</h2><p>As in the case of computing <tt>stbr</tt>, we have a warning, <tt>BR_CONTN warning: delay number_3 becomes negative.</tt> indicating that the delay function <img src="sd_demo_eq16932302710809560062.png" alt="$\tau_3(t)$"> became negative at some point(s) on the period interval of the computed solution during continuation of the branch. The periodic solution with <img src="sd_demo_eq16932302710809560062.png" alt="$\tau_3(t)$"> negative is not accepted as the branch point. Instead, the following algorithm is executed. First, using the solution with <img src="sd_demo_eq16932302710809560062.png" alt="$\tau_3(t)$"> negative and a mesh refinement, a time point <tt>tz</tt> is computed at which <img src="sd_demo_eq16932302710809560062.png" alt="$\tau_3(t)$"> reaches its minimum. Then, a periodic solution is computed under the conditions, <img src="sd_demo_eq09375391710416800747.png" alt="$$ \tau_3(\mathtt{tz})=0,\qquad\mathrm{d}\tau_3(\mathtt{tz})/\mathrm{d}t=0. $$"> We compute and plot the delay <img src="sd_demo_eq16932302710809560062.png" alt="$\tau_3(t)$"> on the mesh of representation points at the last accepted point in the branch, see figure below.</p><pre class="codeinput">tau3fun=@(t)p_tau(funcs,point,3,t);
+figure(5); clf;
+plot(point.mesh,tau3fun(point.mesh),<span class="string">'+-'</span>,<span class="string">'linewidth'</span>,2);
+[tmin,taumin]=fminbnd(tau3fun,0,1)
+hold <span class="string">on</span>;
+plot(tmin,taumin,<span class="string">'o'</span>,<span class="string">'linewidth'</span>,2);
+grid <span class="string">on</span>
+xlabel(<span class="string">'t/period'</span>);ylabel(<span class="string">'tau3'</span>);
+</pre><pre class="codeoutput">tmin =
+      0.31071
+taumin =
+  -5.1664e-10
+</pre><img vspace="5" hspace="5" src="sd_demo_05.png" alt=""> <h2 id="20">Figure: Periodic orbit with state-dependent delay equal to 0</h2><p><img src="sd_demo_eq07501180971664397471.png" alt="$\tau_3(t/T)$"> at the last computed point. Crosses indicate representation points of the mesh used. The value of <tt>taumin</tt> shows that <img src="sd_demo_eq16932302710809560062.png" alt="$\tau_3(t)$"> has its minimal value at a point <tt>tmin</tt> between two representation points. The function <tt>tau3fun</tt> uses polynomial interpolation with the degree given in the field <tt>point.degree</tt>.</p><h2 id="21">A second family of periodic orbits - correction of initial orbit</h2><p>Now we use the last Hopf point in the <tt>psol2br</tt> to compute a branch of periodic solutions as a function of the parameter <img src="sd_demo_eq13137298398265577444.png" alt="$p_1$">, see figure below.</p><pre class="codeinput">[psol2br,suc]=SetupPsol(funcs,hopfbr,length(hopfbr.point),<span class="string">'contpar'</span>,ip.p1,<span class="keyword">...</span>
+    <span class="string">'max_bound'</span>,[ip.p1,10],<span class="string">'min_bound'</span>,[ip.p1,0],<span class="string">'max_step'</span>,[ip.p1,1e-2])
+figure(6); clf;hold <span class="string">on</span>
+[psol2br,s,f,r]=br_contn(funcs,psol2br,40); <span class="comment">% compute periodic solutions branch</span>
+psol=psol2br.point(end);
+tau6fun=@(t)p_tau(funcs,psol,6,t);
+figure(7); clf;
+plot(psol.mesh,tau6fun(psol.mesh),<span class="string">'+-'</span>,<span class="string">'linewidth'</span>,2);
+[t2min,tau6min]=fminbnd(tau6fun,0,1)
+hold <span class="string">on</span>;
+plot(t2min,tau6min,<span class="string">'o'</span>,<span class="string">'linewidth'</span>,2);
+grid <span class="string">on</span>
+xlabel(<span class="string">'t/period'</span>);ylabel(<span class="string">'tau6=x5'</span>);
+</pre><pre class="codeoutput">psol2br = 
+  struct with fields:
+
+       method: [1&times;1 struct]
+    parameter: [1&times;1 struct]
+        point: [1&times;2 struct]
+suc =
+  logical
+   1
+BR_CONTN warning: delay number_6 becomes negative.
+t2min =
+      0.61321
+tau6min =
+  -2.7537e-10
+</pre><img vspace="5" hspace="5" src="sd_demo_06.png" alt=""> <img vspace="5" hspace="5" src="sd_demo_07.png" alt=""> <h2 id="22">Figure: delay <img src="sd_demo_eq18018902420273956757.png" alt="$\tau_6=x_5$"> at last point of branch</h2><p><img src="sd_demo_eq17740691355302708693.png" alt="$\tau_6(t/T)$"> at the last computed point. Dots indicate representation points of the mesh used.</p><p>The minimal value of the delay <img src="sd_demo_eq12858954447957030198.png" alt="$\tau_6$"> is a negative value. The stability of the corresponding solution is computed if this value is larger than the one defined in <tt>method.stability.delay_accuracy</tt>. Periodic orbits also have a trivial Flqouet multiplier. The function <tt>GetStability</tt> automatically excludes the trivial Floquet multiplier from the stability count if requested.</p><pre class="codeinput">[nunst_psol2br,dom2,triverr2,psol2br.point]=GetStability(psol2br,<span class="keyword">...</span>
+    <span class="string">'funcs'</span>,funcs,<span class="string">'exclude_trivial'</span>,true)
+figure(8); clf;
+p_splot(psol2br.point(end));
+axis <span class="string">image</span>;
+xlabel(<span class="string">'\Re\mu'</span>); ylabel(<span class="string">'\Im\mu'</span>);
+</pre><pre class="codeoutput">nunst_psol2br =
+     0
+     1
+     1
+     1
+     1
+     1
+     1
+     1
+     1
+     1
+     1
+     1
+     1
+     1
+     1
+     1
+     1
+     1
+     1
+     1
+     1
+     1
+     1
+dom2 =
+            1 + 4.0502e-06i
+            1 +          0i
+            1 +          0i
+       1.0001 +          0i
+       1.0002 +          0i
+       1.0004 +          0i
+       1.0008 +          0i
+       1.0013 +          0i
+       1.0021 +          0i
+       1.0034 +          0i
+       1.0053 +          0i
+       1.0081 +          0i
+       1.0123 +          0i
+       1.0184 +          0i
+       1.0275 +          0i
+       1.0408 +          0i
+       1.0603 +          0i
+       1.0888 +          0i
+       1.1305 +          0i
+       1.1882 +          0i
+       1.2434 +          0i
+       1.2957 +          0i
+        1.321 +          0i
+triverr2 =
+   4.3202e-06
+   4.3943e-06
+   4.2342e-06
+    3.449e-06
+   3.4143e-06
+   3.3925e-06
+   3.7597e-06
+   3.6368e-06
+   3.4629e-06
+   2.8484e-06
+   2.0163e-06
+   1.9419e-06
+    6.738e-06
+   7.4255e-06
+   5.5871e-06
+   2.2498e-06
+   2.8835e-06
+   3.3798e-06
+   4.9233e-06
+   3.3394e-06
+   1.8418e-05
+   1.4065e-05
+   7.5656e-06
+psol2br = 
+  struct with fields:
+
+       method: [1&times;1 struct]
+    parameter: [1&times;1 struct]
+        point: [1&times;23 struct]
+</pre><img vspace="5" hspace="5" src="sd_demo_08.png" alt=""> <h2 id="23">Figure: Floquet multipliers of last periodic orbit in <tt>psol2br</tt></h2><h2 id="24">Save results, end of demo <tt>sd_demo</tt></h2><pre class="codeinput">save(<span class="string">'sd_demo.mat'</span>);
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% DDE-BIFTOOL  state-dependent delays sd-demo
+% 
+% This demo is an illustrative example, showing how to perform bifurcation
+% analysis for a system with state-dependent delays.
+%
+% The demo shows
+%
+% * which functions the user has to provide and how to put them into the
+% structure |funcs|
+% * continuation of equilibria and their linear stability,
+% * detection and continuation of Hopf bifurcations,
+% * branching off from Hopf bifurcation and continuation of periodic orbits
+% 
+% <html>
+% $Id: sd_demo.html 362 2019-07-14 15:49:40Z jansieber $
+% </html>
+% 
+%
+%% 
+
+%% Differential equations
+% The differential equations for this example are
+%
+% $$\begin{array}{l}
+% \frac{\mathrm{d}}{\mathrm{d} t}x_1(t)=\frac{1}{p_1+x_2(t)}\left(1-p_2x_1(t)x_1(t-\tau_3)
+% x_3(t-\tau_3)+p_3x_1(t-\tau_1)x_2(t-\tau_2)\right),\\
+% \frac{\mathrm{d}}{\mathrm{d} t}x_2(t)=\frac{p_4 x_1(t)}{p_1+x_2(t)}+
+%         p_5\tanh(x_2(t-\tau_5))-1,\\
+% \frac{\mathrm{d}}{\mathrm{d} t}x_3(t)=p_6(x_2(t)-x_3(t))-p_7(x_1(t-\tau_6)-x_2(t-\tau_4))e^{-p_8 \tau_5},\\
+% \frac{\mathrm{d}}{\mathrm{d} t}x_4(t)=x_1(t-\tau_4)e^{-p_1 \tau_5} -0.1,\\
+% \frac{\mathrm{d}}{\mathrm{d} t}x_5(t)=3(x_1(t-\tau_2)-x_5(t))-p_9,
+% \end{array} $$
+%
+% where $\tau_1$ and $\tau_2$ are constant delays and
+%
+% $$
+% \begin{array}{l}
+% \tau_3=2+p_5\tau_1x_2(t)x_2(t-\tau_1),\\
+% \tau_4=1-\frac{1}{1+x_1(t)x_2(t-\tau_2)},\\
+% \tau_5=x_4(t),\\
+% \tau_6=x_5(t).
+% \end{array}
+% $$
+%
+% This system has five components $(x_1,\ldots,x_5)$, six delays
+% $(\tau_1,\ldots,\tau_6)$ and eleven parameters $(p_1,\ldots,p_{11})$,
+% where $p_{10}=\tau_1$ and $p_{11}=\tau_2$. 
+%
+%%
+clear;                           % clear variables
+%close all;                       % close figures
+base=[pwd(),'/../../'];
+addpath([base,'ddebiftool/'],...  % add ddebiftool folders to path
+    [base,'ddebiftool_extra_nmfm'],...
+    [base,'ddebiftool_extra_psol'],...
+    [base,'ddebiftool_utilities']);
+%#ok<*ASGLU,*NOPTS,*NASGU>
+%% Specification of state-dependent delays
+% The function |sys_tau| returns the value of the delay. *This is in
+% contrast to* the definition of |sys_tau| for constant delays, where the
+% delay's _position_ in the parameter list is returned. For
+% state-dependent delays, the header of the function |sys_tau|, defining the
+% delays, has the format (see <sd_tau.html> for the demo example):
+%
+%   function tau=sys_tau(k,xx,par)
+%
+% it defines the |k| th delay $\tau_k$, which is allowed to depend on
+% |xx(:,1:k)| (the states $x(t)$,..., $x(t-\tau_{k-1})$) and the parameter
+% |par|. This definition of delays permits the user to create arbitrary
+% levels of nesting. Note that, when |sys_tau| is called with first
+% argument |k|, its second argument |xx| has column dimension |k|.
+%
+% *Note* The order of the delays corresponds to the order
+% in which they appear in |xx| as passed to
+% the functions |sys_rhs| and |sys_deri|.
+%
+% Optionally, the user is encouraged to provide a function that  supplies
+% derivatives of all delays with respect to the state and parameters. Its functionality is similar to the function
+% |sys_deri|. Its header has the format 
+%
+%   function dtau=sys_dtau(delay_nr,xx,par,nx,np)
+%
+% Its format is similar to |sys_deri|. The result |dtau| is a scalar,
+% vector or matrix of partial derivatives of the delay with number
+% |delay_nr| which depends on the type of derivative requested via
+% |nx| and |np|. See <sd_dtau.html> for an example.
+
+%% The number of delays
+% For systems with state-dependent delays DDE-Biftool requires a separate
+% function that provides the number of delays:
+%
+%   function n=sys_ntau()
+%
+% returns the number |n| of delays. Accordingly, the argument |xx| of
+% the right-hand side |sys_rhs| will have the column dimension |n+1|. The
+% corresponding field in the array |funcs| defining the user functions is
+% named |'sys_ntau'|.
+
+%% Assignment of user function fields
+% The functions can have arbitrary names or can be anonymous. The above
+% names are the field names in the structure containing th euser functions.
+% Assign these fields automatically using |set_funcs|. Note that the flag
+% |tp_del| is set to 1 for state-dependent delays. This is determined
+% inside |set_funcs| using a try-catch enclosed call |sys_tau()|.
+% Derivatives are optional and will be approximated by finite differences
+% if not provided.
+ufuncs=set_funcs('sys_rhs',@sd_rhs,'sys_tau',@sd_tau,...
+    'sys_ntau',@()6,'sys_deri',@sd_deri,'sys_dtau',@sd_dtau,'x_vectorized',true)
+nfuncs=set_funcs('sys_rhs',@sd_rhs,'sys_tau',@sd_tau,...
+    'sys_ntau',@()6,'x_vectorized',true)
+%% Automatic generation of right-hand side and derivatives
+% Alternatively, one may generate the code for the right-hand side, the
+% delays and their derivatives using the symbolic toolbox. See
+% <gen_sym_sd_demo.html>. Then the function definition structure can be
+% defined using te wrapper |set_symfuncs|:
+sfuncs=set_symfuncs('sym_sd_demo')
+%% Select the r.h.s. to be tested
+funcs=sfuncs;
+%% Define parameter names
+ntau=6;
+parnames=[strcat('p',num2cell('1':'9')),{'tau1','tau2'}];
+cind=[parnames;num2cell(1:length(parnames))];
+ip=struct(cind{:});
+%% Continuation and stability of Equilibria for state-dependent delays
+% Once the user-defined functions are prepared, DDE-Biftool can compute and
+% continue equilibria of the DDE, and compute their linearized stability,
+% thus detecting local bifurcations.
+%% Initial guess for steady state
+% We define a steady state solution using the parameter values listed in
+% |p0| and an initial guess given as named argument |'x'| to |SetupStst|.
+% For the first steady-state branch the continuation parameter will be |p5|
+% and it will be varied between |-1| and |1|. Note that a |0| in the first
+% entry of the argument |'max_step'| refers to the predictor stepsize.
+p0([ip.p1,ip.p2,ip.p3,ip.p4,ip.p5,ip.p6,ip.p7,ip.p8,ip.p9,ip.tau1,ip.tau2])=...
+   [  4.5, 0.04, -1.4,    6,-0.45,-0.01,    3,  0.3,  0.1,      1,    0.2];
+[stbr,suc]=SetupStst(funcs,'x',[1.4; 1.5; -25; 0.6; 1.4],'parameter',p0,...
+    'contpar',ip.p5,'step',-0.1,...
+    'min_bound',[ip.p5,-1],'max_bound',[ip.p5,1],'max_step',[0,0.1])
+%% Continuation of equilibria
+% With two starting points and suitable method parameters we continue the
+% branch |stbr| (with plotting) versus parameter $p_5$, see figure below.
+% During continuation, 12 points were successfully computed before the
+% state-dependent delay function $\tau_3$ crossed zero (signalled by a
+% warning). The computed point with $\tau_3<0$ was not accepted. Instead,
+% the point corresponding to $\tau_3=0$ was computed, see figure below. We
+% check the value of $\tau_3$ at the last point in the branch using
+% function |p_tau|.
+%
+% In similar cases, it might happen that the computed value of a delay is 
+% a very small negative value. Because stability cannot be computed when
+% there are negative delays, small negative delay values are automatically
+% neglected when their value is larger than the value defined in the field
+% |method.stability.delay_accuracy|.
+figure(1); clf;
+[stbr,s,f,r]=br_contn(funcs,stbr,50) % continue with plotting the branch
+hold on
+plot(stbr.point(end).parameter(ip.p5),stbr.point(end).x(1),'o','linewidth',2);
+xlabel('p5');ylabel('x(1)');
+fprintf('delay %d=%g\n',3,p_tau(funcs,stbr.point(end),3));
+%% Figure: branch of equilibria
+% Output of |br_contn|: predictions and corrections
+% after computation of a branch of steady state solutions versus parameter
+% $p_5$. |o| - the last computed point in the branch (corresponding to
+% $\tau_3=0$)
+%% Stability of equilibria and eigenvalues of linearization
+% We compute the stability along the branch and after obtaining suitable
+% measure structures we plot the real part of the corrected roots of the
+% characteristic equation along the branch versus the point numbers, see
+% figure below. From this figure it is not clear which real parts
+% correspond to real roots respectively complex pairs of roots. We check
+% the first point with unstable eigenvalues
+[nunst_stbr,~,~,stbr.point]=GetStability(stbr,'funcs',funcs);
+[xm,ym]=df_measr(1,stbr);
+figure(2); clf;
+br_plot(stbr,[],ym,'b.-');   % stability along branch versus point number
+%br_plot(branch1,[],ym,'b.');
+plot([0 10],[0 0],'-.');      % axis
+grid on
+unst1=find(nunst_stbr>0,1,'first');
+stbr.point(unst1).stability.l0 % stability of point 5
+xlabel('point number');ylabel('\Re(\lambda)');
+%% Figure: Eigenvalues of linearization along branch
+% Real parts of the corrected roots of the characteristic equation along
+% the branch.
+%% Detection and continuation of Hopf bifurcations
+% The eigenvalues of the linearized system along branches of equilibria
+% indicate potential bifurcations. In this demo complex conjugate pairs of
+% eigenvalues cross the imaginary axis, corresponding to Hopf bifurcations.
+% The convenience function |LocateSpecialPoints| refines the branch to
+% locate the Hopf point more accurately and determines criticality (the
+% first Lyapunov coefficient |L1|)
+[stbr_wbifs,tests,stbif_ind,stbif_type]=LocateSpecialPoints(funcs,stbr)
+%% Continuation of Hopf points in two parameters
+% The demo will proceed to continue two of these Hopf bifurcations in two
+% system parameters $p_2$ and $p_9$. We select the Hopf point and turn it
+% into a Hopf bifurcation point type. Then we correct the Hopf-like point
+% using appropriate method parameters and one free parameter ($p_5$).
+[hopfbr,suc]=SetupHopf(funcs,stbr_wbifs,stbif_ind,'contpar',[ip.p2,ip.p9],...
+    'step',0.1,'dir',ip.p9,...
+    'min_bound',[ip.p2,-1; ip.p9,-1],'max_bound',[ip.p2,0.053; ip.p9,10],...
+    'max_step',[ip.p2,1;ip.p9,1])
+figure(3); clf;
+[hopfbr,s,f,r]=br_contn(funcs,hopfbr,30); % continue with plotting Hopf branch
+xlabel('p2');ylabel('p9');
+%% Continuation and stability of periodic orbits
+% DDE-biftool computes one-parameter families of periodic orbits
+% (automatically determining their period) by solving periodic
+% boundary-value problems approximately with collocation schemes. A
+% typical starting point for a family of periodic orbits is a Hopf
+% bifurcation.
+%% Constructing an initial small-amplitude orbit near a Hopf bifurcation
+% We use the Hopf point in the |stbr| branch to construct a small amplitude
+% (|1e-1|) periodic solution on an equidistant mesh of |15| intervals with
+% piecewise polynomial degree |3| (these are optional arguments of
+% |SetupPsol|. If we plan to change the continuation parameter, we have to
+% explicitly provide it as the optional parameter |'contpar'|.
+[psolbr,suc]=SetupPsol(funcs,stbr_wbifs,stbif_ind,'contpar',ip.tau1,...
+    'radius',0.1,'intervals',15,'degree',3,...
+    'max_bound',[ip.tau1,10],'min_bound',[ip.tau1,0],'max_step',[ip.tau1,1e-2])
+figure(4); clf;hold on
+[psolbr,s,f,r]=br_contn(funcs,psolbr,20); % compute periodic solutions branch
+point=psolbr.point(end);
+p_ampl=max(point.profile(1,:))-min(point.profile(1,:));
+plot(point.parameter(ip.tau1),p_ampl,'o');
+xlabel('tau1');ylabel('max(x1)-min(x1)');
+%% Stopping criterion
+% As in the case of computing |stbr|, we have a warning, |BR_CONTN
+% warning: delay number_3 becomes negative.| indicating that the delay
+% function $\tau_3(t)$ became negative at some point(s) on the period
+% interval of the computed solution during continuation of the branch. The
+% periodic solution with $\tau_3(t)$ negative is not accepted as the branch
+% point. Instead, the following algorithm is executed. First, using the
+% solution with $\tau_3(t)$ negative and a mesh refinement, a time point
+% |tz| is computed at which $\tau_3(t)$ reaches its minimum. Then, a
+% periodic solution is computed under the conditions,
+% $$
+% \tau_3(\mathtt{tz})=0,\qquad\mathrm{d}\tau_3(\mathtt{tz})/\mathrm{d}t=0.
+% $$
+% We compute and plot the delay $\tau_3(t)$ on the mesh of representation
+% points at the last accepted point in the branch, see figure below.
+tau3fun=@(t)p_tau(funcs,point,3,t);
+figure(5); clf;
+plot(point.mesh,tau3fun(point.mesh),'+-','linewidth',2);
+[tmin,taumin]=fminbnd(tau3fun,0,1)
+hold on;
+plot(tmin,taumin,'o','linewidth',2);
+grid on
+xlabel('t/period');ylabel('tau3');
+%% Figure: Periodic orbit with state-dependent delay equal to 0
+% $\tau_3(t/T)$ at the last computed point. Crosses indicate representation
+% points of the mesh used. The value of |taumin| shows that $\tau_3(t)$ has
+% its minimal value at a point |tmin| between two representation points.
+% The function |tau3fun| uses polynomial interpolation with the degree
+% given in the field |point.degree|.
+%% A second family of periodic orbits - correction of initial orbit
+% Now we use the last Hopf point in the |psol2br| to compute a
+% branch of periodic solutions as a function of the parameter $p_1$, see
+% figure below.
+[psol2br,suc]=SetupPsol(funcs,hopfbr,length(hopfbr.point),'contpar',ip.p1,...
+    'max_bound',[ip.p1,10],'min_bound',[ip.p1,0],'max_step',[ip.p1,1e-2])
+figure(6); clf;hold on
+[psol2br,s,f,r]=br_contn(funcs,psol2br,40); % compute periodic solutions branch
+psol=psol2br.point(end);
+tau6fun=@(t)p_tau(funcs,psol,6,t);
+figure(7); clf;
+plot(psol.mesh,tau6fun(psol.mesh),'+-','linewidth',2);
+[t2min,tau6min]=fminbnd(tau6fun,0,1)
+hold on;
+plot(t2min,tau6min,'o','linewidth',2);
+grid on
+xlabel('t/period');ylabel('tau6=x5');
+%% Figure: delay $\tau_6=x_5$ at last point of branch
+% $\tau_6(t/T)$ at the last computed point. Dots indicate representation
+% points of the mesh used.
+%
+% The minimal value of the delay $\tau_6$ is a negative value. 
+% The stability of the corresponding solution is computed if this value is
+% larger than the one defined in |method.stability.delay_accuracy|.
+% Periodic orbits also have a trivial Flqouet multiplier. The function
+% |GetStability| automatically excludes the trivial Floquet multiplier from
+% the stability count if requested.
+[nunst_psol2br,dom2,triverr2,psol2br.point]=GetStability(psol2br,...
+    'funcs',funcs,'exclude_trivial',true)
+figure(8); clf;
+p_splot(psol2br.point(end));
+axis image;
+xlabel('\Re\mu'); ylabel('\Im\mu');
+%% Figure: Floquet multipliers of last periodic orbit in |psol2br|
+%% Save results, end of demo |sd_demo|
+save('sd_demo.mat');
+
+##### SOURCE END #####
+--></body></html>

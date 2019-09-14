@@ -1,0 +1,100 @@
+\begin{thebibliography}{10}
+
+\bibitem{MDO09}
+H.~Meijer, F.~Dercole, and B.~Oldeman.
+\newblock Numerical bifurcation analysis.
+\newblock In R.~A. Meyers, editor, {\em Encyclopedia of Complexity and Systems
+  Science}, pages 6329--6352. Springer New York, 2009.
+
+\bibitem{G00}
+W.J.F. Govaerts.
+\newblock {\em Numerical Methods for Bifurcations of Dynamical Equilibria}.
+\newblock Miscellaneous Titles in Applied Mathematics Series. SIAM, 2000.
+
+\bibitem{D07}
+E~J Doedel.
+\newblock {Lecture notes on numerical analysis of nonlinear equations}.
+\newblock In B~Krauskopf, H~M Osinga, and J~Gal\'{a}n-Vioque, editors, {\em
+  Numerical Continuation Methods for Dynamical Systems: Path following and
+  boundary value problems}, pages 1--49. Springer-{V}erlag, Dordrecht, 2007.
+
+\bibitem{DCFKSW98}
+E.~J. Doedel, A.~R. Champneys, T.~F. Fairgrieve, Y.~A. Kuznetsov, B.~Sandstede,
+  and X.~Wang.
+\newblock {\em {AUTO97, Continuation and bifurcation software for ordinary
+  differential equations}}.
+\newblock Concordia University, 1998.
+
+\bibitem{S89}
+G~St\'{e}p\'{a}n.
+\newblock {\em {Retarded Dynamical Systems{\rmfamily:} Stability and
+  Characteristic Functions}}.
+\newblock Longman Scientific and Technical, Harlow, Essex, 1989.
+
+\bibitem{HL93}
+J.K. Hale and S.M. {Verduyn Lunel}.
+\newblock {\em {Introduction to functional-differential equations}}, volume~99
+  of {\em Applied Mathematical Sciences}.
+\newblock Springer-Verlag, New York, 1993.
+
+\bibitem{DGLW95}
+O.~Diekmann, S.A. van Gils, S.M. {Verduyn Lunel}, and H.-O. Walther.
+\newblock {\em {Delay equations}}, volume 110 of {\em Applied Mathematical
+  Sciences}.
+\newblock Springer-Verlag, New York, 1995.
+
+\bibitem{ELS01}
+K~Engelborghs, T~Luzyanina, and G~Samaey.
+\newblock {{DDE-BIFTOOL} v.2.00{\rmfamily:} a {Matlab} package for bifurcation
+  analysis of delay differential equations}.
+\newblock Report TW 330, Katholieke Universiteit Leuven, 2001.
+
+\bibitem{ELR02}
+K.~Engelborghs, T.~Luzyanina, and D.~Roose.
+\newblock Numerical bifurcation analysis of delay differential equations using
+  {DDE-BIFTOOL}.
+\newblock {\em ACM Transactions on Mathematical Software}, 28(1):1--21, 2002.
+
+\bibitem{SER02}
+G.~Samaey, K.~Engelborghs, and D.~Roose.
+\newblock {Numerical computation of connecting orbits in delay differential
+  equations}.
+\newblock {\em Numer. Algorithms}, 30:335--352, 2002.
+
+\bibitem{RS07}
+D.~Roose and R.~Szalai.
+\newblock {Continuation and bifurcation analysis of delay differential
+  equations}.
+\newblock In B~Krauskopf, H~M Osinga, and J~Gal\'{a}n-Vioque, editors, {\em
+  Numerical Continuation Methods for Dynamical Systems{\rmfamily:} Path
+  following and boundary value problems}, pages 51--75. Springer-{V}erlag,
+  Dordrecht, 2007.
+
+\bibitem{VLR08}
+K.~Verheyden, T.~Luzyanina, and D.~Roose.
+\newblock Efficient computation of characteristic roots of delay differential
+  equations using lms methods,.
+\newblock {\em Journal of Computational and Applied Mathematics}, 214:209--226,
+  2008.
+
+\bibitem{HKWW06}
+F.~Hartung, T.~Krisztin, H.-O. Walther, and J.~Wu.
+\newblock Functional differential equations with state-dependent
+  delays{\rmfamily:} theory and applications.
+\newblock In P.~Dr{\'a}bek, A.~Ca{\~n}ada, and A.~Fonda, editors, {\em Handbook
+  of Differential Equations{\rmfamily:} Ordinary Differential Equations},
+  volume~3, chapter~5, pages 435--545. North-Holland, 2006.
+
+\bibitem{S12}
+J.~Sieber.
+\newblock Finding periodic orbits in state-dependent delay differential
+  equations as roots of algebraic equations.
+\newblock {\em Discrete and Continuous Dynamical Systems A}, 32(8):2607--2651,
+  2012.
+
+\bibitem{DS13}
+H.~Dankowicz and F.~Schilder.
+\newblock {\em Recipes for Continuation}.
+\newblock Computer Science and Engineering. SIAM, 2013.
+
+\end{thebibliography}

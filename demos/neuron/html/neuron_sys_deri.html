@@ -1,0 +1,281 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>User-provided partial derivatives of right-hand side f</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-04-02"><meta name="DC.source" content="neuron_sys_deri.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+
+  </style></head><body><div class="content"><h1>User-provided partial derivatives of right-hand side <tt>f</tt></h1><!--introduction--><p>Implementation for tutorial demo neuron:</p><pre class="language-matlab"><span class="keyword">function</span> J=neuron_sys_deri(xx,par,nx,np,v)
+</pre><p>
+% $Id: neuron_sys_deri.html 20 2014-04-11 19:27:33Z jan.sieber $
+</p><p>If a user-provided function is not provided, DDE-Biftool will use finite-difference approximation (implemented in <tt>df_deriv.m</tt>).</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#3">Parameter vector</a></li><li><a href="#4">First-order derivatives wrt to state nx+1</a></li><li><a href="#6">First order derivatives wrt parameters</a></li><li><a href="#8">Mixed state, parameter derivatives</a></li><li><a href="#10">Second order derivatives wrt state variables</a></li><li><a href="#12">Otherwise raise error</a></li></ul></div><pre class="codeinput"><span class="keyword">function</span> J=neuron_sys_deri(xx,par,nx,np,v)
+</pre><h2>Parameter vector<a name="3"></a></h2><p><tt>par</tt> <img src="neuron_sys_deri_eq56913.png" alt="$=[\kappa, \beta, a_{12}, a_{21},\tau_1,\tau_2, \tau_s]$">.</p><pre class="codeinput">J=[];
+<span class="keyword">if</span> length(nx)==1 &amp;&amp; isempty(np) &amp;&amp; isempty(v)
+</pre><h2>First-order derivatives wrt to state nx+1<a name="4"></a></h2><pre class="codeinput">    <span class="keyword">if</span> nx==0 <span class="comment">% derivative wrt x(t)</span>
+        J(1,1)=-par(1);
+        J(2,2)=-par(1);
+    <span class="keyword">elseif</span> nx==1 <span class="comment">% derivative wrt x(t-tau1)</span>
+        J(2,1)=par(4)*(1-tanh(xx(1,2))^2);
+        J(2,2)=0;
+    <span class="keyword">elseif</span> nx==2 <span class="comment">% derivative wrt x(t-tau2)</span>
+        J(1,2)=par(3)*(1-tanh(xx(2,3))^2);
+        J(2,2)=0;
+    <span class="keyword">elseif</span> nx==3 <span class="comment">% derivative wrt x(t-tau_s)</span>
+        J(1,1)=par(2)*(1-tanh(xx(1,4))^2);
+        J(2,2)=par(2)*(1-tanh(xx(2,4))^2);
+    <span class="keyword">end</span>
+</pre><pre class="codeinput"><span class="keyword">elseif</span> isempty(nx) &amp;&amp; length(np)==1 &amp;&amp; isempty(v)
+</pre><h2>First order derivatives wrt parameters<a name="6"></a></h2><pre class="codeinput">    <span class="keyword">if</span> np==1 <span class="comment">% derivative wrt kappa</span>
+        J(1,1)=-xx(1,1);
+        J(2,1)=-xx(2,1);
+    <span class="keyword">elseif</span> np==2 <span class="comment">% derivative wrt beta</span>
+        J(1,1)=tanh(xx(1,4));
+        J(2,1)=tanh(xx(2,4));
+    <span class="keyword">elseif</span> np==3 <span class="comment">% derivative wrt a12</span>
+        J(1,1)=tanh(xx(2,3));
+        J(2,1)=0;
+    <span class="keyword">elseif</span> np==4 <span class="comment">% derivative wrt a21</span>
+        J(2,1)=tanh(xx(1,2));
+    <span class="keyword">elseif</span> np==5 || np==6 || np==7 <span class="comment">% derivative wrt tau</span>
+        J=zeros(2,1);
+    <span class="keyword">end</span>;
+</pre><pre class="codeinput"><span class="keyword">elseif</span> length(nx)==1 &amp;&amp; length(np)==1 &amp;&amp; isempty(v)
+</pre><h2>Mixed state, parameter derivatives<a name="8"></a></h2><pre class="codeinput">    <span class="keyword">if</span> nx==0 <span class="comment">% derivative wrt x(t)</span>
+        <span class="keyword">if</span> np==1 <span class="comment">% derivative wrt beta</span>
+            J(1,1)=-1;
+            J(2,2)=-1;
+        <span class="keyword">else</span>
+            J=zeros(2);
+        <span class="keyword">end</span>;
+    <span class="keyword">elseif</span> nx==1 <span class="comment">% derivative wrt x(t-tau1)</span>
+        <span class="keyword">if</span> np==4 <span class="comment">% derivative wrt a21</span>
+            J(2,1)=1-tanh(xx(1,2))^2;
+            J(2,2)=0;
+        <span class="keyword">else</span>
+            J=zeros(2);
+        <span class="keyword">end</span>;
+    <span class="keyword">elseif</span> nx==2 <span class="comment">% derivative wrt x(t-tau2)</span>
+        <span class="keyword">if</span> np==3 <span class="comment">% derivative wrt a12</span>
+            J(1,2)=1-tanh(xx(2,3))^2;
+            J(2,2)=0;
+        <span class="keyword">else</span>
+            J=zeros(2);
+        <span class="keyword">end</span>;
+    <span class="keyword">elseif</span> nx==3 <span class="comment">% derivative wrt x(t-tau_s)</span>
+        <span class="keyword">if</span> np==2 <span class="comment">% derivative wrt beta</span>
+            J(1,1)=1-tanh(xx(1,4))^2;
+            J(2,2)=1-tanh(xx(2,4))^2;
+        <span class="keyword">else</span>
+            J=zeros(2);
+        <span class="keyword">end</span>;
+    <span class="keyword">end</span>;
+</pre><pre class="codeinput"><span class="keyword">elseif</span> length(nx)==2 &amp;&amp; isempty(np) &amp;&amp; ~isempty(v)
+</pre><h2>Second order derivatives wrt state variables<a name="10"></a></h2><pre class="codeinput">    <span class="keyword">if</span> nx(1)==0 <span class="comment">% first derivative wrt x(t)</span>
+        J=zeros(2);
+    <span class="keyword">elseif</span> nx(1)==1 <span class="comment">% first derivative wrt x(t-tau1)</span>
+        <span class="keyword">if</span> nx(2)==1
+            th=tanh(xx(1,2));
+            J(2,1)=-2*par(4)*th*(1-th*th)*v(1);
+            J(2,2)=0;
+        <span class="keyword">else</span>
+            J=zeros(2);
+        <span class="keyword">end</span>;
+    <span class="keyword">elseif</span> nx(1)==2 <span class="comment">% derivative wrt x(t-tau2)</span>
+        <span class="keyword">if</span> nx(2)==2
+            th=tanh(xx(2,3));
+            J(1,2)=-2*par(3)*th*(1-th*th)*v(2);
+            J(2,2)=0;
+        <span class="keyword">else</span>
+            J=zeros(2);
+        <span class="keyword">end</span>
+    <span class="keyword">elseif</span> nx(1)==3 <span class="comment">% derivative wrt x(t-tau_s)</span>
+        <span class="keyword">if</span> nx(2)==3
+            th1=tanh(xx(1,4));
+            J(1,1)=-2*par(2)*th1*(1-th1*th1)*v(1);
+            th2=tanh(xx(2,4));
+            J(2,2)=-2*par(2)*th2*(1-th2*th2)*v(2);
+        <span class="keyword">else</span>
+            J=zeros(2);
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+</pre><pre class="codeinput"><span class="keyword">end</span>
+</pre><h2>Otherwise raise error<a name="12"></a></h2><p>Raise error if the requested derivative does not exist</p><pre class="codeinput"><span class="keyword">if</span> isempty(J)
+    error([<span class="string">'SYS_DERI: requested derivative nx=%d, np=%d, size(v)=%d'</span>,<span class="keyword">...</span>
+        <span class="string">'could not be computed!'</span>],nx,np,size(v));
+<span class="keyword">end</span>
+</pre><pre class="codeinput"><span class="keyword">end</span>
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.14<br></p></div><!--
+##### SOURCE BEGIN #####
+%% User-provided partial derivatives of right-hand side |f|
+%
+% Implementation for tutorial demo neuron:
+%
+%   function J=neuron_sys_deri(xx,par,nx,np,v)
+% 
+% <html>
+% $Id: neuron_sys_deri.html 20 2014-04-11 19:27:33Z jan.sieber $
+% </html>
+%
+% If a user-provided function is not provided, DDE-Biftool will use
+% finite-difference approximation (implemented in |df_deriv.m|).
+%%
+function J=neuron_sys_deri(xx,par,nx,np,v)
+
+%% Parameter vector
+% |par| $=[\kappa, \beta, a_{12}, a_{21},\tau_1,\tau_2, \tau_s]$.
+
+J=[];
+if length(nx)==1 && isempty(np) && isempty(v)
+    %% First-order derivatives wrt to state nx+1
+    if nx==0 % derivative wrt x(t)
+        J(1,1)=-par(1);
+        J(2,2)=-par(1);
+    elseif nx==1 % derivative wrt x(t-tau1)
+        J(2,1)=par(4)*(1-tanh(xx(1,2))^2);
+        J(2,2)=0;
+    elseif nx==2 % derivative wrt x(t-tau2)
+        J(1,2)=par(3)*(1-tanh(xx(2,3))^2);
+        J(2,2)=0;
+    elseif nx==3 % derivative wrt x(t-tau_s)
+        J(1,1)=par(2)*(1-tanh(xx(1,4))^2);
+        J(2,2)=par(2)*(1-tanh(xx(2,4))^2);
+    end
+elseif isempty(nx) && length(np)==1 && isempty(v)
+    %% First order derivatives wrt parameters
+    if np==1 % derivative wrt kappa
+        J(1,1)=-xx(1,1);
+        J(2,1)=-xx(2,1);
+    elseif np==2 % derivative wrt beta
+        J(1,1)=tanh(xx(1,4));
+        J(2,1)=tanh(xx(2,4));
+    elseif np==3 % derivative wrt a12
+        J(1,1)=tanh(xx(2,3));
+        J(2,1)=0;
+    elseif np==4 % derivative wrt a21
+        J(2,1)=tanh(xx(1,2));
+    elseif np==5 || np==6 || np==7 % derivative wrt tau
+        J=zeros(2,1);
+    end;
+elseif length(nx)==1 && length(np)==1 && isempty(v)
+    %% Mixed state, parameter derivatives
+    if nx==0 % derivative wrt x(t)
+        if np==1 % derivative wrt beta
+            J(1,1)=-1;
+            J(2,2)=-1;
+        else
+            J=zeros(2);
+        end;
+    elseif nx==1 % derivative wrt x(t-tau1)
+        if np==4 % derivative wrt a21
+            J(2,1)=1-tanh(xx(1,2))^2;
+            J(2,2)=0;
+        else
+            J=zeros(2);
+        end;
+    elseif nx==2 % derivative wrt x(t-tau2)
+        if np==3 % derivative wrt a12
+            J(1,2)=1-tanh(xx(2,3))^2;
+            J(2,2)=0;
+        else
+            J=zeros(2);
+        end;
+    elseif nx==3 % derivative wrt x(t-tau_s)
+        if np==2 % derivative wrt beta
+            J(1,1)=1-tanh(xx(1,4))^2;
+            J(2,2)=1-tanh(xx(2,4))^2;
+        else
+            J=zeros(2);
+        end;
+    end;
+elseif length(nx)==2 && isempty(np) && ~isempty(v)
+    %% Second order derivatives wrt state variables
+    if nx(1)==0 % first derivative wrt x(t)
+        J=zeros(2);
+    elseif nx(1)==1 % first derivative wrt x(t-tau1)
+        if nx(2)==1
+            th=tanh(xx(1,2));
+            J(2,1)=-2*par(4)*th*(1-th*th)*v(1);
+            J(2,2)=0;
+        else
+            J=zeros(2);
+        end;
+    elseif nx(1)==2 % derivative wrt x(t-tau2)
+        if nx(2)==2
+            th=tanh(xx(2,3));
+            J(1,2)=-2*par(3)*th*(1-th*th)*v(2);
+            J(2,2)=0;
+        else
+            J=zeros(2);
+        end
+    elseif nx(1)==3 % derivative wrt x(t-tau_s)
+        if nx(2)==3
+            th1=tanh(xx(1,4));
+            J(1,1)=-2*par(2)*th1*(1-th1*th1)*v(1);
+            th2=tanh(xx(2,4));
+            J(2,2)=-2*par(2)*th2*(1-th2*th2)*v(2);
+        else
+            J=zeros(2);
+        end
+    end
+end
+%% Otherwise raise error
+% Raise error if the requested derivative does not exist
+if isempty(J)
+    error(['SYS_DERI: requested derivative nx=%d, np=%d, size(v)=%d',...
+        'could not be computed!'],nx,np,size(v));
+end
+end
+
+##### SOURCE END #####
+--></body></html>

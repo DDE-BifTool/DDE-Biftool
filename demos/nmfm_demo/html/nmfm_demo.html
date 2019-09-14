@@ -1,0 +1,459 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Normal form demo - bifurcation detection and normal form computation</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-12-24"><meta name="DC.source" content="nmfm_demo.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+
+  </style></head><body><div class="content"><h1>Normal form demo - bifurcation detection and normal form computation</h1><!--introduction--><p>This file is self-contained and requires the extension <tt>ddebiftool_extra_nmfm</tt>.</p><p>
+$Id$
+</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">The system</a></li><li><a href="#2">Initialization</a></li><li><a href="#3">Continuation and plot of steady state branch</a></li><li><a href="#4">Bifurcation detection on the steady state branch</a></li><li><a href="#5">Extracting bifurcation locations</a></li><li><a href="#6">Continuation of the first Hopf branch</a></li><li><a href="#7">Bifurcation detection on the first Hopf branch</a></li><li><a href="#8">The second Hopf branch</a></li><li><a href="#9">Plotting the bifurcations on the branches</a></li></ul></div><h2>The system<a name="1"></a></h2><p>This system represents a non-dimensionalized model of two interacting layers of neurons.</p><p><img src="nmfm_demo_eq27773.png" alt="$$ \dot{x}_1(t) = - x_1(t) - a g(bx_1(t-\tau_1)) + cg (dx_2(t-\tau_2)), $$"></p><p><img src="nmfm_demo_eq01297.png" alt="$$ \dot{x}_2(t) = - x_2(t) - a g(bx_2(t-\tau_1)) + cg (dx_1(t-\tau_2)), $$"></p><p>where <img src="nmfm_demo_eq76729.png" alt="$g:\bf{R} \rightarrow \bf{R}$"> is of the sigmoidal form</p><p><img src="nmfm_demo_eq61256.png" alt="$$ g(z) = \left[\tanh(z-1) + \tanh(1)\right]\cosh(1)^2. $$"></p><p>The variables <img src="nmfm_demo_eq48238.png" alt="$x_1(t)$"> and <img src="nmfm_demo_eq50353.png" alt="$x_2(t)$"> represent the population-averaged neural activity at time <img src="nmfm_demo_eq07064.png" alt="$t$"> in layers one and two, respectively. The parameter <img src="nmfm_demo_eq27608.png" alt="$a &gt; 0$"> is a measure of the strength of inhibitory feedback, while <img src="nmfm_demo_eq75785.png" alt="$c &gt; 0$"> measures the strength of the excitatory effect of one layer on the other. The parameters <img src="nmfm_demo_eq28601.png" alt="$b &gt; 0$"> and <img src="nmfm_demo_eq36368.png" alt="$d &gt; 0$"> are saturation rates and the delays <img src="nmfm_demo_eq23839.png" alt="$\tau_{1,2}$"> represent time lags in the inhibitory feedback loop and excitatory inter-layer connection. Note that the system is symmetric with respect to interchanging the labels <img src="nmfm_demo_eq80350.png" alt="$1$"> and <img src="nmfm_demo_eq53893.png" alt="$2$">, so equilibria are necessarily of the form <img src="nmfm_demo_eq05186.png" alt="$(x_0,x_0)$">.</p><h2>Initialization<a name="2"></a></h2><p>First, we load the necessary DDE-Biftool extensions. We use existing files in the <tt>funcs</tt> structure. These files were generated using a Maple script. Lastly, we define the boundaries and step sizes of the active parameters.</p><pre class="codeinput">clear <span class="string">variables</span>;
+close <span class="string">all</span>;
+addpath(<span class="string">'../../ddebiftool'</span>,<span class="keyword">...</span>
+    <span class="string">'../../ddebiftool_extra_psol'</span>,<span class="keyword">...</span>
+    <span class="string">'../../ddebiftool_extra_nmfm'</span>,<span class="keyword">...</span>
+    <span class="string">'../../ddebiftool_utilities'</span>);
+
+funcs=set_funcs(<span class="keyword">...</span>
+    <span class="string">'sys_rhs'</span>, @(xx,par) sys_rhs(xx,par),<span class="keyword">...</span>
+    <span class="string">'sys_tau'</span>, @() sys_tau(),<span class="keyword">...</span>
+    <span class="string">'sys_deri'</span>, @(xx,par,nx,np,v) sys_deri(xx,par,nx,np,v),<span class="keyword">...</span>
+    <span class="string">'sys_mfderi'</span>,@(xx,par,varargin) sys_mfderi(xx,par,varargin{:}));
+
+n = 2;
+
+astepsize = 0.0005;
+cstepsize = 0.005;
+amin = 0.0;
+amax = 0.55;
+cmin = 0.0;
+cmax = 1.0;
+</pre><h2>Continuation and plot of steady state branch<a name="3"></a></h2><p>We set up a steady state branch using <tt>SetupStst</tt> and do a standard continuation. Then, we plot the branch.</p><pre class="codeinput">branch1 = SetupStst(funcs,<span class="string">'x'</span>,[0;0],<span class="string">'parameter'</span>,[0.25, 2, 15/29, 1.2, 12.7, 20.2],<span class="keyword">...</span>
+    <span class="string">'contpar'</span>,1,<span class="string">'max_step'</span>,[1 astepsize],<span class="string">'max_bound'</span>,[1 amax],<span class="string">'min_bound'</span>,[1 amin],<span class="keyword">...</span>
+    <span class="string">'newheuristics_tests'</span>,0);
+
+branch1.method.continuation.plot = 0;
+[branch1,s,f,r] = br_contn(funcs,branch1,300);
+branch1 = br_rvers(branch1);
+[branch1,s,f,r] = br_contn(funcs,branch1,300);
+
+figure;
+[xm,ym] = df_measr(0,branch1,1);
+br_plot(branch1,xm,ym);
+xlabel(<span class="string">'a'</span>);
+ylabel(<span class="string">'x_1'</span>);
+</pre><img vspace="5" hspace="5" src="nmfm_demo_01.png" alt=""> <h2>Bifurcation detection on the steady state branch<a name="4"></a></h2><p>To detect bifurcations, we have to call the function <tt>br_bifdet</tt>.</p><p><tt>function [newbranch, success] = br_bifdet(funcs, branch)</tt></p><p>Inputs:</p><div><ul><li><tt>funcs</tt>: problem-definition structure with user-defined functions</li><li><tt>branch</tt>: branch of steady state (<tt>stst</tt>) points</li></ul></div><p>Outputs:</p><div><ul><li><tt>newbranch</tt>: branch with flagged bifurcation points containing normal form coefficient structures</li><li><tt>success</tt>: flag whether detection was successful</li></ul></div><p>To adjust the behavior of this algorithm, you can change a number of parameters in <tt>branch.method.bifurcation</tt>:</p><div><ul><li><tt>minimal_real_part</tt>: only roots with a real part above this parameter will be taken into consideration when detecting bifurcations. The default is <tt>-0.03</tt>. Too many roots will cause overflow (because the hopf detector multiplies them all), so if an overflow is reported, try increasing this parameter.</li><li><tt>correction_tolerance</tt>: to correct hopf bifurcations, the standard routine <tt>p_correc</tt> is used. The default value for this corrector is <tt>1e-7</tt>.</li><li><tt>secant_iterations</tt>: codimension 2 bifurcations are corrected using a secant method. This is the maximum number of iterations, with default value 30.</li><li><tt>secant_tolerance</tt>: this is the tolerance of the secant method, with default <tt>1e-9</tt>.</li><li><tt>radial_tolerance_factor</tt>: after a bifurcation point has been corrected, it is checked whether the corrected point actually lies on the branch. If the bifurcation point originated from a change in the roots between points A and B, the new point is considered "on the branch" if its distance to the line AB is less than 25% of length(AB). This default percentage can be adjusted with this parameter.</li></ul></div><p>You will see some notifications about found hopf points not falling within the branch. This indicates a false positive: the correction algorithm produced a hopf point, but it ended up some distance away from the branch.</p><pre class="codeinput">branch1.method.bifurcation.minimal_real_part = -0.03;
+branch1.method.bifurcation.secant_tolerance=1e-5;
+branch1.method.bifurcation.correction_tolerance=1e-5;
+
+fprintf(<span class="string">'Bifurcation detection\n'</span>);
+branch1 = br_bifdet(funcs, branch1);
+</pre><pre class="codeoutput">Bifurcation detection
+BR_BIFDET: hopf point found at par(1) = 0.3676281680.
+BR_BIFDET: L1 = -0.0028635604, omega = 0.7234938546, par(1) = 0.3676281680.
+BR_BIFDET: hopf point found at par(1) = 0.3453112603.
+BR_BIFDET: L1 = -0.0133009607, omega = 0.1826428346, par(1) = 0.3453112603.
+BR_BIFDET: hopf point found at par(1) = 0.2988605971.
+BR_BIFDET: L1 = -0.0054576675, omega = 0.2710841446, par(1) = 0.2988605971.
+BR_BIFDET: hopf point found at par(1) = 0.2988605971.
+BR_BIFDET: the detected hopf point does not fall within the branch.
+BR_BIFDET: hopf point found at par(1) = 0.2988605971.
+BR_BIFDET: the detected hopf point does not fall within the branch.
+</pre><h2>Extracting bifurcation locations<a name="5"></a></h2><p>As you can see, three Hopf points were detected. They will have been flagged, e.g. <tt>branch1.point(132).flag = 'hopf'</tt>. They will also have normal form information: <tt>branch1.point(132).nmfm.L1 = -0.0133009607</tt>. We will choose two hopf points and continue them. (These two were chosen because their branches happen to intersect, producing a Double Hopf bifurcation.)</p><p>To this end, we need to know where the bifurcations were found. We do this by calling <tt>br_getflags</tt> on the steady state branch.</p><p><tt>flagged_point_indices = br_getflags(branch)</tt></p><p>Inputs:</p><div><ul><li><tt>branch</tt>: any branch</li></ul></div><p>Outputs:</p><div><ul><li><tt>flagged_point_indices</tt>: a matrix containing the indices of the bifurcation points in <tt>branch</tt>.</li></ul></div><p>The way the <tt>FPI</tt> (flagged point indices) matrix is structured is as follows. Every bifurcation has its own number (0 = <tt>stst</tt>, 1 = <tt>hopf</tt>, ...). You can convert between these representations by using <tt>string = num2bif(number)</tt> and <tt>number = bif2num(string)</tt>. Now, <tt>FPI(bif2num('bifucation type'),:)</tt> is a list of the indices at which the bifurcation of the designated type occurs. (For the full list, you can refer to any of these two files.)</p><p>We first select the second Hopf point on the steady state branch.</p><pre class="codeinput">FPI = br_getflags(branch1);
+
+start_ind = FPI(bif2num(<span class="string">'hopf'</span>),2);
+</pre><h2>Continuation of the first Hopf branch<a name="6"></a></h2><p>We do a standard continuation, using the starting index obtained from the flagged point indices.</p><pre class="codeinput">fprintf(<span class="string">'----- Hopf branch 1 -----\n'</span>);
+[branch2, suc] = SetupHopf(funcs, branch1, start_ind, <span class="string">'contpar'</span>, [1 3], <span class="string">'dir'</span>, 3, <span class="string">'step'</span>, cstepsize);
+
+branch2.parameter.min_bound=[5 0; 6 0; 3 cmin; 1 amin];
+branch2.parameter.max_bound=[1 amax; 3 cmax];
+branch2.parameter.max_step=[1 0.002; 3 cstepsize];
+
+branch2.method.continuation.plot = 0;
+branch2.method.stability.minimal_time_step = 0.005; <span class="comment">% default 0.01</span>
+
+[branch2,s,f,r]=br_contn(funcs,branch2,300);
+branch2 = br_rvers(branch2);
+[branch2,s,f,r]=br_contn(funcs,branch2,300);
+</pre><pre class="codeoutput">----- Hopf branch 1 -----
+BR_CONTN warning: boundary hit.
+BR_CONTN warning: boundary hit.
+</pre><h2>Bifurcation detection on the first Hopf branch<a name="7"></a></h2><p>We repeat the steps for bifurcation detection, but now apply it to the hopf branch. This yields several higher-order bifurcations.</p><pre class="codeinput">branch2.method.bifurcation.minimal_real_part = -0.03;
+branch2.method.bifurcation.secant_tolerance=1e-5;
+branch2.method.bifurcation.correction_tolerance=1e-5;
+
+branch2 = br_bifdet(funcs,branch2);
+</pre><pre class="codeoutput">BR_BIFDET: zeho point found at par(1) = 0.0037927481, par(3) = 0.8396720010.
+BR_BIFDET: omega = 0.1485568996, par(1) = 0.0037927481, par(3) = 0.8396720010.
+s = 0.0000855602, theta = 2.0242706451.
+BR_BIFDET: hoho point found at par(1) = 0.0899922748, par(3) = 0.7735178974.
+BR_BIFDET: omega1 = 0.1560058562, omega2 = 0.2900084424, par(1) = 0.0899922748, par(3) = 0.7735178974.
+theta(0) = 1.5255011842, delta(0) = 1.6984697752.
+BR_BIFDET: genh point found at par(1) = 0.2566137217, par(3) = 0.6210725697.
+BR_BIFDET: L2 = 0.0018108090, omega = 0.1722171486, par(1) = 0.2566137217, par(3) = 0.6210725697.
+BR_BIFDET: Unable to correct as hoho point near par(1) = 0.2813.
+BR_BIFDET: Unable to correct as zeho point near par(1) = 0.3652.
+BR_BIFDET: Unable to correct as hoho point near par(1) = 0.4966.
+</pre><h2>The second Hopf branch<a name="8"></a></h2><p>We now repeat the entire exercise, but with the third hopf point as input.</p><pre class="codeinput">fprintf(<span class="string">'----- Hopf branch 2 -----\n'</span>);
+FPI = br_getflags(branch1);
+
+start_ind = FPI(bif2num(<span class="string">'hopf'</span>),3);
+[branch3, suc] = SetupHopf(funcs, branch1, start_ind, <span class="string">'contpar'</span>, [1 3], <span class="string">'dir'</span>, 3, <span class="string">'step'</span>, cstepsize);
+
+branch3.parameter.min_bound=[5 0; 6 0; 3 cmin; 1 amin];
+branch3.parameter.max_bound=[1 amax; 3 cmax];
+branch3.parameter.max_step=[1 0.002; 3 cstepsize];
+
+branch3.method.continuation.plot = 0;
+branch3.method.stability.minimal_time_step = 0.005; <span class="comment">% default 0.01</span>
+
+[branch3,s,f,r]=br_contn(funcs,branch3,300);
+branch3 = br_rvers(branch3);
+[branch3,s,f,r]=br_contn(funcs,branch3,300);
+
+branch3.method.bifurcation.minimal_real_part = -0.03;
+branch3.method.bifurcation.secant_tolerance=1e-5;
+branch3.method.bifurcation.correction_tolerance=1e-5;
+branch3 = br_bifdet(funcs, branch3);
+</pre><pre class="codeoutput">----- Hopf branch 2 -----
+BR_CONTN warning: boundary hit.
+BR_CONTN warning: boundary hit.
+BR_BIFDET: zeho point found at par(1) = 0.0133327150, par(3) = 0.8554382654.
+BR_BIFDET: omega = 0.2958015628, par(1) = 0.0133327150, par(3) = 0.8554382654.
+s = 0.0000803411, theta = 2.0969328059.
+BR_BIFDET: hoho point found at par(1) = 0.0900149247, par(3) = 0.7736041399.
+BR_BIFDET: omega1 = 0.2900073517, omega2 = 0.1560072608, par(1) = 0.0900149247, par(3) = 0.7736041399.
+theta(0) = 1.6984018466, delta(0) = 1.5254221873.
+BR_BIFDET: genh point found at par(1) = 0.2518504300, par(3) = 0.5812203535.
+BR_BIFDET: L2 = 0.0011029849, omega = 0.2759107995, par(1) = 0.2518504300, par(3) = 0.5812203535.
+BR_BIFDET: Unable to correct as zeho point near par(1) = 0.3348.
+</pre><h2>Plotting the bifurcations on the branches<a name="9"></a></h2><p>We now plot the branches. On the hopf branches, we want to plot the bifurcation points with a special marker. This is done using the function <tt>br_bifplot</tt>.</p><p><tt>function br_bifplot(branch,x_m,y_m,method)</tt></p><p>Inputs:</p><div><ul><li><tt>branch</tt>: any branch (containing flagged bifurcation points)</li><li><tt>x_m</tt>: measure for the x-axis</li><li><tt>y_m</tt>: measure for the y-axis</li><li><tt>method</tt>: a structure specifying a marker type for all bifurcation types</li></ul></div><p>A default bifurcation plot structure can be obtained with <tt>df_bifplot</tt>. This function produces a structure that plots all bifurcations with 'o' and steady state points with '-'.</p><pre class="codeinput">figure;
+
+bifplot = df_bifplot();
+bifplot.hoho = <span class="string">'*'</span>;
+
+[xm,ym] = df_measr(0,branch2,1);
+br_plot(branch2,xm,ym,<span class="string">'-'</span>);
+br_bifplot(branch2,xm,ym,bifplot);
+
+[xm,ym] = df_measr(0,branch3,1);
+br_plot(branch3,xm,ym,<span class="string">'-'</span>);
+br_bifplot(branch3,xm,ym,bifplot);
+
+br_plot(branch1,xm,ym,<span class="string">'--'</span>);
+
+xlabel(<span class="string">'a'</span>);
+ylabel(<span class="string">'c'</span>);
+
+
+<span class="keyword">return</span>;
+</pre><img vspace="5" hspace="5" src="nmfm_demo_02.png" alt=""> <p class="footer"><br>
+      Published with MATLAB&reg; 7.14<br></p></div><!--
+##### SOURCE BEGIN #####
+%% Normal form demo - bifurcation detection and normal form computation
+% This file is self-contained and requires the extension
+% |ddebiftool_extra_nmfm|.
+%
+% <html>
+% $Id$
+% </html>
+
+%% The system
+% This system represents a non-dimensionalized model of two interacting
+% layers of neurons.
+% 
+% $$ \dot{x}_1(t) = - x_1(t) - a g(bx_1(t-\tau_1)) + cg (dx_2(t-\tau_2)), $$
+%
+% $$ \dot{x}_2(t) = - x_2(t) - a g(bx_2(t-\tau_1)) + cg (dx_1(t-\tau_2)), $$
+%
+% where $g:\bf{R} \rightarrow \bf{R}$ is of the sigmoidal form
+%
+% $$ g(z) = \left[\tanh(z-1) + \tanh(1)\right]\cosh(1)^2. $$
+% 
+% The variables $x_1(t)$ and $x_2(t)$ represent the population-averaged
+% neural activity at time $t$ in layers one and two, respectively.
+% The parameter $a > 0$ is a measure of the strength of inhibitory feedback,
+% while $c > 0$ measures the strength of the excitatory effect of one layer
+% on the other. The parameters $b > 0$ and $d > 0$ are saturation rates and
+% the delays $\tau_{1,2}$ represent time lags in the inhibitory feedback
+% loop and excitatory inter-layer connection. Note that the system is
+% symmetric with respect to interchanging the labels $1$ and $2$, so
+% equilibria are necessarily of the form $(x_0,x_0)$.
+
+%% Initialization
+% First, we load the necessary DDE-Biftool extensions.
+% We use existing files in the |funcs| structure. These files were
+% generated using a Maple script.
+% Lastly, we define the boundaries and step sizes of the active parameters.
+clear variables;
+close all;
+addpath('../../ddebiftool',...
+    '../../ddebiftool_extra_psol',...
+    '../../ddebiftool_extra_nmfm',...
+    '../../ddebiftool_utilities');
+
+funcs=set_funcs(...
+    'sys_rhs', @(xx,par) sys_rhs(xx,par),...
+    'sys_tau', @() sys_tau(),...
+    'sys_deri', @(xx,par,nx,np,v) sys_deri(xx,par,nx,np,v),...
+    'sys_mfderi',@(xx,par,varargin) sys_mfderi(xx,par,varargin{:}));
+
+n = 2;
+
+astepsize = 0.0005;
+cstepsize = 0.005;
+amin = 0.0;
+amax = 0.55;
+cmin = 0.0;
+cmax = 1.0;
+
+%% Continuation and plot of steady state branch
+% We set up a steady state branch using |SetupStst| and do a standard
+% continuation. Then, we plot the branch.
+
+branch1 = SetupStst(funcs,'x',[0;0],'parameter',[0.25, 2, 15/29, 1.2, 12.7, 20.2],...
+    'contpar',1,'max_step',[1 astepsize],'max_bound',[1 amax],'min_bound',[1 amin],...
+    'newheuristics_tests',0);
+
+branch1.method.continuation.plot = 0;
+[branch1,s,f,r] = br_contn(funcs,branch1,300);
+branch1 = br_rvers(branch1);
+[branch1,s,f,r] = br_contn(funcs,branch1,300);
+
+figure;
+[xm,ym] = df_measr(0,branch1,1);
+br_plot(branch1,xm,ym);
+xlabel('a');
+ylabel('x_1');
+
+%% Bifurcation detection on the steady state branch
+% To detect bifurcations, we have to call the function |br_bifdet|.
+%
+% |function [newbranch, success] = br_bifdet(funcs, branch)|
+%
+% Inputs:
+%
+% * |funcs|: problem-definition structure with user-defined functions
+% * |branch|: branch of steady state (|stst|) points
+%
+% Outputs:
+%
+% * |newbranch|: branch with flagged bifurcation points containing normal
+% form coefficient structures 
+% * |success|: flag whether detection was successful
+%
+% To adjust the behavior of this algorithm, you can change a
+% number of parameters in |branch.method.bifurcation|:
+%
+% * |minimal_real_part|: only roots with a real part above this parameter
+% will be taken into consideration when detecting bifurcations. The default
+% is |-0.03|. Too many roots will cause overflow (because the hopf detector
+% multiplies them all), so if an overflow is reported, try increasing this
+% parameter.
+% * |correction_tolerance|: to correct hopf bifurcations, the standard
+% routine |p_correc| is used. The default value for this corrector is |1e-7|.
+% * |secant_iterations|: codimension 2 bifurcations are corrected using a
+% secant method. This is the maximum number of iterations, with default
+% value 30.
+% * |secant_tolerance|: this is the tolerance of the secant method, with
+% default |1e-9|.
+% * |radial_tolerance_factor|: after a bifurcation point has been corrected,
+% it is checked whether the corrected point actually lies on the branch.
+% If the bifurcation point originated from a change in the roots between
+% points A and B, the new point is considered "on the branch" if its
+% distance to the line AB is less than 25% of length(AB). This default
+% percentage can be adjusted with this parameter.
+%
+% You will see some notifications about found hopf points not falling
+% within the branch. This indicates a false positive: the correction
+% algorithm produced a hopf point, but it ended up some distance away from
+% the branch.
+
+branch1.method.bifurcation.minimal_real_part = -0.03;
+branch1.method.bifurcation.secant_tolerance=1e-5;
+branch1.method.bifurcation.correction_tolerance=1e-5;
+
+fprintf('Bifurcation detection\n');
+branch1 = br_bifdet(funcs, branch1);
+
+
+%% Extracting bifurcation locations
+% As you can see, three Hopf points were detected. They will have been
+% flagged, e.g. |branch1.point(132).flag = 'hopf'|. They will also have normal
+% form information: |branch1.point(132).nmfm.L1 = -0.0133009607|. We will choose two
+% hopf points and continue them. (These two were chosen because their branches
+% happen to intersect, producing a Double Hopf bifurcation.)
+%
+% To this end, we need to know where the bifurcations were found. We do this by
+% calling |br_getflags| on the steady state branch.
+%
+% |flagged_point_indices = br_getflags(branch)|
+%
+% Inputs:
+%
+% * |branch|: any branch
+%
+% Outputs:
+%
+% * |flagged_point_indices|: a matrix containing the indices of the
+% bifurcation points in |branch|.
+%
+% The way the |FPI| (flagged point indices) matrix is structured is as follows. Every bifurcation has
+% its own number (0 = |stst|, 1 = |hopf|, ...). You can convert between
+% these representations by using |string = num2bif(number)| and
+% |number = bif2num(string)|. Now, |FPI(bif2num('bifucation type'),:)| is a
+% list of the indices at which the bifurcation of the designated type
+% occurs. (For the full list, you can refer to any of these two files.)
+%
+% We first select the second Hopf point on the steady state branch.
+FPI = br_getflags(branch1);
+
+start_ind = FPI(bif2num('hopf'),2);
+
+%% Continuation of the first Hopf branch
+% We do a standard continuation, using the starting index obtained from the
+% flagged point indices.
+fprintf('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH- Hopf branch 1 REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-\n');
+[branch2, suc] = SetupHopf(funcs, branch1, start_ind, 'contpar', [1 3], 'dir', 3, 'step', cstepsize);
+
+branch2.parameter.min_bound=[5 0; 6 0; 3 cmin; 1 amin];
+branch2.parameter.max_bound=[1 amax; 3 cmax];
+branch2.parameter.max_step=[1 0.002; 3 cstepsize];
+
+branch2.method.continuation.plot = 0;
+branch2.method.stability.minimal_time_step = 0.005; % default 0.01
+
+[branch2,s,f,r]=br_contn(funcs,branch2,300);
+branch2 = br_rvers(branch2);
+[branch2,s,f,r]=br_contn(funcs,branch2,300);
+
+%% Bifurcation detection on the first Hopf branch
+% We repeat the steps for bifurcation detection, but now apply it to the
+% hopf branch. This yields several higher-order bifurcations.
+branch2.method.bifurcation.minimal_real_part = -0.03;
+branch2.method.bifurcation.secant_tolerance=1e-5;
+branch2.method.bifurcation.correction_tolerance=1e-5;
+
+branch2 = br_bifdet(funcs,branch2);
+
+
+%% The second Hopf branch
+% We now repeat the entire exercise, but with the third hopf point as
+% input.
+fprintf('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH- Hopf branch 2 REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-\n');
+FPI = br_getflags(branch1);
+
+start_ind = FPI(bif2num('hopf'),3);
+[branch3, suc] = SetupHopf(funcs, branch1, start_ind, 'contpar', [1 3], 'dir', 3, 'step', cstepsize);
+
+branch3.parameter.min_bound=[5 0; 6 0; 3 cmin; 1 amin];
+branch3.parameter.max_bound=[1 amax; 3 cmax];
+branch3.parameter.max_step=[1 0.002; 3 cstepsize];
+
+branch3.method.continuation.plot = 0;
+branch3.method.stability.minimal_time_step = 0.005; % default 0.01
+
+[branch3,s,f,r]=br_contn(funcs,branch3,300);
+branch3 = br_rvers(branch3);
+[branch3,s,f,r]=br_contn(funcs,branch3,300);
+
+branch3.method.bifurcation.minimal_real_part = -0.03;
+branch3.method.bifurcation.secant_tolerance=1e-5;
+branch3.method.bifurcation.correction_tolerance=1e-5;
+branch3 = br_bifdet(funcs, branch3);
+
+%% Plotting the bifurcations on the branches
+% We now plot the branches. On the hopf branches, we want to plot the
+% bifurcation points with a special marker. This is done using the function
+% |br_bifplot|.
+%
+% |function br_bifplot(branch,x_m,y_m,method)|
+%
+% Inputs:
+%
+% * |branch|: any branch (containing flagged bifurcation points)
+% * |x_m|: measure for the x-axis
+% * |y_m|: measure for the y-axis
+% * |method|: a structure specifying a marker type for all bifurcation
+% types
+%
+% A default bifurcation plot structure can be obtained with |df_bifplot|.
+% This function produces a structure that plots all bifurcations with 'o'
+% and steady state points with '-'.
+
+figure;
+
+bifplot = df_bifplot();
+bifplot.hoho = '*';
+
+[xm,ym] = df_measr(0,branch2,1);
+br_plot(branch2,xm,ym,'-');
+br_bifplot(branch2,xm,ym,bifplot);
+
+[xm,ym] = df_measr(0,branch3,1);
+br_plot(branch3,xm,ym,'-');
+br_bifplot(branch3,xm,ym,bifplot);
+
+br_plot(branch1,xm,ym,'REPLACE_WITH_DASH_DASH');
+
+xlabel('a');
+ylabel('c');
+
+
+return;
+
+
+
+
+##### SOURCE END #####
+--></body></html>

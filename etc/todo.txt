@@ -1,0 +1,7 @@
+bugs/unexpected behaviour:
+
+* acknowledge legpts (chebfun), munkres
+
+* p_tau still uses strcmp (implement dde_psol_delays, dde_hcli_delays)
+
+* dde_coll_delay_zero_cond still uses psol_jac, convert to dde_coll_jac

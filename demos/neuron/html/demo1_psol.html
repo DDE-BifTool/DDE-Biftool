@@ -1,0 +1,341 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Continuation and stability of periodic orbits</title><meta name="generator" content="MATLAB 9.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-02-03"><meta name="DC.source" content="demo1_psol.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Continuation and stability of periodic orbits</h1><!--introduction--><p>
+$Id: demo1_psol.m 47 2014-04-19 17:05:42Z jan.sieber $
+</p><p>DDE-biftool computes one-parameter families of periodic orbits (automatically determining their period) by solving periodic boundary-value problems approximately with collocation schemes. A typical starting point for a family of periodic orbits is a Hopf bifurcation. This demo requires <a href="demo1_hopf.html">demo1_hopf.html</a> to have run beforehand.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Constructing an initial small-amplitude orbit near a Hopf bifurcation</a></li><li><a href="#3">Construction and continuation of branch</a></li><li><a href="#4">Figure: family of periodic orbits</a></li><li><a href="#5">Loss of accuracy along branch</a></li><li><a href="#6">Figures: Low accuracy solution profiles (top) and period (bottom) of periodic orbits</a></li><li><a href="#7">Stability of periodic orbits</a></li><li><a href="#8">Figures: Stability of periodic orbits at low accuracy</a></li><li><a href="#9">Refined computation with adaptive mesh</a></li><li><a href="#10">Homoclinic orbit</a></li><li><a href="#11">Save and continue</a></li></ul></div><pre class="codeinput"><span class="comment">%#ok&lt;*ASGLU,*NOPTS,*NASGU&gt;</span>
+<span class="comment">%</span>
+</pre><h2 id="2">Constructing an initial small-amplitude orbit near a Hopf bifurcation</h2><p>We use the first Hopf point we computed (<tt>first_hopf</tt>) to construct a small-amplitude (<tt>1e-2</tt>) periodic solution on an equidistant mesh of 18 intervals with piecewise polynomial degree 3. The steplength condition (returned by <tt>p_topsol</tt>) ensures the branch switch from the Hopf to the periodic solution as it avoids convergence of the amplitude to zero during corrections. Due to the presence of the steplength condition we also need to free one parameter, here <img src="demo1_psol_eq00088373482002467634.png" alt="$a_{21}$">.</p><pre class="codeinput">intervals=18;
+degree=3;
+[psol,stepcond]=p_topsol(funcs,first_hopf,1e-2,degree,intervals);
+<span class="comment">% correct periodic solution guess:</span>
+method=df_mthod(funcs,<span class="string">'psol'</span>);
+[psol,success]=p_correc(funcs,psol,4,stepcond,method.point)
+</pre><pre class="codeoutput">psol = 
+  struct with fields:
+
+         kind: 'psol'
+    parameter: [0.5000 -1 1 0.8072 0.2000 0.2000 1.5000]
+         mesh: [1&times;55 double]
+       degree: 3
+      profile: [2&times;55 double]
+       period: 8.0354
+    stability: []
+success =
+  logical
+   1
+</pre><h2 id="3">Construction and continuation of branch</h2><p>The result, along with a degenerate periodic solution with amplitude zero is used to start on the emanating branch of periodic solutions, see figure below. We avoid adaptive mesh selection and save memory by clearing the mesh field. An equidistant mesh is then automatically used which is kept fixed during continuation. Simple clearing of the mesh field is only  possible if it is already equidistant. This is the case here as <tt>p_topsol</tt> returns a solution on an equidistant mesh.</p><pre class="codeinput">branch4=df_brnch(funcs,ind_a21,<span class="string">'psol'</span>); <span class="comment">% empty branch:</span>
+branch4.parameter.min_bound(1,:)=[ind_a21 0];
+branch4.parameter.max_bound(1,:)=[ind_a21 5];
+branch4.parameter.max_step(1,:)=[ind_a21 0.1];
+<span class="comment">% make degenerate periodic solution with amplitude zero at hopf point:</span>
+deg_psol=p_topsol(funcs,first_hopf,0,degree,intervals);
+<span class="comment">% use deg_psol and psol as first two points on branch:</span>
+deg_psol.mesh=[];
+branch4.point=deg_psol;
+psol.mesh=[];
+branch4.point(2)=psol;
+figure(9); clf;
+[branch4,s,f,r]=br_contn(funcs,branch4,50); <span class="comment">% compute periodic solutions branch</span>
+xlabel(<span class="string">'a21'</span>);ylabel(<span class="string">'amplitude'</span>);
+</pre><img vspace="5" hspace="5" src="demo1_psol_01.png" alt=""> <h2 id="4">Figure: family of periodic orbits</h2><p>Branch of periodic solutions emanating from a Hopf point. The branch turns at the far right.</p><h2 id="5">Loss of accuracy along branch</h2><p>Notice how computing periodic solution branches takes considerably more computational time. Zooming shows erratic behaviour of the last computed branch points, shortly beyond a turning point, see figure below. Plotting some of the last solution profiles shows that smoothness and thus also accuracy are lost, see figure below. From a plot of the period along the branch we could suspect a homoclinic or heteroclinic bifurcation scenario.</p><pre class="codeinput">ll=length(branch4.point);
+figure(10); clf;
+subplot(3,1,1);
+p_pplot(branch4.point(ll-10));
+xlabel(<span class="string">'t/period'</span>);ylabel(sprintf(<span class="string">'x_1, x_2, point %d'</span>,ll-10));
+subplot(3,1,2);
+p_pplot(branch4.point(ll-5));
+xlabel(<span class="string">'t/period'</span>);ylabel(sprintf(<span class="string">'x_1, x_2, point %d'</span>,ll-5));
+subplot(3,1,3);
+p_pplot(branch4.point(ll-1));
+xlabel(<span class="string">'t/period'</span>);ylabel(sprintf(<span class="string">'x_1, x_2, point %d'</span>,ll-1));
+figure(11); clf;
+[xm,ym]=df_measr(0,branch4);
+ym
+ym.field=<span class="string">'period'</span>;
+ym.col=1;
+br_plot(branch4,xm,ym,<span class="string">'b'</span>);<span class="comment">% look at the period along the branch:</span>
+axis([2.2 2.36 20 170]);
+xlabel(<span class="string">'a21'</span>);ylabel(<span class="string">'period'</span>);
+</pre><pre class="codeoutput">ym = 
+  struct with fields:
+
+       field: 'profile'
+    subfield: ''
+         row: 1
+         col: 'ampl'
+        func: ''
+</pre><img vspace="5" hspace="5" src="demo1_psol_02.png" alt=""> <img vspace="5" hspace="5" src="demo1_psol_03.png" alt=""> <h2 id="6">Figures: Low accuracy solution profiles (top) and period (bottom) of periodic orbits</h2><p>Three solution profiles using equidistant meshes (top), and period (bottom) along the branch of periodic solutions.</p><h2 id="7">Stability of periodic orbits</h2><p>We compute and plot the stability (Floquet multipliers) just before and after the turning point. The second spectrum is clearly unstable but no accurate trivial Floquet multiplier is present at 1.</p><pre class="codeinput">psol=branch4.point(ll-11);
+psol.stability=p_stabil(funcs,psol,method.stability);
+figure(12); clf;
+subplot(2,1,1);
+p_splot(psol);
+axis <span class="string">image</span>;
+psol=branch4.point(ll-8);
+psol.stability=p_stabil(funcs,psol,method.stability);
+subplot(2,1,2);
+p_splot(psol);
+</pre><img vspace="5" hspace="5" src="demo1_psol_04.png" alt=""> <h2 id="8">Figures: Stability of periodic orbits at low accuracy</h2><p>Floquet multipliers for a periodic solutions before (top) and just after (bottom) the turning point visible in figure.</p><h2 id="9">Refined computation with adaptive mesh</h2><p>We recompute the branch using adaptive mesh selection (with reinterpolation and additional corrections) after correcting every point, see figure. Increasing mesh sizes and using adaptive mesh selection also improves the accuracy of the computed Floquet multipliers.</p><pre class="codeinput">psol=branch4.point(ll-12:ll-11); <span class="comment">%refine these two points</span>
+intervals=40;
+degree=4;
+psol=arrayfun(@(p)p_remesh(p,degree,intervals),psol); <span class="comment">% refine</span>
+method.point.adapt_mesh_after_correct=1;
+method.point.newton_max_iterations=7;
+method.point.newton_nmon_iterations=2;
+psol=arrayfun(@(p)p_correc(funcs,p,[],[],method.point),psol) <span class="comment">%correct</span>
+branch5=branch4;
+branch5.point=psol;
+branch5.method=method;
+[xm,ym]=df_measr(0,branch5);
+ym.field=<span class="string">'period'</span>;
+ym.col=1;
+figure(11); axis <span class="string">auto</span>; hold <span class="string">on</span>;
+branch5.method.continuation.plot_measure.x=xm;
+branch5.method.continuation.plot_measure.y=ym;
+[branch5,s,f,r]=br_contn(funcs,branch5,25);
+xlabel(<span class="string">'a21'</span>);ylabel(<span class="string">'period'</span>);
+</pre><pre class="codeoutput">psol = 
+  1&times;2 struct array with fields:
+    kind
+    parameter
+    mesh
+    degree
+    profile
+    period
+    stability
+</pre><img vspace="5" hspace="5" src="demo1_psol_05.png" alt=""> <h2 id="10">Homoclinic orbit</h2><p>Plotting of a point clearly shows the (double) homoclinic nature of the solutions.</p><pre class="codeinput"><span class="comment">%&lt;html&gt;&lt;a name=longperiod&gt;&lt;/a&gt;&lt;/html&gt;</span>
+<span class="comment">%</span>
+figure(13); clf;
+subplot(2,1,1);
+indmax0=length(branch5.point);
+psol=branch5.point(indmax0-6);
+plot(psol.mesh,psol.profile);
+xlabel(<span class="string">'t/period'</span>);ylabel(<span class="string">'x1, x2'</span>);
+subplot(2,1,2);
+psol1=p_remesh(psol,degree,0:0.001:1);
+psol2=p_remesh(psol,degree,mod((0:0.001:1)+0.02,1));
+plot(psol1.profile',psol2.profile');
+xlabel(<span class="string">'x1'</span>);ylabel(<span class="string">'x2'</span>);
+psol.period
+</pre><pre class="codeoutput">ans =
+  161.4688
+</pre><img vspace="5" hspace="5" src="demo1_psol_06.png" alt=""> <h2 id="11">Save and continue</h2><p>with homoclinic connections <a href="demo1_hcli.html">demo1_hcli.html</a> or folds of periodic orbits <a href="demo1_POfold.html">demo1_POfold.html</a></p><pre class="codeinput">save(<span class="string">'demo1_psol_results.mat'</span>);
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Continuation and stability of periodic orbits
+%
+% <html>
+% $Id: demo1_psol.m 47 2014-04-19 17:05:42Z jan.sieber $
+% </html>
+%
+% DDE-biftool computes one-parameter families of periodic orbits
+% (automatically determining their period) by solving periodic
+% boundary-value problems approximately with collocation schemes. A
+% typical starting point for a family of periodic orbits is a Hopf
+% bifurcation. This demo requires <demo1_hopf.html> to have run beforehand.
+%%
+%#ok<*ASGLU,*NOPTS,*NASGU>
+%
+%% Constructing an initial small-amplitude orbit near a Hopf bifurcation
+% We use the first Hopf point we computed (|first_hopf|) to construct a
+% small-amplitude (|1e-2|) periodic solution on an equidistant mesh of 18
+% intervals with piecewise polynomial degree 3. The steplength condition
+% (returned by |p_topsol|) ensures the branch switch from the Hopf to the
+% periodic solution as it avoids convergence of the amplitude to zero
+% during corrections. Due to the presence of the steplength condition we
+% also need to free one parameter, here $a_{21}$.
+intervals=18;
+degree=3;
+[psol,stepcond]=p_topsol(funcs,first_hopf,1e-2,degree,intervals);
+% correct periodic solution guess:
+method=df_mthod(funcs,'psol');
+[psol,success]=p_correc(funcs,psol,4,stepcond,method.point)
+
+%% Construction and continuation of branch
+% The result, along with a degenerate periodic solution with amplitude zero
+% is used to start on the emanating branch of periodic solutions, see
+% figure below. We avoid adaptive mesh selection and save
+% memory by clearing the mesh field. An equidistant mesh is then
+% automatically used which is kept fixed during continuation. Simple
+% clearing of the mesh field is only  possible if it is already
+% equidistant. This is the case here as |p_topsol| returns a solution on an
+% equidistant mesh.
+branch4=df_brnch(funcs,ind_a21,'psol'); % empty branch:
+branch4.parameter.min_bound(1,:)=[ind_a21 0];
+branch4.parameter.max_bound(1,:)=[ind_a21 5];
+branch4.parameter.max_step(1,:)=[ind_a21 0.1];
+% make degenerate periodic solution with amplitude zero at hopf point:
+deg_psol=p_topsol(funcs,first_hopf,0,degree,intervals);
+% use deg_psol and psol as first two points on branch:
+deg_psol.mesh=[];
+branch4.point=deg_psol;
+psol.mesh=[];
+branch4.point(2)=psol;
+figure(9); clf;
+[branch4,s,f,r]=br_contn(funcs,branch4,50); % compute periodic solutions branch
+xlabel('a21');ylabel('amplitude');
+%% Figure: family of periodic orbits
+% Branch of periodic solutions emanating from a Hopf point. The
+% branch turns at the far right.
+
+%% Loss of accuracy along branch
+% Notice how computing periodic solution branches takes considerably more
+% computational time. Zooming shows erratic behaviour of the last computed
+% branch points, shortly beyond a turning point, see figure below. Plotting
+% some of the last solution profiles shows that smoothness and thus also
+% accuracy are lost, see figure below. From a plot of the period along the
+% branch we could suspect a homoclinic or heteroclinic bifurcation
+% scenario.
+ll=length(branch4.point);
+figure(10); clf;
+subplot(3,1,1);
+p_pplot(branch4.point(ll-10));
+xlabel('t/period');ylabel(sprintf('x_1, x_2, point %d',ll-10));
+subplot(3,1,2);
+p_pplot(branch4.point(ll-5));
+xlabel('t/period');ylabel(sprintf('x_1, x_2, point %d',ll-5));
+subplot(3,1,3);
+p_pplot(branch4.point(ll-1));
+xlabel('t/period');ylabel(sprintf('x_1, x_2, point %d',ll-1));
+figure(11); clf;
+[xm,ym]=df_measr(0,branch4); 
+ym
+ym.field='period';
+ym.col=1;
+br_plot(branch4,xm,ym,'b');% look at the period along the branch:
+axis([2.2 2.36 20 170]);
+xlabel('a21');ylabel('period');
+%% Figures: Low accuracy solution profiles (top) and period (bottom) of periodic orbits
+% Three solution profiles using equidistant meshes (top), and period
+% (bottom) along the branch of periodic solutions.
+%% Stability of periodic orbits
+% We compute and plot the stability (Floquet multipliers) just before and
+% after the turning point. The second spectrum is clearly unstable but no
+% accurate trivial Floquet multiplier is present at 1.
+psol=branch4.point(ll-11);
+psol.stability=p_stabil(funcs,psol,method.stability);
+figure(12); clf;
+subplot(2,1,1);
+p_splot(psol);
+axis image;
+psol=branch4.point(ll-8);
+psol.stability=p_stabil(funcs,psol,method.stability);
+subplot(2,1,2);
+p_splot(psol);
+%% Figures: Stability of periodic orbits at low accuracy
+% Floquet multipliers for a periodic solutions before (top) and just after
+% (bottom) the turning point visible in figure.
+%% Refined computation with adaptive mesh
+% We recompute the branch using adaptive mesh selection (with
+% reinterpolation and additional corrections) after correcting every point,
+% see figure. Increasing mesh sizes and using adaptive mesh selection also
+% improves the accuracy of the computed Floquet multipliers.
+psol=branch4.point(ll-12:ll-11); %refine these two points
+intervals=40;
+degree=4;
+psol=arrayfun(@(p)p_remesh(p,degree,intervals),psol); % refine
+method.point.adapt_mesh_after_correct=1;
+method.point.newton_max_iterations=7;
+method.point.newton_nmon_iterations=2;
+psol=arrayfun(@(p)p_correc(funcs,p,[],[],method.point),psol) %correct
+branch5=branch4;
+branch5.point=psol;
+branch5.method=method;
+[xm,ym]=df_measr(0,branch5);
+ym.field='period';
+ym.col=1;
+figure(11); axis auto; hold on;
+branch5.method.continuation.plot_measure.x=xm;
+branch5.method.continuation.plot_measure.y=ym;
+[branch5,s,f,r]=br_contn(funcs,branch5,25);
+xlabel('a21');ylabel('period');
+%% Homoclinic orbit
+% Plotting of a point clearly shows the (double) homoclinic nature of the
+% solutions. 
+%
+%<html><a name=longperiod></a></html>
+% 
+figure(13); clf;
+subplot(2,1,1);
+indmax0=length(branch5.point);
+psol=branch5.point(indmax0-6);
+plot(psol.mesh,psol.profile);
+xlabel('t/period');ylabel('x1, x2');
+subplot(2,1,2);
+psol1=p_remesh(psol,degree,0:0.001:1);
+psol2=p_remesh(psol,degree,mod((0:0.001:1)+0.02,1));
+plot(psol1.profile',psol2.profile');
+xlabel('x1');ylabel('x2');
+psol.period
+%% Save and continue 
+% with homoclinic connections <demo1_hcli.html> or folds of periodic orbits
+% <demo1_POfold.html>
+save('demo1_psol_results.mat');
+
+##### SOURCE END #####
+--></body></html>

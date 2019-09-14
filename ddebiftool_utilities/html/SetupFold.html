@@ -1,0 +1,152 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Initialize continuation of Fold bifurcations</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-03-23"><meta name="DC.source" content="SetupFold.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+
+  </style></head><body><div class="content"><h1>Initialize continuation of Fold bifurcations</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Inputs</a></li><li><a href="#3">Outputs</a></li><li><a href="#4">process options</a></li><li><a href="#5">set up functions of extended system</a></li><li><a href="#6">create initial guess for correction</a></li><li><a href="#7">correct and add 2nd point if desired</a></li></ul></div><pre class="codeinput"><span class="keyword">function</span> [foldbranch,suc]=SetupFold(funcs,branch,ind,varargin)
+</pre><h2>Inputs<a name="2"></a></h2><div><ul><li><tt>funcs</tt>: functions used for DDE</li><li><tt>branch</tt>: branch of stst along which Fold was discovered</li><li><tt>ind</tt>: index of approximate Fold point</li></ul></div><p>Important optional inputs (name-value pairs) outputs foldbranch: Fold branch with first point (or two points) suc: flag whether corection was successful</p><p>Important name-value pair inputs</p><div><ul><li><tt>'contpar'</tt> (integers default <tt>[]</tt>): index of additional continuation parameters  (in addition to free pars of branch</li><li><tt>'correc'</tt> (logical, default true): apply <tt>p_correc</tt> to first points on fold   branch</li><li><tt>'dir'</tt> (integer, default <tt>[]</tt>): which parameter to vary initially along fold   branch (foldbranch has only single point if dir is empty)</li><li><tt>'step'</tt> (real, default <tt>1e-3</tt>): size of initial step if dir is non-empty</li></ul></div><p>All other named arguments are passed on to fields of <tt>foldbranch</tt></p><h2>Outputs<a name="3"></a></h2><div><ul><li><tt>foldbranch</tt>: Hopf branch with first point (or two points)</li><li><tt>suc</tt>: flag whether corection was successful</li></ul></div><p>$Id: SetupFold.html 20 2014-04-11 19:27:33Z jan.sieber $</p><h2>process options<a name="4"></a></h2><pre class="codeinput">default={<span class="string">'contpar'</span>,[],<span class="string">'correc'</span>,true,<span class="string">'dir'</span>,[],<span class="string">'step'</span>,1e-3};
+[options,pass_on]=dde_set_options(default,varargin,<span class="string">'pass_on'</span>);
+<span class="comment">% initialize branch of folds (pbranch)</span>
+foldbranch=df_brnch(funcs,options.contpar,<span class="string">'fold'</span>);
+foldbranch.method.point=branch.method.point;
+foldbranch.method.continuation=dde_set_options(foldbranch.method.continuation,pass_on,<span class="string">'pass_on'</span>);
+foldbranch.method.point=dde_set_options(foldbranch.method.point,pass_on,<span class="string">'pass_on'</span>);
+foldbranch.method.stability=dde_set_options(foldbranch.method.stability,pass_on,<span class="string">'pass_on'</span>);
+<span class="keyword">if</span> isempty(options.contpar)
+    <span class="comment">% if no continuation parameters are given use free parameters of branch</span>
+    foldbranch.parameter.free=branch.parameter.free;
+<span class="keyword">elseif</span> length(options.contpar)==1;
+    <span class="comment">% if single continuation parameter is given prepend to free parameters of branch</span>
+    foldbranch.parameter.free=[options.contpar,branch.parameter.free];
+<span class="keyword">else</span>
+    foldbranch.parameter.free=options.contpar(:)';
+<span class="keyword">end</span>
+foldbranch.parameter=dde_set_options(foldbranch.parameter,pass_on,<span class="string">'pass_on'</span>);
+point=branch.point(ind);
+<span class="keyword">if</span> ~isfield(point,<span class="string">'stability'</span>)
+    point.stability=p_stabil(funcs,point,branch.method.stability);
+<span class="keyword">end</span>
+</pre><h2>set up functions of extended system<a name="5"></a></h2><h2>create initial guess for correction<a name="6"></a></h2><pre class="codeinput">foldini0=p_tofold(funcs,point);
+</pre><h2>correct and add 2nd point if desired<a name="7"></a></h2><pre class="codeinput">[foldbranch,suc]=correct_ini(funcs,foldbranch,foldini0,<span class="keyword">...</span>
+    options.dir,options.step,options.correc);
+</pre><pre class="codeinput"><span class="keyword">end</span>
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.14<br></p></div><!--
+##### SOURCE BEGIN #####
+%% Initialize continuation of Fold bifurcations
+%%
+function [foldbranch,suc]=SetupFold(funcs,branch,ind,varargin)
+%% Inputs
+%
+% * |funcs|: functions used for DDE
+% * |branch|: branch of stst along which Fold was discovered
+% * |ind|: index of approximate Fold point
+%
+% Important optional inputs (name-value pairs)
+% outputs
+% foldbranch: Fold branch with first point (or two points)
+% suc: flag whether corection was successful
+%
+% Important name-value pair inputs
+%
+% * |'contpar'| (integers default |[]|): index of additional continuation parameters
+%  (in addition to free pars of branch
+% * |'correc'| (logical, default true): apply |p_correc| to first points on fold
+%   branch
+% * |'dir'| (integer, default |[]|): which parameter to vary initially along fold
+%   branch (foldbranch has only single point if dir is empty)
+% * |'step'| (real, default |1e-3|): size of initial step if dir is non-empty
+%
+% All other named arguments are passed on to fields of |foldbranch|
+%% Outputs
+% 
+% * |foldbranch|: Hopf branch with first point (or two points)
+% * |suc|: flag whether corection was successful
+%
+% $Id: SetupFold.html 20 2014-04-11 19:27:33Z jan.sieber $
+%
+%% process options
+default={'contpar',[],'correc',true,'dir',[],'step',1e-3};
+[options,pass_on]=dde_set_options(default,varargin,'pass_on');
+% initialize branch of folds (pbranch)
+foldbranch=df_brnch(funcs,options.contpar,'fold');
+foldbranch.method.point=branch.method.point;
+foldbranch.method.continuation=dde_set_options(foldbranch.method.continuation,pass_on,'pass_on');
+foldbranch.method.point=dde_set_options(foldbranch.method.point,pass_on,'pass_on');
+foldbranch.method.stability=dde_set_options(foldbranch.method.stability,pass_on,'pass_on');
+if isempty(options.contpar)
+    % if no continuation parameters are given use free parameters of branch
+    foldbranch.parameter.free=branch.parameter.free;
+elseif length(options.contpar)==1;
+    % if single continuation parameter is given prepend to free parameters of branch
+    foldbranch.parameter.free=[options.contpar,branch.parameter.free];
+else
+    foldbranch.parameter.free=options.contpar(:)';
+end
+foldbranch.parameter=dde_set_options(foldbranch.parameter,pass_on,'pass_on');
+point=branch.point(ind);
+if ~isfield(point,'stability')
+    point.stability=p_stabil(funcs,point,branch.method.stability);
+end
+%% set up functions of extended system
+%% create initial guess for correction
+foldini0=p_tofold(funcs,point);
+%% correct and add 2nd point if desired
+[foldbranch,suc]=correct_ini(funcs,foldbranch,foldini0,...
+    options.dir,options.step,options.correc);
+end
+
+##### SOURCE END #####
+--></body></html>

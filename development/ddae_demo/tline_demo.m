@@ -1,0 +1,140 @@
+%% test NDDE modifications - laser model by Hessel et al
+%
+base=[pwd(),'/../../'];
+addpath([base,'ddebiftool/'],...
+    [base,'ddebiftool_extra_psol/'],...
+    [base,'ddebiftool_utilities/'],...
+    [base,'ddebiftool_extra_nmfm/'],...
+    [base,'ddebiftool_extra_rotsym/']);
+clear;
+format compact
+format short g
+lw={'linewidth',2};
+%% Set number of delays and create parameter names as strings
+parnames={'Rc','R','Is_Rc_by_V0','tau_by_C'};
+cs=[parnames;num2cell(1:length(parnames))];
+ip=struct(cs{:});
+varnames={'y','v'};
+cs=[varnames;num2cell(1:length(varnames))];
+iv=struct(cs{:});
+V0=0.055;
+Is=8e-6;
+Cp=0.08;
+par0([ip.Rc,ip.R, ip.Is_Rc_by_V0, ip.tau_by_C])=...
+    [ 50,     50, 50*Is/V0,  3.5/Cp];
+funcs=set_symfuncs(@sym_tline,'sys_tau',@()ip.tau_by_C,'lhs_matrix',diag([1,0]));
+bd={'max_bound',[ip.R,150;ip.tau_by_C,225],...
+    'min_bound',[ip.R,1; ip.tau_by_C,0.1]};
+bds=struct(bd{:});
+getij=@(x,i,j)x(i,j);
+getc=@(x,i)x(:,i);
+bdf=@(p,mx)getij(bds.(mx),ip.(p)==getc(bds.(mx),1),2);
+stab_inputs={'exclude_trivial',true};
+getp=@(br,name)arrayfun(@(p)p.parameter(ip.(name)),br.point);
+%%
+R_eq=@(y)par0(ip.Rc)*y./(par0(ip.Is_Rc_by_V0)*(exp(y)-1));
+u_eq=@(y)(y*(R_eq(y)-par0(ip.Rc)))./(2*R_eq(y));
+figure(1);clf;
+fplot(R_eq,[1,10]);ylim([bdf('R','min_bound'),bdf('R','max_bound')]);
+y0=7;
+x0=[y0;u_eq(y0)];
+par0(ip.R)=R_eq(y0);
+%%
+[ntriv_eq,suc]=SetupStst(funcs,'contpar',ip.R,...
+    'x',x0,'parameter',par0,bd{:},'max_step',[ip.R,5])
+%%
+figure(1);clf;ax1=gca;
+ntriv_eq=br_contn(funcs,ntriv_eq,120,'plotaxis',ax1);
+ntriv_eq=br_rvers(ntriv_eq);
+ntriv_eq=br_contn(funcs,ntriv_eq,120,'plotaxis',ax1);
+Rvals=getp(ntriv_eq,'R');
+%%
+[ntriv_wbifs,eqbiftests,eqbif_ind,eqbiftype]=LocateSpecialPoints(...
+    funcs,ntriv_eq,stab_inputs{:},'nearest',0);
+stat_nunst=GetStability(ntriv_wbifs);
+%%
+[hopf1,suc]=SetupHopf(funcs,ntriv_wbifs,eqbif_ind(1),...
+    'contpar',[ip.R,ip.tau_by_C],'dir',ip.R,'step',1)
+figure(2);clf;ax2=gca;
+hopf1=br_contn(funcs,hopf1,100,'plotaxis',ax2);
+hopf1=br_rvers(hopf1);
+hopf1=br_contn(funcs,hopf1,200,'plotaxis',ax2);
+%%
+[hopf1_wbifs,h1biftests,h1bif_ind,h1biftype]=LocateSpecialPoints(...
+    funcs,hopf1,stab_inputs{:},'nearest',0);
+%%
+figure(3);clf;ax3=gca;
+for i=1:length(hopf1_wbifs.point)
+    [ps{i},suc(i)]=SetupPsol(funcs,hopf1_wbifs,i,'contpar',ip.R,...
+        'submesh','cheb','degree',10,'intervals',5,...
+        'plot',0,'plot_progress',0,'collocation_parameters','cheb');
+    ps{i}=br_contn(funcs,ps{i},5);
+    Ri=getp(ps{i},'R');
+    ampi(i)=max(arrayfun(@(p)max(p.profile(1,:))-min(p.profile(1,:)),ps{i}.point));
+    psdir(i)=diff(Ri([1,end]));
+    fprintf('i=%d of %d, L1=%g, dR/amp^2=%g\n',...
+        i,length(hopf1_wbifs.point),h1biftests.genh(1,i),psdir(i)/ampi(i)^2);
+end
+figure(3);clf;ax3=gca;
+plot(ax3,getp(hopf1_wbifs,'R'),psdir./ampi.^2,'o');
+grid(ax3,'on');
+%%
+[hopf2,suc]=SetupHopf(funcs,ntriv_wbifs,eqbif_ind(2),...
+    'contpar',[ip.R,ip.tau_by_C],'dir',ip.R,'step',1)
+figure(2);ax2=gca;
+hopf2=br_contn(funcs,hopf2,100,'plotaxis',ax2);
+hopf2=br_rvers(hopf2);
+hopf2=br_contn(funcs,hopf2,200,'plotaxis',ax2);
+%%
+[hopf2_wbifs,h2biftests,h2bif_ind,h2biftype]=LocateSpecialPoints(...
+    funcs,hopf2,stab_inputs{:},'nearest',0);
+%%
+p_eva=@(p,t)dde_coll_eva(p.profile,p.mesh,mod(t,1),p.degree,'kron',true);
+ptau=@(p)setfield(p,'profile',p_eva(p,p.mesh-p.parameter(ip.tau_by_C)/p.period));
+u=@(p)setfield(p,'profile',[1,0]*p.profile-[0,1]*getfield(ptau(p),'profile'));
+u_norm=@(p)sqrt(dde_coll_profile_dot(u(p),u(p)))*V0;
+p_meas={@(p)p.parameter(ip.R),@(p)u_norm(p)};
+[psolbr,suc]=SetupPsol(funcs,ntriv_wbifs,eqbif_ind(1),'contpar',ip.R,...
+    'print_residual_info',1,'degree',10,'intervals',50,...
+    'submesh','cheb','collocation_parameters','cheb','minimal_accuracy',1e-8,...
+    'plot_measure',p_meas,'max_step',[0,2]);
+figure(1);clf;ax1=gca;
+psolbr=br_contn(funcs,psolbr,200,'plotaxis',ax1);
+%%
+[ps_nunst,ps_dom,ps_defect,psolbr.point]=GetStability(psolbr,'funcs',funcs,...
+    stab_inputs{:},'geteigenfuncs',true,'recompute',true,...
+    'eigmatrix','sparse');
+%%
+ind_pd=find(diff(ps_nunst)~=0&real(ps_dom(1:end-1))<0);
+[pdfuncs,pdbr,suc]=SetupPeriodDoubling(funcs,psolbr,ind_pd(1),...
+    'contpar',[ip.R,ip.tau_by_C],'dir',ip.R,'step',1e0,...
+    'print_residual_info',1,'max_step',[0,Inf],...
+    'plot_measure',[],'matrix','sparse','minimal_angle',0.5);
+%%
+figure(2);
+pdbr=br_contn(pdfuncs,pdbr,500,'plotaxis',ax2);
+pdbr=br_rvers(pdbr);
+pdbr=br_contn(pdfuncs,pdbr,800,'plotaxis',ax2);
+%%
+[pd_nunst,pd_dom,pd_defect,pdbr.point]=GetStability(pdbr,'funcs',pdfuncs,...
+    stab_inputs{:},'geteigenfuncs',true,'recompute',true,...
+    'eigmatrix','sparse');
+%%
+%%
+ind_pfold=find(diff(ps_nunst)~=0&real(ps_dom(1:end-1))>0);
+[pfoldfuncs,pfoldbr,suc]=SetupPOfold(funcs,psolbr,ind_pfold(1),...
+    'contpar',[ip.R,ip.tau_by_C],'dir',ip.R,'step',1e0,...
+    'print_residual_info',1,'max_step',[0,Inf],...
+    'plot_measure',[],'matrix','sparse','minimal_angle',0.5)
+%%
+figure(2);
+pfoldbr=br_contn(pfoldfuncs,pfoldbr,50,'plotaxis',ax2);
+pfoldbr=br_rvers(pfoldbr);
+pfoldbr=br_contn(pfoldfuncs,pfoldbr,80,'plotaxis',ax2);
+%%
+[pfold_nunst,pfold_dom,pfold_defect,pfoldbr.point]=GetStability(pfoldbr,...
+    'funcs',pfoldfuncs,...
+    stab_inputs{:},'geteigenfuncs',true,'recompute',true,...
+    'eigmatrix','sparse');
+%%
+figure(5);clf;

@@ -1,0 +1,442 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Test state-dependent delay equations with many levels of nesting</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-02-23"><meta name="DC.source" content="nested_demo.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Test state-dependent delay equations with many levels of nesting</h1><!--introduction--><p>
+$Id: nested_demo.html 161 2017-02-23 21:58:11Z jansieber $
+</p><p>The equation is</p><p><img src="nested_demo_eq04426175980153763359.png" alt="$$x'(t)=-x(t+\theta_k)$$"></p><p>where <img src="nested_demo_eq03365494348422180395.png" alt="$\theta_0(t)=0$"> and</p><p><img src="nested_demo_eq10104443844172265801.png" alt="$$ \theta_{j+1}(t)=-p_1-x(t+theta_j(t))-p_2 x(t+theta_j(t))^2 $$"></p><p>resulting in a nesting level of delays of order <tt>k$. The parameter |p(1)</tt> controls the delay at the Hopf bifurcation, <tt>p(2)</tt> controls the criticiality of the Hopf bifurcation (at least for <tt>k=3</tt> this is demonstrated below).</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Equation definition</a></li><li><a href="#3">Branch of trivial Equilibria</a></li><li><a href="#4">Stability of equilibria</a></li><li><a href="#5">Branch off at Hopf bifurcation</a></li><li><a href="#6">Periodic orbits continued in <tt>p(1)</tt></a></li><li><a href="#7">Stability of periodic orbits</a></li><li><a href="#8">Profiles of periodic orbits</a></li><li><a href="#9">Plot 1d bifurcation diagram</a></li><li><a href="#10">Save data</a></li><li><a href="#11">Continue Hopf bifurcation and check criticality along the branch</a></li><li><a href="#12">Plot criticality of Hopf bifurcation along Hopf line</a></li><li><a href="#13">Fold of periodic orbits</a></li><li><a href="#14">Fold of periodic orbits</a></li><li><a href="#15">Stability of periodic orbits at fold</a></li><li><a href="#16">Plot two-parameter bifurcation diagram in parameter plane</a></li><li><a href="#17">Plot two-parameter bifurcation diagram in 3d</a></li><li><a href="#18">Save all data</a></li></ul></div><pre class="codeinput">clear
+close <span class="string">all</span>
+addpath(<span class="string">'../../ddebiftool/'</span>,<span class="keyword">...</span>
+    <span class="string">'../../ddebiftool_extra_psol/'</span>,<span class="keyword">...</span>
+    <span class="string">'../../ddebiftool_extra_nmfm/'</span>,<span class="keyword">...</span>
+    <span class="string">'../../ddebiftool_utilities/'</span>);
+format <span class="string">compact</span>
+<span class="comment">%#ok&lt;*NOPTS&gt;</span>
+</pre><h2>Equation definition<a name="2"></a></h2><p>Change <tt>ntau</tt> to change the level of nesting.</p><pre class="codeinput">dim=1;
+ntau=3;
+rhs=@(x,p)-x(1,ntau+1,:);
+sys_ntau=@()ntau;
+tau=@(nr,x,p)p(1)+x(1,nr,:)+p(2)*x(1,nr,:).^2;
+symbolic_derivatives=false;
+<span class="keyword">if</span> symbolic_derivatives
+    args={<span class="string">'sys_dirderi'</span>,str2func(sprintf(<span class="string">'nested_dirderi%d'</span>,ntau))};
+<span class="keyword">else</span>
+    args={};
+<span class="keyword">end</span>
+funcs=set_funcs(<span class="string">'sys_rhs'</span>,rhs,<span class="string">'sys_ntau'</span>,sys_ntau,<span class="string">'sys_tau'</span>,tau,<span class="string">'x_vectorized'</span>,true,args{:});
+pbounds={<span class="string">'max_bound'</span>,[1,2; 2,2],<span class="string">'min_bound'</span>,[1,-1e-3; 2,-2],<span class="string">'max_step'</span>,[1,0.1; 2,0.1]};
+</pre><h2>Branch of trivial Equilibria<a name="3"></a></h2><p>x=0 is always the only equlibrium.</p><pre class="codeinput">[eqbr,suc]=SetupStst(funcs,<span class="string">'contpar'</span>,1,<span class="string">'x'</span>,zeros(dim,1),<span class="string">'parameter'</span>,[0,0],<span class="keyword">...</span>
+    pbounds{:});
+<span class="keyword">if</span> ~suc
+    error(<span class="string">'equilibrium not found'</span>);
+<span class="keyword">end</span>
+figure(1);clf;ax1=gca;
+eqbr=br_contn(funcs,eqbr,100);
+</pre><pre class="codeoutput">BR_CONTN warning: boundary hit.
+</pre><img vspace="5" hspace="5" src="nested_demo_01.png" alt=""> <h2>Stability of equilibria<a name="4"></a></h2><p>The family of trivial equlibria loses stability in a Hopf bifurcation at <tt>p(1)=pi/2</tt>.</p><pre class="codeinput">[eqbr,eqtests,indhopf,eqbiftype]=LocateSpecialPoints(funcs,eqbr)
+</pre><pre class="codeoutput">StstCodimension1: calculate stability if not yet present
+StstCodimension1: (provisional) 1 Hopf  detected.
+br_insert: detected 1 of 1: hopf. Normalform:
+    L1: -0.134937039955236
+eqbr = 
+       method: [1x1 struct]
+    parameter: [1x1 struct]
+        point: [1x31 struct]
+eqtests = 
+    fold: [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]
+    hopf: [1x31 double]
+indhopf =
+    25
+eqbiftype = 
+    'hopf'
+</pre><h2>Branch off at Hopf bifurcation<a name="5"></a></h2><p>At the Hopf bifurcation a family of periodic orbits branches off. Its stability close to the Hopf bifurcation depends on the level of nesting <tt>ntau</tt>.</p><pre class="codeinput">[per,suc]=SetupPsol(funcs,eqbr,indhopf,<span class="string">'degree'</span>,3,<span class="string">'intervals'</span>,30,<span class="keyword">...</span>
+    <span class="string">'print_residual_info'</span>,1,pbounds{:});
+<span class="keyword">if</span> ~suc
+    error(<span class="string">'initialization of periodic orbits failed'</span>);
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">it=1, res=1.60812e-16
+it=1, res=0.000315165
+it=2, res=5.99412e-09
+it=1, res=2.06276e-06
+it=2, res=2.99344e-14
+</pre><h2>Periodic orbits continued in <tt>p(1)</tt><a name="6"></a></h2><p>The family of periodic orbits folds back and forth for <tt>ntau=3</tt>.</p><pre class="codeinput">per.parameter.max_step=[0,0.01];
+per=br_contn(funcs,per,30,<span class="string">'plotaxis'</span>,ax1);
+per.parameter.max_step=[];
+per=br_contn(funcs,per,20,<span class="string">'plotaxis'</span>,ax1);
+</pre><pre class="codeoutput">it=1, res=0.000840063
+it=2, res=4.29234e-08
+it=3, res=1.01308e-15
+it=1, res=0.0011203
+it=2, res=7.48275e-08
+it=3, res=2.65066e-15
+it=1, res=4.6182e-06
+it=2, res=8.00471e-14
+it=1, res=0.00122163
+it=2, res=8.60555e-08
+it=3, res=1.9984e-15
+it=1, res=0.00125337
+it=2, res=8.71148e-08
+it=3, res=2.47025e-15
+it=1, res=0.00128296
+it=2, res=8.6973e-08
+it=3, res=4.5401e-15
+it=1, res=1.2803e-05
+it=2, res=6.65745e-13
+it=1, res=0.001302
+...</pre><img vspace="5" hspace="5" src="nested_demo_02.png" alt=""> <h2>Stability of periodic orbits<a name="7"></a></h2><p>The only source of instability is the fold such that periodic orbits are either stable or order-1 unstable.</p><pre class="codeinput">[pernunst,dom,triv_defect,per.point]=<span class="keyword">...</span>
+    GetStability(per,<span class="string">'exclude_trivial'</span>,true,<span class="string">'funcs'</span>,funcs); <span class="comment">%#ok&lt;ASGLU&gt;</span>
+fprintf(<span class="string">'maximum error of trivial Floquet multiplier: %g\n'</span>,max(abs(triv_defect)));
+</pre><pre class="codeoutput">maximum error of trivial Floquet multiplier: 0.216262
+</pre><h2>Profiles of periodic orbits<a name="8"></a></h2><pre class="codeinput">ppars=arrayfun(@(x)x.parameter(1),per.point);
+pmeshes=cell2mat(arrayfun(@(x)x.mesh(:),per.point,<span class="string">'uniformoutput'</span>,false));
+pprofs=cell2mat(arrayfun(@(x)x.profile(1,:)',per.point,<span class="string">'uniformoutput'</span>,false));
+figure(2);clf
+plot(pmeshes,pprofs,<span class="string">'.-'</span>);
+xlabel(<span class="string">'t/T'</span>);
+ylabel(<span class="string">'x'</span>);
+title(<span class="string">'profiles'</span>);
+</pre><img vspace="5" hspace="5" src="nested_demo_03.png" alt=""> <h2>Plot 1d bifurcation diagram<a name="9"></a></h2><pre class="codeinput">cla(ax1);hold(ax1,<span class="string">'on'</span>);
+lg1=Plot2dBranch(eqbr,<span class="string">'ax'</span>,ax1);
+lg1=Plot2dBranch(per,<span class="string">'ax'</span>,ax1,<span class="string">'oldlegend'</span>,lg1);
+lg1=Plot2dBranch(per,<span class="string">'ax'</span>,ax1,<span class="string">'oldlegend'</span>,lg1,<span class="string">'y'</span>,@(p)min(p.profile));
+xlabel(<span class="string">'p(1)'</span>);
+ylabel(<span class="string">'min x, max x'</span>);
+</pre><img vspace="5" hspace="5" src="nested_demo_04.png" alt=""> <img vspace="5" hspace="5" src="nested_demo_05.png" alt=""> <h2>Save data<a name="10"></a></h2><pre class="codeinput">save(sprintf(<span class="string">'sd_basic_per%d.mat'</span>,ntau));
+</pre><img vspace="5" hspace="5" src="nested_demo_06.png" alt=""> <h2>Continue Hopf bifurcation and check criticality along the branch<a name="11"></a></h2><p>Note that one should specify <tt>'correc'</tt> false, since otherwise, the initial correction will attempt to correct using contpar(2) and parameter 2 has no influence on the Hopf bifurcation.</p><pre class="codeinput">hbranch=SetupHopf(funcs,eqbr,indhopf,<span class="string">'contpar'</span>,[1,2],<span class="string">'correc'</span>,false,<span class="string">'dir'</span>,2,<span class="keyword">...</span>
+    <span class="string">'step'</span>,0.1,pbounds{:});
+figure(3);clf;ax3=gca;
+hbranch=br_contn(funcs,hbranch,30,<span class="string">'plotaxis'</span>,ax3);
+hbranch=br_rvers(hbranch);
+hbranch=br_contn(funcs,hbranch,30,<span class="string">'plotaxis'</span>,ax3);
+[hbranch,hopftests,hc2_ind,hc2_types]=LocateSpecialPoints(funcs,hbranch)
+</pre><pre class="codeoutput">BR_CONTN warning: boundary hit.
+BR_CONTN warning: boundary hit.
+HopfCodimension2: calculate stability if not yet present
+HopfCodimension2: calculate L1 coefficients
+HopfCodimension2: (provisional) 1 gen. Hopf  detected.
+br_insert: detected 1 of 1: genh. Normalform:
+    L2: 1.43994246667039
+    L1: -5.44037259686547e-10
+Warning: HopfCodimension2: large error for normal form coefficient(s) in
+codim2 points
+1:
+0.18894 
+hbranch = 
+       method: [1x1 struct]
+    parameter: [1x1 struct]
+        point: [1x71 struct]
+hopftests = 
+    genh: [2x71 double]
+      bt: [1x71 double]
+    zeho: [1x71 double]
+...</pre><img vspace="5" hspace="5" src="nested_demo_07.png" alt=""> <h2>Plot criticality of Hopf bifurcation along Hopf line<a name="12"></a></h2><pre class="codeinput">figure(4);clf;
+plot(arrayfun(@(x)x.parameter(2),hbranch.point),hopftests.genh,<span class="string">'.-'</span>);
+grid <span class="string">on</span>
+xlabel(<span class="string">'p2'</span>);
+ylabel(<span class="string">'L1'</span>);
+</pre><img vspace="5" hspace="5" src="nested_demo_08.png" alt=""> <h2>Fold of periodic orbits<a name="13"></a></h2><p>A two-parameter continuation of the folds of periodic orbits shows that the fold is not present for large <tt>p(2)</tt>. We start from the fold (last point where the number of Floquet multipliers changes by one).</p><pre class="codeinput">disp(<span class="string">'Fold initialization'</span>)
+pf_ind0=find(abs(diff(pernunst))==1,1,<span class="string">'last'</span>);
+[pfuncs,pbr,suc]=SetupPOfold(funcs,per,pf_ind0,<span class="string">'contpar'</span>,[1,2],<span class="string">'dir'</span>,1,<span class="keyword">...</span>
+    <span class="string">'step'</span>,1e-3,pbounds{:},<span class="string">'print_residual_info'</span>,1);
+<span class="keyword">if</span> ~suc
+    error(<span class="string">'initialization of folds of periodic orbits failed'</span>);
+<span class="keyword">else</span>
+    disp(<span class="string">'PO folds initialized'</span>);
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">Fold initialization
+it=1, res=0.00510661
+it=2, res=0.00545295
+it=3, res=1.91947e-05
+it=4, res=4.33978e-10
+it=1, res=0.00165261
+it=2, res=1.09515e-09
+it=1, res=0.0143452
+it=2, res=0.00610375
+it=3, res=3.43484e-05
+it=4, res=6.2531e-10
+it=1, res=0.000541244
+it=2, res=4.50159e-10
+PO folds initialized
+</pre><h2>Fold of periodic orbits<a name="14"></a></h2><p>continued in two parameters <tt>p(1:2)</tt>.</p><pre class="codeinput">figure(3);
+pbr=br_contn(pfuncs,pbr,20,<span class="string">'plotaxis'</span>,ax3);
+pbr=br_rvers(pbr);
+pbr=br_contn(pfuncs,pbr,20,<span class="string">'plotaxis'</span>,ax3);
+</pre><pre class="codeoutput">it=1, res=0.0145771
+it=2, res=0.000130148
+it=3, res=1.3954e-08
+it=4, res=4.93605e-12
+it=1, res=0.0173193
+it=2, res=0.000192681
+it=3, res=2.03116e-08
+it=4, res=3.80762e-12
+it=1, res=0.000649377
+it=2, res=1.82224e-10
+it=1, res=0.0162263
+it=2, res=0.00017484
+it=3, res=1.20583e-08
+it=4, res=4.90719e-12
+it=1, res=0.0140946
+it=2, res=0.000130528
+it=3, res=4.71687e-09
+it=1, res=0.0121539
+it=2, res=9.21498e-05
+it=3, res=2.04051e-09
+...</pre><img vspace="5" hspace="5" src="nested_demo_09.png" alt=""> <h2>Stability of periodic orbits at fold<a name="15"></a></h2><p>We compute the stability of the periodic orbits at the fold excluding the two Floquet multipliers closest to unity in <tt>pfnunst</tt>. All orbits are stable transversal to the fold direction.</p><pre class="codeinput">[pfnunst,dom,triv_defect,pbr.point]=GetStability(pbr,<span class="string">'exclude_trivial'</span>,true,<span class="string">'funcs'</span>,pfuncs);
+display(pfnunst.',<span class="string">'transversally unstable Flqouet multipliers at fold='</span>);
+</pre><pre class="codeoutput">transversally unstable Flqouet multipliers at fold= =
+  Columns 1 through 13
+     0     0     0     0     0     0     0     0     0     0     0     0     0
+  Columns 14 through 26
+     0     0     0     0     0     0     0     0     0     0     0     0     0
+  Columns 27 through 38
+     0     0     0     0     0     0     0     0     0     0     0     0
+</pre><h2>Plot two-parameter bifurcation diagram in parameter plane<a name="16"></a></h2><pre class="codeinput">cla(ax3);hold(ax3,<span class="string">'on'</span>);
+lg2=Plot2dBranch(hbranch,<span class="string">'ax'</span>,ax3);
+lg2=Plot2dBranch(pbr,<span class="string">'ax'</span>,ax3,<span class="string">'oldlegend'</span>,lg2,<span class="string">'funcs'</span>,pfuncs);
+xlabel(ax3,<span class="string">'p(1)'</span>);
+ylabel(ax3,<span class="string">'p(2)'</span>);
+</pre><img vspace="5" hspace="5" src="nested_demo_10.png" alt=""> <h2>Plot two-parameter bifurcation diagram in 3d<a name="17"></a></h2><p>axes: <tt>p(1)</tt>, <tt>p(2)</tt> and <tt>max(x)</tt> and <tt>min(x)</tt>. The Hopf bifurcation is independent of <tt>p(2)</tt></p><pre class="codeinput">pfs=pfuncs.get_comp(pbr,<span class="string">'solution'</span>);
+pfpars=cell2mat(arrayfun(@(x)x.parameter(1:2)',pfs,<span class="string">'uniformoutput'</span>,false));
+pfmeshes=cell2mat(arrayfun(@(x)x.mesh(:),pfs,<span class="string">'uniformoutput'</span>,false));
+pfprofs=cell2mat(arrayfun(@(x)x.profile(1,:)',pfs,<span class="string">'uniformoutput'</span>,false));
+hpars=per.point(1).parameter;
+figure(5);clf
+plot3(pfpars(1,:),pfpars(2,:),max(pfprofs),<span class="string">'k.-'</span>,<span class="keyword">...</span>
+    pfpars(1,:),pfpars(2,:),min(pfprofs),<span class="string">'k.-'</span>,<span class="keyword">...</span>
+    hpars(1)+0*pfpars(1,:),pfpars(2,:),0*pfpars(1,:),<span class="string">'.-'</span>);
+grid <span class="string">on</span>
+legend({<span class="string">'Fold of periodic orbits'</span>,<span class="string">'Hopf bifurcation'</span>},<span class="string">'location'</span>,<span class="string">'south'</span>)
+xlabel(<span class="string">'p(1)'</span>);
+ylabel(<span class="string">'p(2)'</span>);
+zlabel(<span class="string">'max(x)-min(x)'</span>);
+</pre><img vspace="5" hspace="5" src="nested_demo_11.png" alt=""> <h2>Save all data<a name="18"></a></h2><pre class="codeinput">save(<span class="string">'NestedPOfold.mat'</span>);
+</pre><img vspace="5" hspace="5" src="nested_demo_12.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Test state-dependent delay equations with many levels of nesting
+%
+% <html>
+% $Id: nested_demo.html 161 2017-02-23 21:58:11Z jansieber $
+% </html>
+%
+% The equation is 
+% 
+% $$x'(t)=-x(t+\theta_k)$$
+%
+% where $\theta_0(t)=0$ and
+% 
+% $$ \theta_{j+1}(t)=-p_1-x(t+theta_j(t))-p_2 x(t+theta_j(t))^2 $$
+% 
+% resulting in a nesting level of delays of order |k$. The parameter |p(1)|
+% controls the delay at the Hopf bifurcation, |p(2)| controls the
+% criticiality of the Hopf bifurcation (at least for |k=3| this is
+% demonstrated below).
+%
+%%
+clear
+close all
+addpath('../../ddebiftool/',...
+    '../../ddebiftool_extra_psol/',...
+    '../../ddebiftool_extra_nmfm/',...
+    '../../ddebiftool_utilities/');
+format compact
+%#ok<*NOPTS>
+%% Equation definition
+% Change |ntau| to change the level of nesting.
+dim=1;
+ntau=3;
+rhs=@(x,p)-x(1,ntau+1,:);
+sys_ntau=@()ntau;
+tau=@(nr,x,p)p(1)+x(1,nr,:)+p(2)*x(1,nr,:).^2;
+symbolic_derivatives=false;
+if symbolic_derivatives
+    args={'sys_dirderi',str2func(sprintf('nested_dirderi%d',ntau))};
+else
+    args={};
+end
+funcs=set_funcs('sys_rhs',rhs,'sys_ntau',sys_ntau,'sys_tau',tau,'x_vectorized',true,args{:});
+pbounds={'max_bound',[1,2; 2,2],'min_bound',[1,-1e-3; 2,-2],'max_step',[1,0.1; 2,0.1]};
+%% Branch of trivial Equilibria
+% x=0 is always the only equlibrium.
+[eqbr,suc]=SetupStst(funcs,'contpar',1,'x',zeros(dim,1),'parameter',[0,0],...
+    pbounds{:});
+if ~suc
+    error('equilibrium not found');
+end
+figure(1);clf;ax1=gca;
+eqbr=br_contn(funcs,eqbr,100);
+%% Stability of equilibria
+% The family of trivial equlibria loses stability in a Hopf bifurcation at
+% |p(1)=pi/2|.
+[eqbr,eqtests,indhopf,eqbiftype]=LocateSpecialPoints(funcs,eqbr)
+%% Branch off at Hopf bifurcation
+% At the Hopf bifurcation a family of periodic orbits branches off. Its
+% stability close to the Hopf bifurcation depends on the level of nesting |ntau|.
+[per,suc]=SetupPsol(funcs,eqbr,indhopf,'degree',3,'intervals',30,...
+    'print_residual_info',1,pbounds{:});
+if ~suc
+    error('initialization of periodic orbits failed');
+end
+%% Periodic orbits continued in |p(1)|
+% The family of periodic orbits folds back and forth for |ntau=3|.
+per.parameter.max_step=[0,0.01];
+per=br_contn(funcs,per,30,'plotaxis',ax1);
+per.parameter.max_step=[];
+per=br_contn(funcs,per,20,'plotaxis',ax1);
+%% Stability of periodic orbits
+% The only source of instability is the fold such that periodic orbits are
+% either stable or order-1 unstable.
+[pernunst,dom,triv_defect,per.point]=...
+    GetStability(per,'exclude_trivial',true,'funcs',funcs); %#ok<ASGLU>
+fprintf('maximum error of trivial Floquet multiplier: %g\n',max(abs(triv_defect)));
+%% Profiles of periodic orbits
+ppars=arrayfun(@(x)x.parameter(1),per.point);
+pmeshes=cell2mat(arrayfun(@(x)x.mesh(:),per.point,'uniformoutput',false));
+pprofs=cell2mat(arrayfun(@(x)x.profile(1,:)',per.point,'uniformoutput',false));
+figure(2);clf
+plot(pmeshes,pprofs,'.-');
+xlabel('t/T');
+ylabel('x');
+title('profiles');
+%% Plot 1d bifurcation diagram
+cla(ax1);hold(ax1,'on');
+lg1=Plot2dBranch(eqbr,'ax',ax1);
+lg1=Plot2dBranch(per,'ax',ax1,'oldlegend',lg1);
+lg1=Plot2dBranch(per,'ax',ax1,'oldlegend',lg1,'y',@(p)min(p.profile));
+xlabel('p(1)');
+ylabel('min x, max x');
+%% Save data
+save(sprintf('sd_basic_per%d.mat',ntau));
+%% Continue Hopf bifurcation and check criticality along the branch
+% Note that one should specify |'correc'| false, since otherwise, the
+% initial correction will attempt to correct using contpar(2) and parameter
+% 2 has no influence on the Hopf bifurcation.
+hbranch=SetupHopf(funcs,eqbr,indhopf,'contpar',[1,2],'correc',false,'dir',2,...
+    'step',0.1,pbounds{:});
+figure(3);clf;ax3=gca;
+hbranch=br_contn(funcs,hbranch,30,'plotaxis',ax3);
+hbranch=br_rvers(hbranch);
+hbranch=br_contn(funcs,hbranch,30,'plotaxis',ax3);
+[hbranch,hopftests,hc2_ind,hc2_types]=LocateSpecialPoints(funcs,hbranch) 
+%% Plot criticality of Hopf bifurcation along Hopf line
+figure(4);clf;
+plot(arrayfun(@(x)x.parameter(2),hbranch.point),hopftests.genh,'.-');
+grid on
+xlabel('p2');
+ylabel('L1');
+%% Fold of periodic orbits
+% A two-parameter continuation of the folds of periodic orbits shows that
+% the fold is not present for large |p(2)|. We start from the fold
+% (last point where the number of Floquet multipliers changes by one).
+disp('Fold initialization')
+pf_ind0=find(abs(diff(pernunst))==1,1,'last');
+[pfuncs,pbr,suc]=SetupPOfold(funcs,per,pf_ind0,'contpar',[1,2],'dir',1,...
+    'step',1e-3,pbounds{:},'print_residual_info',1);
+if ~suc
+    error('initialization of folds of periodic orbits failed');
+else
+    disp('PO folds initialized');
+end
+%% Fold of periodic orbits
+% continued in two parameters |p(1:2)|.
+figure(3);
+pbr=br_contn(pfuncs,pbr,20,'plotaxis',ax3);
+pbr=br_rvers(pbr);
+pbr=br_contn(pfuncs,pbr,20,'plotaxis',ax3);
+%% Stability of periodic orbits at fold
+% We compute the stability of the periodic orbits at the fold excluding the
+% two Floquet multipliers closest to unity in |pfnunst|. All orbits are
+% stable transversal to the fold direction.
+[pfnunst,dom,triv_defect,pbr.point]=GetStability(pbr,'exclude_trivial',true,'funcs',pfuncs);
+display(pfnunst.','transversally unstable Flqouet multipliers at fold=');
+%% Plot two-parameter bifurcation diagram in parameter plane
+cla(ax3);hold(ax3,'on');
+lg2=Plot2dBranch(hbranch,'ax',ax3);
+lg2=Plot2dBranch(pbr,'ax',ax3,'oldlegend',lg2,'funcs',pfuncs);
+xlabel(ax3,'p(1)');
+ylabel(ax3,'p(2)');
+%% Plot two-parameter bifurcation diagram in 3d
+% axes: |p(1)|, |p(2)| and |max(x)| and |min(x)|. The Hopf bifurcation is
+% independent of |p(2)|
+pfs=pfuncs.get_comp(pbr,'solution');
+pfpars=cell2mat(arrayfun(@(x)x.parameter(1:2)',pfs,'uniformoutput',false));
+pfmeshes=cell2mat(arrayfun(@(x)x.mesh(:),pfs,'uniformoutput',false));
+pfprofs=cell2mat(arrayfun(@(x)x.profile(1,:)',pfs,'uniformoutput',false));
+hpars=per.point(1).parameter;
+figure(5);clf
+plot3(pfpars(1,:),pfpars(2,:),max(pfprofs),'k.-',...
+    pfpars(1,:),pfpars(2,:),min(pfprofs),'k.-',...
+    hpars(1)+0*pfpars(1,:),pfpars(2,:),0*pfpars(1,:),'.-');
+grid on
+legend({'Fold of periodic orbits','Hopf bifurcation'},'location','south')
+xlabel('p(1)');
+ylabel('p(2)');
+zlabel('max(x)-min(x)');
+%% Save all data
+save('NestedPOfold.mat');
+
+##### SOURCE END #####
+--></body></html>

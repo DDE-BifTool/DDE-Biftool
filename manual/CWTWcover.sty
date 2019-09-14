@@ -1,0 +1,100 @@
+%    ****************************************
+%    *     COVERPAGE FOR CW/TW REPORTS      *
+%    ****************************************
+%
+% The simplest is to copy the file CWTWcover.tex.skel from the standard
+% TeX inputs directory and adopt for your own needs.
+% Written by A. Bultheel <ade@cs.kuleuven.ac.be> April 13, 1991.
+% Adapted by E. Van Gestel <ericvg@cs.kuleuven.ac.be> April 19, 1991.
+% Adapted by A. Bultheel <ade@cs.kuleuven.ac.be> December 14, 1994.
+% Line removed by A. Bultheel <ade@cs.kuleuven.ac.be> February 17, 1994.
+% CW reports are now also generated with cover; by R. Cools <ronald@cs.kuleuven.ac.be> January 5, 1998
+%
+
+% This is not used any more, but I leave it for the future...    ronald 6/1/98
+\newif\ifISCW	% to make distinction between CW and TW Feb. 4, 1993 ade
+		% ISCW =true: CW report; ISCW =false: TW report
+
+\setlength{\textheight}{23cm}
+
+\def\nothanks{\gdef\thanks##1{}}	% no thanks on cover page
+
+\newenvironment{coverpage}%
+	{\begin{titlepage}\maketitlepage
+	 \vbox to 12cm
+		\bgroup		% start vbox below window
+ 	 \vfil			% Vertical space after window.
+	 \begin{center}  % Computer Science for both TW and CW         ronald 6/1/98
+   	   {\large Department of Computer Science, K.U.Leuven} %       ade 14/12/94
+	 \end{center}
+	 \vfil }%
+	{	\egroup		% end of vbox below window
+	 \end{titlepage}}
+
+\hoffset=-0.465cm		% to get box in window of cover
+\def\maketitlepage{\par		% everything above abstract
+ \begingroup
+   \newpage\bgroup\def\thanks##1{}\@maketitlepage\@makelogo\egroup 
+   \def\thefootnote{\fnsymbol{footnote}}
+   \newpage\thispagestyle{empty}
+	\bgroup\let\fbox\relax\@maketitlepage \@thanks\egroup    % repeat but no fbox
+  \endgroup }
+
+\newfont{\kul}{kullogo}    %ade 14/12/94
+
+\def\@makelogo{\vskip 8cm  % \@makelogo added ade 14/12/94
+  \raisebox{7mm}{\hfil\kul n\hfil} % kullogo
+  \kern5mm
+  \makebox[8cm][l]{%
+	\vbox to 20mm{%
+	      \hbox{\huge\sf Katholieke Universiteit Leuven\hfil}
+		\vfil
+              \hbox{\LARGE\sf Department of Computer Science\hfil}
+		\vfil
+              \hbox{\large\sf Celestijnenlaan 200A --
+                                  B-3001 Heverlee (Belgium)\hfil}}
+  } % end makebox
+ } % end @makelogo
+
+\def\@maketitlepage{\newpage
+ \null
+ \vskip 1.7cm			% Vertical space above title box.
+\begin{center}\hbox{\fbox{%	% frame the title instead of window% ade 14/12/94
+ \vbox to 6.5cm{		% this box corresponds to window in cover
+       \vfil			% centers vertically better % ade 14/12/94
+   \begin{minipage}[t]{12cm}	% titlebox is 12cm wide.
+     \begin{center}
+       {\LARGE\bf\@title\par}	% Title set in \LARGE size.
+     \end{center}
+   \end{minipage}		% minipage handles breaking of lines
+       \vfil			% vfil up space in titlebox
+     \begin{center}
+       {\Large\em		% each author set in \Large, in a
+        \lineskip .5em		% tabular environment
+        \begin{tabular}[t]{c}\@author \end{tabular}\par
+       }
+       \vfil			% vfil up space in titlebox
+       {\Large\em \@CWTW, \@date \par}
+     \end{center}
+	\vfil			% centers vertically better % ade 14/12/94
+ }}}				% end of vbox} fbox} hbox}
+\end{center}
+\setcounter{footnote}{0}        % reset footnote counter (ronald, Sep 23, 1993)
+}				% end of \@maketitlepage
+
+
+\renewenvironment{abstract}%
+	{\begin{center}
+	  {\bf Abstract\vspace{-.5em}\vspace{0pt}}
+	 \end{center}}%
+	{\vfil}
+
+\def\CW#1{\def\@CWTW{Report CW\,#1}\ISCWtrue} %\ISCWtrue added Feb. 4, 1993
+\def\TW#1{\def\@CWTW{Report TW\,#1}\ISCWfalse} %\ISCWfalse  by ade
+\def\Report#1{\def\@CWTW{#1}}	% to be used only if all else fails
+
+\def\keywords{\par\noindent{\bf Keywords~:~}}
+\def\CR{\par\noindent{\bf CR Subject Classification~:~}}
+\def\AMS{\par\noindent{\bf AMS(MOS) Classification~:~}}
+\def\Primary{Primary~:~}
+\def\Secondary{Secondary~:~}

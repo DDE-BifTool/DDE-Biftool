@@ -1,0 +1,341 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Equilibrium bifurcations and normal forms for example from Humpries etal (DCDS-A 2012)</title><meta name="generator" content="MATLAB 9.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-03-13"><meta name="DC.source" content="humphriesetal_equilibria.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Equilibrium bifurcations and normal forms for example from Humpries etal (DCDS-A 2012)</h1><!--introduction--><p>
+$Id$
+</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Load possible ways to define right-hand side</a></li><li><a href="#2">Choose which definition to test</a></li><li><a href="#3">Set initial parameters {'kappa1','kappa2','a1','a2','gamma','c'};</a></li><li><a href="#4">Set continuation bounds during two-parameter continuation</a></li><li><a href="#5">Trivial equilibrium branch</a></li><li><a href="#6">Stability, bifurcations and their normal forms</a></li><li><a href="#8">Hopf bifurcation in two parameters</a></li><li><a href="#9">Loop over all found Hopf branches</a></li><li><a href="#10">continue branch</a></li><li><a href="#11">compute stability, criticality and codim2 bifurcations along Hopf curves</a></li><li><a href="#12">extract criticality along Hopf curve in nf</a></li><li><a href="#14">One additional Hopf bifurcation crosses the above Hopf curves</a></li><li><a href="#15">Compute stability, criticality and codim2 bifurcations along last Hopf curve</a></li><li><a href="#16">Bifucation diagram for equilibria</a></li><li><a href="#17">Next step: continuation of periodic orbits in a single parameter</a></li></ul></div><h2 id="1">Load possible ways to define right-hand side</h2><pre class="codeinput">clear
+load(<span class="string">'humphriesetal_demo_funcs_results.mat'</span>);
+</pre><h2 id="2">Choose which definition to test</h2><pre class="codeinput">funcs=fsymbolic;
+</pre><h2 id="3">Set initial parameters {'kappa1','kappa2','a1','a2','gamma','c'};</h2><pre class="codeinput">kappa1=0;
+kappa2=2.3;
+a1=1.3;
+a2=6;
+gamma=4.75;
+c=1;
+par_ini=cellfun(@(x)evalin(<span class="string">'caller'</span>,x),parnames);
+</pre><h2 id="4">Set continuation bounds during two-parameter continuation</h2><pre class="codeinput">eqbounds={<span class="string">'max_bound'</span>,[ind.kappa1,14; ind.kappa2,5],<span class="keyword">...</span>
+        <span class="string">'min_bound'</span>,[ind.kappa1,0; ind.kappa2,0],<span class="keyword">...</span>
+        <span class="string">'max_step'</span>,[ind.kappa1,0.1; ind.kappa2,0.1]};
+</pre><h2 id="5">Trivial equilibrium branch</h2><p>The equilibrium <img src="humphriesetal_equilibria_eq17014082639638836868.png" alt="$x=0$"> changes its stability in Hopf bifurcations</p><pre class="codeinput">[eqbr,suc]=SetupStst(funcs,<span class="string">'contpar'</span>,ind.kappa1,<span class="string">'x'</span>,0,<span class="string">'parameter'</span>,par_ini,<span class="keyword">...</span>
+    <span class="string">'max_bound'</span>,[ind.kappa1,14],<span class="string">'max_step'</span>,[ind.kappa1,0.1]);
+<span class="keyword">if</span> ~suc
+    error(<span class="string">'equilibrium not found'</span>);
+<span class="keyword">end</span>
+figure(1);clf
+eqbr=br_contn(funcs,eqbr,200);
+</pre><pre class="codeoutput">BR_CONTN warning: boundary hit.
+</pre><img vspace="5" hspace="5" src="humphriesetal_equilibria_01.png" alt=""> <h2 id="6">Stability, bifurcations and their normal forms</h2><pre class="codeinput">[eqbr,~,ind_hopf,eqc1biftype]=LocateSpecialPoints(funcs,eqbr);
+</pre><pre class="codeoutput">StstCodimension1: calculate stability if not yet present
+StstCodimension1: (provisional) 3 Hopf  detected.
+br_insert: detected 1 of 3: hopf. Normalform:
+    L1: -0.0368072044189892
+br_insert: detected 2 of 3: hopf. Normalform:
+    L1: -0.0568094502229304
+br_insert: detected 3 of 3: hopf. Normalform:
+    L1: -0.12869530352354
+</pre><pre class="codeinput">figure(3);clf;ax3=gca;
+lg1=Plot2dBranch(eqbr,<span class="string">'y'</span>,@(p)p.x(1),<span class="string">'ax'</span>,ax3);
+set(ax3,<span class="string">'ylim'</span>,[-0.1,1]);
+xlabel(ax3,<span class="string">'kappa1'</span>);
+ylabel(<span class="string">'max x'</span>);
+</pre><img vspace="5" hspace="5" src="humphriesetal_equilibria_02.png" alt=""> <h2 id="8">Hopf bifurcation in two parameters</h2><p>Continuation parameters are <img src="humphriesetal_equilibria_eq16993965676546849131.png" alt="$\kappa_1$"> and <img src="humphriesetal_equilibria_eq06946740807326507268.png" alt="$\kappa_2$">.</p><pre class="codeinput">nhopf=length(ind_hopf);
+figure(2);clf;ax2=gca;
+xlabel(<span class="string">'kappa1'</span>);
+ylabel(<span class="string">'kappa2'</span>);
+nhopfpoints=100;
+fprintf(<span class="string">'Computation of Hopf bifurcations found\n'</span>);
+</pre><pre class="codeoutput">Computation of Hopf bifurcations found
+</pre><img vspace="5" hspace="5" src="humphriesetal_equilibria_03.png" alt=""> <h2 id="9">Loop over all found Hopf branches</h2><pre class="codeinput"><span class="keyword">for</span> i=nhopf:-1:1
+</pre><h2 id="10">continue branch</h2><pre class="codeinput">    [hbranch{i},suc]=SetupHopf(funcs,eqbr,ind_hopf(i),<span class="keyword">...</span>
+        <span class="string">'contpar'</span>,[ind.kappa1,ind.kappa2],<span class="string">'dir'</span>,ind.kappa1,<span class="string">'step'</span>,0.1,eqbounds{:});
+    <span class="keyword">if</span> ~suc
+        error(<span class="string">'Hopf initialization failed'</span>);
+    <span class="keyword">end</span>
+    hbranch{i}=br_contn(funcs,hbranch{i},nhopfpoints,<span class="string">'plotaxis'</span>,ax2);
+    hbranch{i}=br_rvers(hbranch{i});
+    hbranch{i}=br_contn(funcs,hbranch{i},nhopfpoints,<span class="string">'plotaxis'</span>,ax2);
+</pre><pre class="codeoutput">BR_CONTN warning: boundary hit.
+BR_CONTN warning: boundary hit.
+</pre><img vspace="5" hspace="5" src="humphriesetal_equilibria_04.png" alt=""> <pre class="codeoutput">BR_CONTN warning: boundary hit.
+BR_CONTN warning: boundary hit.
+</pre><img vspace="5" hspace="5" src="humphriesetal_equilibria_05.png" alt=""> <pre class="codeoutput">BR_CONTN warning: boundary hit.
+BR_CONTN warning: boundary hit.
+</pre><img vspace="5" hspace="5" src="humphriesetal_equilibria_06.png" alt=""> <h2 id="11">compute stability, criticality and codim2 bifurcations along Hopf curves</h2><pre class="codeinput">    tic;
+    [hbranch{i},~,indhoho{i},eqc2biftype{i}]=<span class="keyword">...</span>
+        LocateSpecialPoints(funcs,hbranch{i},<span class="string">'stabilityfield'</span>,<span class="string">'l1'</span>,<span class="string">'q_scale'</span>,false);
+    ti=toc;
+</pre><pre class="codeoutput">HopfCodimension2: calculate stability if not yet present
+HopfCodimension2: calculate L1 coefficients
+HopfCodimension2: (provisional) 1 Hopf-Hopf  detected.
+br_insert: detected 1 of 1: hoho. Normalform:
+    g2100: -16.8534773874876 -      33.3297431774531i
+    g1011: -21.3834727310938 +      11.0889450426167i
+    g1110: 50.366602528457 -       61.126527429646i
+    g0021: -0.20383503681602 -     0.111815427244402i
+    theta: 104.905776087917
+    delta: -2.98849913109624
+</pre><pre class="codeoutput">HopfCodimension2: calculate stability if not yet present
+HopfCodimension2: calculate L1 coefficients
+HopfCodimension2: (provisional) 1 Hopf-Hopf  detected.
+br_insert: detected 1 of 1: hoho. Normalform:
+    g2100: -7.50609582777788 -      6.80911116066865i
+    g1011: -5.26325881568273 -     0.847301707213588i
+    g1110: 5.55956094147517 +     0.226359604301177i
+    g0021: -0.656772770544155 -     0.430848404524155i
+    theta: 8.01382007862776
+    delta: -0.740672790360716
+</pre><pre class="codeoutput">HopfCodimension2: calculate stability if not yet present
+HopfCodimension2: calculate L1 coefficients
+HopfCodimension2: (provisional) 1 Hopf-Hopf  detected.
+br_insert: detected 1 of 1: hoho. Normalform:
+    g2100: -0.698716133459609 -      0.45302271593111i
+    g1011: -0.515730558793701 -     0.382637085321176i
+    g1110: 0.0155740831003016 -      0.81187132379853i
+    g0021: -0.0974722520553292 -     0.295794456805267i
+    theta: 5.29104999544846
+    delta: -0.0222895713359134
+</pre><h2 id="12">extract criticality along Hopf curve in nf</h2><pre class="codeinput">    hpars{i}=cell2mat(arrayfun(@(x)x.parameter([ind.kappa1,ind.kappa2])',<span class="keyword">...</span>
+        hbranch{i}.point,<span class="string">'uniformoutput'</span>,false));
+    nf{i}=arrayfun(@(x)x.nmfm.L1,hbranch{i}.point);
+    fprintf(<span class="string">'Stability changes: %d, %d subcritical, %d supercritical\ntiming=%g\n\n'</span>,<span class="keyword">...</span>
+        length(indhoho{i}),sum(nf{i}&gt;0),sum(nf{i}&lt;0),ti);
+</pre><pre class="codeoutput">Stability changes: 1, 0 subcritical, 89 supercritical
+timing=18.4264
+
+</pre><pre class="codeoutput">Stability changes: 1, 0 subcritical, 82 supercritical
+timing=17.1168
+
+</pre><pre class="codeoutput">Stability changes: 1, 0 subcritical, 96 supercritical
+timing=19.9191
+
+</pre><pre class="codeinput"><span class="keyword">end</span>
+</pre><h2 id="14">One additional Hopf bifurcation crosses the above Hopf curves</h2><pre class="codeinput">[hbranch{nhopf+1},suc]=SetupHopf(funcs,hbranch{1},indhoho{1}(1),<span class="keyword">...</span>
+    <span class="string">'contpar'</span>,[ind.kappa1,ind.kappa2],<span class="string">'dir'</span>,ind.kappa2,<span class="string">'step'</span>,0.1,eqbounds{:});
+hbranch{nhopf+1}=br_contn(funcs,hbranch{nhopf+1},nhopfpoints,<span class="string">'plotaxis'</span>,ax2);
+hbranch{nhopf+1}=br_rvers(hbranch{nhopf+1});
+hbranch{nhopf+1}=br_contn(funcs,hbranch{nhopf+1},nhopfpoints,<span class="string">'plotaxis'</span>,ax2);
+</pre><pre class="codeoutput">BR_CONTN warning: boundary hit.
+BR_CONTN warning: boundary hit.
+</pre><img vspace="5" hspace="5" src="humphriesetal_equilibria_07.png" alt=""> <h2 id="15">Compute stability, criticality and codim2 bifurcations along last Hopf curve</h2><p>several of Hopf-Hopf interactions should be identical to those found on the other Hopf branches, since these are the intersections. They may possibly have permuted coefficients.</p><pre class="codeinput">[hbranch{nhopf+1},~,indhoho{nhopf+1},eqc2biftype{nhopf+1}]=<span class="keyword">...</span>
+    LocateSpecialPoints(funcs,hbranch{nhopf+1},<span class="string">'stabilityfield'</span>,<span class="string">'l1'</span>);
+hpars{nhopf+1}=cell2mat(arrayfun(@(x)x.parameter([ind.kappa1,ind.kappa2])',<span class="keyword">...</span>
+    hbranch{nhopf+1}.point,<span class="string">'uniformoutput'</span>,false));
+nf{nhopf+1}=arrayfun(@(x)x.nmfm.L1,hbranch{nhopf+1}.point);
+fprintf(<span class="string">'Stability changes: %d, %d subcritical, %d supercritical\ntiming=%g\n\n'</span>,<span class="keyword">...</span>
+    length(indhoho{nhopf+1}),sum(nf{nhopf+1}&gt;0),sum(nf{nhopf+1}&lt;0),ti);
+</pre><pre class="codeoutput">HopfCodimension2: calculate stability if not yet present
+HopfCodimension2: calculate L1 coefficients
+HopfCodimension2: (provisional) 4 Hopf-Hopf  detected.
+br_insert: detected 1 of 4: hoho. Normalform:
+    g2100: -0.00217496068348078 -   0.00474179103853144i
+    g1011: -0.000761143744595124 -   0.00140326818349955i
+    g1110: -0.000357777639990625 -   0.00370383241132729i
+    g0021: -1.38489669863563e-05 -  0.000232271113019176i
+    theta: 54.9603263077301
+    delta: 0.164498440228373
+br_insert: detected 2 of 4: hoho. Normalform:
+    g2100: -0.00390733208174006 -    0.0118573968108661i
+    g1011: 0.000615291158694659 -    0.0320749058476584i
+    g1110: -0.0206738893937754 -     0.015338623328503i
+    g0021: -0.0276044411680499 -    0.0178977388839763i
+    theta: -0.0222895712667719
+    delta: 5.2910499955685
+br_insert: detected 3 of 4: hoho. Normalform:
+    g2100: -0.0434784402957425 -    0.0285222187522825i
+    g1011: 0.238361387976445 +   0.00970497312333557i
+    g1110: -0.348428397836043 -    0.0560914799521098i
+    g0021: -0.321817395031648 -     0.291934777610693i
+    theta: -0.740672790397189
+    delta: 8.01382007877964
+br_insert: detected 4 of 4: hoho. Normalform:
+    g2100: -0.013997519938616 -   0.00767845752472044i
+    g1011: 1.46636606893949 -      1.77962898496747i
+    g1110: -1.46842069245116 +      0.76148699339164i
+    g0021: -0.490669732397457 -     0.970357380245751i
+    theta: -2.98849913112571
+    delta: 104.905776086813
+Stability changes: 4, 0 subcritical, 220 supercritical
+timing=19.9191
+
+</pre><h2 id="16">Bifucation diagram for equilibria</h2><pre class="codeinput">figure(4);clf;ax4=gca;hold(ax4,<span class="string">'on'</span>);
+args={<span class="string">'ax'</span>,ax4,<span class="string">'stability'</span>,0.75};
+lg2=Plot2dBranch(hbranch{nhopf+1},args{:});
+<span class="keyword">for</span> i=1:nhopf
+    lg2=Plot2dBranch(hbranch{i},args{:},<span class="string">'oldlegend'</span>,lg2);
+<span class="keyword">end</span>
+grid <span class="string">on</span>
+legend(lg2{1},lg2{2},<span class="string">'location'</span>,<span class="string">'southeast'</span>);
+xlabel(<span class="string">'kappa1'</span>);
+ylabel(<span class="string">'kappa2'</span>);
+</pre><img vspace="5" hspace="5" src="humphriesetal_equilibria_08.png" alt=""> <h2 id="17">Next step: continuation of periodic orbits in a single parameter</h2><p>see <a href="humphriesetal_periodic1dbif.html">humphriesetal_periodic1dbif.html</a>.</p><pre class="codeinput">save(sprintf(<span class="string">'humphriesetal_equilibrium_results.mat'</span>));
+</pre><img vspace="5" hspace="5" src="humphriesetal_equilibria_09.png" alt=""> <img vspace="5" hspace="5" src="humphriesetal_equilibria_10.png" alt=""> <img vspace="5" hspace="5" src="humphriesetal_equilibria_11.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Equilibrium bifurcations and normal forms for example from Humpries etal (DCDS-A 2012)
+%
+% <html>
+% $Id$
+% </html>
+%% Load possible ways to define right-hand side
+clear
+load('humphriesetal_demo_funcs_results.mat');
+%% Choose which definition to test
+funcs=fsymbolic;
+%% Set initial parameters {'kappa1','kappa2','a1','a2','gamma','c'};
+kappa1=0;
+kappa2=2.3;
+a1=1.3;
+a2=6;
+gamma=4.75;
+c=1;
+par_ini=cellfun(@(x)evalin('caller',x),parnames); 
+%% Set continuation bounds during two-parameter continuation
+eqbounds={'max_bound',[ind.kappa1,14; ind.kappa2,5],...
+        'min_bound',[ind.kappa1,0; ind.kappa2,0],...
+        'max_step',[ind.kappa1,0.1; ind.kappa2,0.1]};
+%% Trivial equilibrium branch
+% The equilibrium $x=0$ changes its stability in Hopf bifurcations
+[eqbr,suc]=SetupStst(funcs,'contpar',ind.kappa1,'x',0,'parameter',par_ini,...
+    'max_bound',[ind.kappa1,14],'max_step',[ind.kappa1,0.1]);
+if ~suc
+    error('equilibrium not found');
+end
+figure(1);clf
+eqbr=br_contn(funcs,eqbr,200);
+%% Stability, bifurcations and their normal forms
+[eqbr,~,ind_hopf,eqc1biftype]=LocateSpecialPoints(funcs,eqbr);
+%%
+figure(3);clf;ax3=gca;
+lg1=Plot2dBranch(eqbr,'y',@(p)p.x(1),'ax',ax3);
+set(ax3,'ylim',[-0.1,1]);
+xlabel(ax3,'kappa1');
+ylabel('max x');
+%% Hopf bifurcation in two parameters
+% Continuation parameters are $\kappa_1$ and $\kappa_2$.
+nhopf=length(ind_hopf);
+figure(2);clf;ax2=gca;
+xlabel('kappa1');
+ylabel('kappa2');
+nhopfpoints=100;
+fprintf('Computation of Hopf bifurcations found\n');
+%% Loop over all found Hopf branches
+for i=nhopf:-1:1
+    %% continue branch
+    [hbranch{i},suc]=SetupHopf(funcs,eqbr,ind_hopf(i),...
+        'contpar',[ind.kappa1,ind.kappa2],'dir',ind.kappa1,'step',0.1,eqbounds{:});
+    if ~suc
+        error('Hopf initialization failed');
+    end
+    hbranch{i}=br_contn(funcs,hbranch{i},nhopfpoints,'plotaxis',ax2);
+    hbranch{i}=br_rvers(hbranch{i});
+    hbranch{i}=br_contn(funcs,hbranch{i},nhopfpoints,'plotaxis',ax2);
+    %% compute stability, criticality and codim2 bifurcations along Hopf curves
+    tic;
+    [hbranch{i},~,indhoho{i},eqc2biftype{i}]=...
+        LocateSpecialPoints(funcs,hbranch{i},'stabilityfield','l1','q_scale',false);
+    ti=toc;
+    %% extract criticality along Hopf curve in nf
+    hpars{i}=cell2mat(arrayfun(@(x)x.parameter([ind.kappa1,ind.kappa2])',...
+        hbranch{i}.point,'uniformoutput',false));
+    nf{i}=arrayfun(@(x)x.nmfm.L1,hbranch{i}.point);
+    fprintf('Stability changes: %d, %d subcritical, %d supercritical\ntiming=%g\n\n',...
+        length(indhoho{i}),sum(nf{i}>0),sum(nf{i}<0),ti);
+end
+%% One additional Hopf bifurcation crosses the above Hopf curves
+[hbranch{nhopf+1},suc]=SetupHopf(funcs,hbranch{1},indhoho{1}(1),...
+    'contpar',[ind.kappa1,ind.kappa2],'dir',ind.kappa2,'step',0.1,eqbounds{:});
+hbranch{nhopf+1}=br_contn(funcs,hbranch{nhopf+1},nhopfpoints,'plotaxis',ax2);
+hbranch{nhopf+1}=br_rvers(hbranch{nhopf+1});
+hbranch{nhopf+1}=br_contn(funcs,hbranch{nhopf+1},nhopfpoints,'plotaxis',ax2);
+%% Compute stability, criticality and codim2 bifurcations along last Hopf curve
+% several of Hopf-Hopf interactions should be identical to those found on
+% the other Hopf branches, since these are the intersections. They may
+% possibly have permuted coefficients.
+[hbranch{nhopf+1},~,indhoho{nhopf+1},eqc2biftype{nhopf+1}]=...
+    LocateSpecialPoints(funcs,hbranch{nhopf+1},'stabilityfield','l1');
+hpars{nhopf+1}=cell2mat(arrayfun(@(x)x.parameter([ind.kappa1,ind.kappa2])',...
+    hbranch{nhopf+1}.point,'uniformoutput',false));
+nf{nhopf+1}=arrayfun(@(x)x.nmfm.L1,hbranch{nhopf+1}.point);
+fprintf('Stability changes: %d, %d subcritical, %d supercritical\ntiming=%g\n\n',...
+    length(indhoho{nhopf+1}),sum(nf{nhopf+1}>0),sum(nf{nhopf+1}<0),ti);
+%% Bifucation diagram for equilibria
+figure(4);clf;ax4=gca;hold(ax4,'on');
+args={'ax',ax4,'stability',0.75};
+lg2=Plot2dBranch(hbranch{nhopf+1},args{:});
+for i=1:nhopf
+    lg2=Plot2dBranch(hbranch{i},args{:},'oldlegend',lg2);
+end
+grid on
+legend(lg2{1},lg2{2},'location','southeast');
+xlabel('kappa1');
+ylabel('kappa2');
+%% Next step: continuation of periodic orbits in a single parameter
+% see <humphriesetal_periodic1dbif.html>.
+save(sprintf('humphriesetal_equilibrium_results.mat'));
+
+##### SOURCE END #####
+--></body></html>

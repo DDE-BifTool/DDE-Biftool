@@ -1,0 +1,483 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>DDE-Biftool demo Mackey-Glass Equation</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-02-23"><meta name="DC.source" content="MackeyGlass_demo.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>DDE-Biftool demo Mackey-Glass Equation</h1><!--introduction--><p>The Mackey-Glass equation is given by</p><p><img src="MackeyGlass_demo_eq15447707332970395500.png" alt="$$x'(t)=\beta \frac{x(t-\tau)}{1+x(t-\tau)^n}-\gamma x(t)$$"></p><p>Parameters are (in this order) <tt>beta</tt>, <tt>n</tt>, <tt>tau</tt> (<tt>gamma</tt> is not part of parameter vector).</p><p>
+$Id: MackeyGlass_demo.html 161 2017-02-23 21:58:11Z jansieber $
+</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">load DDE-Biftool into path</a></li><li><a href="#2">Enable vectorization</a></li><li><a href="#3">Set user-defined functions</a></li><li><a href="#4">Initial parameters and state</a></li><li><a href="#5">Initialization of branch of non-trivial equilibria</a></li><li><a href="#6">Compute, find stability and bifurcations of non-trivial equilibria</a></li><li><a href="#7">Continue Hopf bifurcation in two parameters</a></li><li><a href="#8">Compute L1 coefficient</a></li><li><a href="#9">Branch off at  Hopf bifurcation</a></li><li><a href="#10">Find period doubling bifurcations in two parameters</a></li><li><a href="#11">Check Floquet multipliers</a></li><li><a href="#12">Branch off at period doubling</a></li><li><a href="#13">Continue period doublings in two parameters for secondary PD</a></li><li><a href="#14">Check Floquet multipliers along period doubling bifurcation</a></li><li><a href="#15">Two-parameter bifurcation diagram</a></li><li><a href="#16">Time profiles of period doubling orbits and errors of Floquet multipliers</a></li><li><a href="#17">save</a></li></ul></div><h2>load DDE-Biftool into path<a name="1"></a></h2><pre class="codeinput">clear
+close <span class="string">all</span>
+addpath(<span class="string">'../../ddebiftool'</span>,<span class="keyword">...</span>
+    <span class="string">'../../ddebiftool_extra_psol'</span>,<span class="keyword">...</span>
+    <span class="string">'../../ddebiftool_extra_nmfm'</span>,<span class="keyword">...</span>
+    <span class="string">'../../ddebiftool_utilities'</span>);
+format <span class="string">compact</span>
+</pre><h2>Enable vectorization<a name="2"></a></h2><p>(disable for speed comparison)</p><pre class="codeinput">x_vectorize=true;
+</pre><h2>Set user-defined functions<a name="3"></a></h2><p>using <tt>gamma</tt> as constant and (<tt>beta</tt>,|n|,|tau|) as parameters</p><pre class="codeinput">gamma=1.0;
+beta_ind=1;
+n_ind=2;
+tau_ind=3;
+<span class="keyword">if</span> x_vectorize
+    f=@(x,xtau,beta,n)beta*xtau./(1+xtau.^n)-gamma*x;
+    funcs=set_funcs(<span class="keyword">...</span>
+        <span class="string">'sys_rhs'</span>,@(xx,p)f(xx(1,1,:),xx(1,2,:),p(1),p(2)),<span class="keyword">...</span>
+        <span class="string">'sys_tau'</span>,@()tau_ind,<span class="keyword">...</span>
+        <span class="string">'x_vectorized'</span>,true);
+<span class="keyword">else</span>
+    f=@(x,xtau,beta,n)beta*xtau/(1+xtau^n)-gamma*x; <span class="comment">%#ok&lt;UNRCH&gt;</span>
+    funcs=set_funcs(<span class="keyword">...</span>
+        <span class="string">'sys_rhs'</span>,@(xx,p)f(xx(1,1,:),xx(1,2,:),p(1),p(2)),<span class="keyword">...</span>
+        <span class="string">'sys_tau'</span>,@()tau_ind);
+<span class="keyword">end</span>
+</pre><h2>Initial parameters and state<a name="4"></a></h2><pre class="codeinput">beta0=2;
+n0=10;
+tau0=0;
+x0=(beta0-1)^(1/n0);
+</pre><h2>Initialization of branch of non-trivial equilibria<a name="5"></a></h2><pre class="codeinput">contpar=tau_ind;
+nontriv_eqs=SetupStst(funcs,<span class="string">'x'</span>,x0,<span class="string">'parameter'</span>,[beta0,n0,tau0],<span class="string">'step'</span>,0.1,<span class="keyword">...</span>
+    <span class="string">'contpar'</span>,contpar,<span class="string">'max_step'</span>,[contpar,0.3],<span class="string">'max_bound'</span>,[contpar,10]);
+</pre><h2>Compute, find stability and bifurcations of non-trivial equilibria<a name="6"></a></h2><pre class="codeinput">disp(<span class="string">'Trivial equilibria'</span>);
+figure(1);clf;ax1=gca;
+nontriv_eqs=br_contn(funcs,nontriv_eqs,3,<span class="string">'plotaxis'</span>,ax1);
+[nontriv_eqs,~,ind_hopf,bif1types]=LocateSpecialPoints(funcs,nontriv_eqs);
+nunst_eqs=GetStability(nontriv_eqs);
+fprintf(<span class="string">'Hopf bifurcation near point %d\n'</span>,ind_hopf);
+</pre><pre class="codeoutput">Trivial equilibria
+StstCodimension1: calculate stability if not yet present
+StstCodimension1: (provisional) 1 Hopf  detected.
+br_insert: detected 1 of 1: hopf. Normalform:
+    L1: -5.69527799058398
+Hopf bifurcation near point 5
+</pre><img vspace="5" hspace="5" src="MackeyGlass_demo_01.png" alt=""> <h2>Continue Hopf bifurcation in two parameters<a name="7"></a></h2><pre class="codeinput">[hbranch,suc]=SetupHopf(funcs,nontriv_eqs,ind_hopf,<span class="keyword">...</span>
+    <span class="string">'contpar'</span>,[beta_ind,tau_ind],<span class="string">'dir'</span>,beta_ind,<span class="string">'step'</span>,1e-3);
+figure(2);clf;ax2=gca;
+hbranch=br_contn(funcs,hbranch,30,<span class="string">'plotaxis'</span>,ax2);
+hbranch=br_rvers(hbranch);
+hbranch=br_contn(funcs,hbranch,30,<span class="string">'plotaxis'</span>,ax2);
+</pre><img vspace="5" hspace="5" src="MackeyGlass_demo_02.png" alt=""> <h2>Compute L1 coefficient<a name="8"></a></h2><p>to find if Hopf bifurcation is supercritical (L1&lt;0) or subcritical (L1&gt;0)</p><pre class="codeinput">[hbranch,hopftests,hc2_indices,hc2_types]=LocateSpecialPoints(funcs,hbranch)
+fprintf(<span class="string">'maximal L1 coefficient along Hopf branch: %g\n'</span>,max(hopftests.genh(1,:)));
+fprintf(<span class="string">'max of error estimate for L1 coefficient: %g\n'</span>,norm(diff(hopftests.genh),<span class="string">'inf'</span>));
+</pre><pre class="codeoutput">HopfCodimension2: calculate stability if not yet present
+HopfCodimension2: calculate L1 coefficients
+HopfCodimension2: (provisional)  detected.
+hbranch = 
+       method: [1x1 struct]
+    parameter: [1x1 struct]
+        point: [1x62 struct]
+hopftests = 
+    genh: [2x62 double]
+      bt: [1x62 double]
+    zeho: [1x62 double]
+    hoho: [1x62 double]
+hc2_indices =
+     []
+hc2_types = 
+   Empty cell array: 1-by-0
+maximal L1 coefficient along Hopf branch: -4.22512
+max of error estimate for L1 coefficient: 0.00383284
+</pre><h2>Branch off at  Hopf bifurcation<a name="9"></a></h2><pre class="codeinput">disp(<span class="string">'Branch off at Hopf bifurcation'</span>);
+fprintf(<span class="string">'Initial correction of periodic orbits at Hopf:\n'</span>);
+[per_orb,suc]=SetupPsol(funcs,nontriv_eqs,ind_hopf,<span class="keyword">...</span>
+    <span class="string">'print_residual_info'</span>,1,<span class="string">'intervals'</span>,20,<span class="string">'degree'</span>,4,<span class="keyword">...</span>
+    <span class="string">'max_bound'</span>,[contpar,20],<span class="string">'max_step'</span>,[contpar,0.5]);
+<span class="keyword">if</span> ~suc
+    error(<span class="string">'MackeyGlassDemo:fail'</span>,<span class="keyword">...</span>
+        <span class="string">'MackeyGlassDemo: initialization of periodic orbit failed'</span>);
+<span class="keyword">end</span>
+figure(1);
+hold <span class="string">on</span>
+per_orb=br_contn(funcs,per_orb,60);
+per_orb=br_stabl(funcs,per_orb,0,1);
+nunst_per=GetStability(per_orb,<span class="string">'exclude_trivial'</span>,true);
+</pre><pre class="codeoutput">Branch off at Hopf bifurcation
+Initial correction of periodic orbits at Hopf:
+it=1, res=4.44089e-16
+it=1, res=0.000474015
+it=2, res=2.52388e-07
+it=3, res=3.02411e-13
+it=1, res=2.21451e-07
+it=2, res=5.905e-14
+it=1, res=0.00153112
+it=2, res=1.62608e-05
+it=3, res=4.24821e-08
+it=4, res=1.62131e-12
+it=1, res=0.00229308
+it=2, res=6.5338e-05
+it=3, res=4.58407e-07
+it=4, res=1.32847e-11
+it=1, res=6.17341e-07
+it=2, res=9.91984e-14
+it=1, res=0.00267022
+it=2, res=7.63302e-05
+...</pre><img vspace="5" hspace="5" src="MackeyGlass_demo_03.png" alt=""> <h2>Find period doubling bifurcations in two parameters<a name="10"></a></h2><pre class="codeinput">ind_pd=find(diff(nunst_per)==1);
+[pdfuncs,pdbranch1,suc]=SetupPeriodDoubling(funcs,per_orb,ind_pd(1),<span class="keyword">...</span>
+    <span class="string">'contpar'</span>,[beta_ind,tau_ind],<span class="string">'dir'</span>,beta_ind,<span class="string">'step'</span>,1e-3);
+<span class="keyword">if</span> ~suc
+    error(<span class="string">'MackeyGlassDemo:fail'</span>,<span class="keyword">...</span>
+        <span class="string">'MackeyGlassDemo: initialization of period doubling failed'</span>);
+<span class="keyword">end</span>
+figure(2);
+pdbranch1=br_contn(pdfuncs,pdbranch1,30);
+pdbranch1=br_rvers(pdbranch1);
+pdbranch1=br_contn(pdfuncs,pdbranch1,30);
+</pre><pre class="codeoutput">it=1, res=0.788214
+it=2, res=0.0916841
+it=3, res=0.0025304
+it=4, res=1.56433e-07
+it=5, res=2.92104e-11
+it=1, res=0.0112006
+it=2, res=1.16375e-08
+it=3, res=3.34808e-11
+it=1, res=0.0069642
+it=2, res=8.9861e-06
+it=3, res=2.14417e-10
+it=1, res=0.00537865
+it=2, res=3.64861e-09
+it=1, res=0.00646205
+it=2, res=8.1615e-09
+it=1, res=4.45396e-05
+it=2, res=1.80161e-09
+it=1, res=0.00265392
+it=2, res=1.67361e-09
+it=1, res=0.00316854
+...</pre><img vspace="5" hspace="5" src="MackeyGlass_demo_04.png" alt=""> <h2>Check Floquet multipliers<a name="11"></a></h2><p>(note that Floquet multipliers are often unreliable)</p><pre class="codeinput">[nunst_pd,floqpd1,triv_defect1,pdbranch1.point]=GetStability(pdbranch1,<span class="keyword">...</span>
+    <span class="string">'exclude_trivial'</span>,true,<span class="string">'funcs'</span>,pdfuncs);
+fprintf(<span class="string">'max defect of Floquet multiplier at -1 or 1: %g\n'</span>,max(abs(triv_defect1)));
+</pre><pre class="codeoutput">max defect of Floquet multiplier at -1 or 1: 2.91538e-05
+</pre><h2>Branch off at period doubling<a name="12"></a></h2><p>(Solutions at far end get inaccurate.)</p><pre class="codeinput">[per2,suc]=DoublePsol(funcs,per_orb,ind_pd(1));
+<span class="keyword">if</span> ~suc
+    error(<span class="string">'MackeyGlassDemo:fail'</span>,<span class="keyword">...</span>
+        <span class="string">'MackeyGlassDemo: branching off at period doubling failed'</span>);
+<span class="keyword">end</span>
+figure(1);
+per2=br_contn(funcs,per2,60);
+[nunst_per2,dom,triv_defect]=GetStability(per2,<span class="string">'funcs'</span>,funcs,<span class="string">'exclude_trivial'</span>,true);
+fprintf(<span class="string">'max defect of Floquet multiplier at 1: %g\n'</span>,max(triv_defect));
+</pre><pre class="codeoutput">it=1, res=0.0124911
+it=2, res=0.0276352
+it=3, res=0.000296731
+it=4, res=2.46301e-08
+it=5, res=2.25597e-13
+it=1, res=0.00151564
+it=2, res=7.31194e-09
+it=1, res=0.0253445
+it=2, res=0.0280135
+it=3, res=0.000301408
+it=4, res=2.48935e-08
+it=5, res=2.57572e-13
+it=1, res=0.00161747
+it=2, res=9.03779e-09
+it=1, res=0.00205178
+it=2, res=6.12801e-05
+it=3, res=1.39947e-07
+it=4, res=3.1017e-11
+it=1, res=0.00142129
+it=2, res=3.52686e-05
+...</pre><img vspace="5" hspace="5" src="MackeyGlass_demo_05.png" alt=""> <h2>Continue period doublings in two parameters for secondary PD<a name="13"></a></h2><pre class="codeinput">ind_pd2=find(diff(nunst_per2)==1);
+[pd2funcs,pdbranch2,suc]=SetupPeriodDoubling(funcs,per2,ind_pd2(1),<span class="keyword">...</span>
+    <span class="string">'contpar'</span>,[beta_ind,tau_ind],<span class="string">'dir'</span>,beta_ind,<span class="string">'step'</span>,1e-3);
+<span class="keyword">if</span> ~suc
+    error(<span class="string">'MackeyGlassDemo:fail'</span>,<span class="keyword">...</span>
+        <span class="string">'MackeyGlassDemo: initialization of 2nd period doubling failed'</span>);
+<span class="keyword">end</span>
+figure(2);
+pdbranch2=br_contn(pdfuncs,pdbranch2,30);
+pdbranch2=br_rvers(pdbranch2);
+pdbranch2=br_contn(pdfuncs,pdbranch2,30);
+</pre><pre class="codeoutput">it=1, res=0.750973
+it=2, res=0.0371569
+it=3, res=2.0725e-05
+it=4, res=4.36228e-10
+it=1, res=0.0294226
+it=2, res=3.52651e-08
+it=3, res=7.27844e-11
+it=1, res=0.0242077
+it=2, res=3.89516e-05
+it=3, res=1.29773e-09
+it=1, res=0.0280011
+it=2, res=4.7441e-08
+it=3, res=8.08935e-11
+it=1, res=0.0334636
+it=2, res=9.77472e-08
+it=3, res=8.03269e-11
+it=1, res=0.000162675
+it=2, res=9.72391e-09
+it=1, res=0.0343983
+it=2, res=8.68216e-08
+...</pre><img vspace="5" hspace="5" src="MackeyGlass_demo_06.png" alt=""> <h2>Check Floquet multipliers along period doubling bifurcation<a name="14"></a></h2><p>(Note that Floquet multipliers are often unreliable.)</p><pre class="codeinput">[nunst_pd2,floqpd2,triv_defect2,pdbranch2.point]=GetStability(pdbranch2,<span class="keyword">...</span>
+    <span class="string">'exclude_trivial'</span>,true,<span class="string">'funcs'</span>,pdfuncs);
+fprintf(<span class="string">'max defect of Floquet multiplier at -1 or 1: %g\n'</span>,max(abs(triv_defect2)));
+</pre><pre class="codeoutput">max defect of Floquet multiplier at -1 or 1: 0.00226198
+</pre><h2>Two-parameter bifurcation diagram<a name="15"></a></h2><p>Assigning a name anda color to a curve. Others are chosen automatically</p><pre class="codeinput">figure(3)
+clf;ax3=gca;hold(ax3,<span class="string">'on'</span>)
+lg=Plot2dBranch(hbranch);
+lg=Plot2dBranch(pdbranch1,<span class="string">'lgname'</span>,<span class="string">'PD1'</span>,<span class="string">'funcs'</span>,pdfuncs,<span class="string">'oldlegend'</span>,lg);
+lg=Plot2dBranch(pdbranch2,<span class="string">'lgname'</span>,<span class="string">'PD2'</span>,<span class="string">'funcs'</span>,pdfuncs,<span class="string">'oldlegend'</span>,lg,<span class="string">'color'</span>,[0,0.5,0]);
+xlabel(<span class="string">'\beta'</span>);
+ylabel(<span class="string">'\tau'</span>);
+title(sprintf([<span class="string">'Bifurcation diagram of Mackey-Glass eqn,\nother parameters, '</span>,<span class="keyword">...</span>
+    <span class="string">' n=%g, gamma=1'</span>],n0));
+grid <span class="string">on</span>
+</pre><img vspace="5" hspace="5" src="MackeyGlass_demo_07.png" alt=""> <h2>Time profiles of period doubling orbits and errors of Floquet multipliers<a name="16"></a></h2><pre class="codeinput">bifsols={pdbranch1.point,pdbranch2.point};
+floqpd={triv_defect1,triv_defect2};
+get_par=@(i,k)arrayfun(@(x)x.parameter(i),bifsols{k});
+figure(4)
+clf;
+<span class="keyword">for</span> k=1:2
+    subplot(2,2,k);
+    hold <span class="string">on</span>
+    <span class="keyword">for</span> i=1:length(bifsols{k})
+        plot(bifsols{k}(i).mesh*bifsols{k}(i).period,bifsols{k}(i).profile(1,:),<span class="string">'-'</span>);
+    <span class="keyword">end</span>
+    hold <span class="string">off</span>
+    box <span class="string">on</span>
+    grid <span class="string">on</span>
+    title(sprintf(<span class="string">'PD%d: time profiles of period doubling'</span>,k));
+    xlabel(<span class="string">'t'</span>);
+    ylabel(<span class="string">'x'</span>);
+    subplot(2,2,2+k);
+    semilogy(1:length(bifsols{k}),floqpd{k},<span class="string">'.-'</span>);
+    grid <span class="string">on</span>
+    title(sprintf(<span class="string">'PD%d: dist crit Floq mult to 1 or -1'</span>,k));
+    ylabel(<span class="string">'error'</span>);
+    xlabel(<span class="string">'point along branch'</span>);
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="MackeyGlass_demo_08.png" alt=""> <h2>save<a name="17"></a></h2><pre class="codeinput">save(<span class="string">'MGresults.mat'</span>);
+</pre><img vspace="5" hspace="5" src="MackeyGlass_demo_09.png" alt=""> <img vspace="5" hspace="5" src="MackeyGlass_demo_10.png" alt=""> <img vspace="5" hspace="5" src="MackeyGlass_demo_11.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% DDE-Biftool demo Mackey-Glass Equation
+%
+% The Mackey-Glass equation is given by
+% 
+% $$x'(t)=\beta \frac{x(t-\tau)}{1+x(t-\tau)^n}-\gamma x(t)$$
+% 
+% Parameters are (in this order) |beta|, |n|, |tau| (|gamma| is not part of
+% parameter vector).
+%
+% <html>
+% $Id: MackeyGlass_demo.html 161 2017-02-23 21:58:11Z jansieber $
+% </html>
+%
+%% load DDE-Biftool into path
+clear
+close all
+addpath('../../ddebiftool',...
+    '../../ddebiftool_extra_psol',...
+    '../../ddebiftool_extra_nmfm',...
+    '../../ddebiftool_utilities');
+format compact
+%% Enable vectorization
+% (disable for speed comparison)
+x_vectorize=true;
+%% Set user-defined functions
+% using |gamma| as constant and (|beta|,|n|,|tau|) as parameters
+gamma=1.0;
+beta_ind=1;
+n_ind=2;
+tau_ind=3;
+if x_vectorize
+    f=@(x,xtau,beta,n)beta*xtau./(1+xtau.^n)-gamma*x;
+    funcs=set_funcs(...
+        'sys_rhs',@(xx,p)f(xx(1,1,:),xx(1,2,:),p(1),p(2)),...
+        'sys_tau',@()tau_ind,...
+        'x_vectorized',true);
+else
+    f=@(x,xtau,beta,n)beta*xtau/(1+xtau^n)-gamma*x; %#ok<UNRCH>
+    funcs=set_funcs(...
+        'sys_rhs',@(xx,p)f(xx(1,1,:),xx(1,2,:),p(1),p(2)),...
+        'sys_tau',@()tau_ind);
+end
+%% Initial parameters and state
+beta0=2;
+n0=10;
+tau0=0;
+x0=(beta0-1)^(1/n0);
+%% Initialization of branch of non-trivial equilibria
+contpar=tau_ind;
+nontriv_eqs=SetupStst(funcs,'x',x0,'parameter',[beta0,n0,tau0],'step',0.1,...
+    'contpar',contpar,'max_step',[contpar,0.3],'max_bound',[contpar,10]);
+%% Compute, find stability and bifurcations of non-trivial equilibria 
+disp('Trivial equilibria');
+figure(1);clf;ax1=gca;
+nontriv_eqs=br_contn(funcs,nontriv_eqs,3,'plotaxis',ax1);
+[nontriv_eqs,~,ind_hopf,bif1types]=LocateSpecialPoints(funcs,nontriv_eqs);
+nunst_eqs=GetStability(nontriv_eqs);
+fprintf('Hopf bifurcation near point %d\n',ind_hopf);
+%% Continue Hopf bifurcation in two parameters
+[hbranch,suc]=SetupHopf(funcs,nontriv_eqs,ind_hopf,...
+    'contpar',[beta_ind,tau_ind],'dir',beta_ind,'step',1e-3);
+figure(2);clf;ax2=gca;
+hbranch=br_contn(funcs,hbranch,30,'plotaxis',ax2);
+hbranch=br_rvers(hbranch);
+hbranch=br_contn(funcs,hbranch,30,'plotaxis',ax2);
+%% Compute L1 coefficient 
+% to find if Hopf bifurcation is supercritical (L1<0) or subcritical (L1>0)
+[hbranch,hopftests,hc2_indices,hc2_types]=LocateSpecialPoints(funcs,hbranch)
+fprintf('maximal L1 coefficient along Hopf branch: %g\n',max(hopftests.genh(1,:)));
+fprintf('max of error estimate for L1 coefficient: %g\n',norm(diff(hopftests.genh),'inf'));
+%% Branch off at  Hopf bifurcation
+disp('Branch off at Hopf bifurcation');
+fprintf('Initial correction of periodic orbits at Hopf:\n');
+[per_orb,suc]=SetupPsol(funcs,nontriv_eqs,ind_hopf,...
+    'print_residual_info',1,'intervals',20,'degree',4,...
+    'max_bound',[contpar,20],'max_step',[contpar,0.5]);
+if ~suc
+    error('MackeyGlassDemo:fail',...
+        'MackeyGlassDemo: initialization of periodic orbit failed');
+end
+figure(1);
+hold on
+per_orb=br_contn(funcs,per_orb,60);
+per_orb=br_stabl(funcs,per_orb,0,1);
+nunst_per=GetStability(per_orb,'exclude_trivial',true);
+%% Find period doubling bifurcations in two parameters
+ind_pd=find(diff(nunst_per)==1);
+[pdfuncs,pdbranch1,suc]=SetupPeriodDoubling(funcs,per_orb,ind_pd(1),...
+    'contpar',[beta_ind,tau_ind],'dir',beta_ind,'step',1e-3);
+if ~suc
+    error('MackeyGlassDemo:fail',...
+        'MackeyGlassDemo: initialization of period doubling failed');
+end
+figure(2);
+pdbranch1=br_contn(pdfuncs,pdbranch1,30);
+pdbranch1=br_rvers(pdbranch1);
+pdbranch1=br_contn(pdfuncs,pdbranch1,30);
+%% Check Floquet multipliers 
+% (note that Floquet multipliers are often unreliable)
+[nunst_pd,floqpd1,triv_defect1,pdbranch1.point]=GetStability(pdbranch1,...
+    'exclude_trivial',true,'funcs',pdfuncs); 
+fprintf('max defect of Floquet multiplier at -1 or 1: %g\n',max(abs(triv_defect1)));
+%% Branch off at period doubling 
+% (Solutions at far end get inaccurate.)
+[per2,suc]=DoublePsol(funcs,per_orb,ind_pd(1));
+if ~suc
+    error('MackeyGlassDemo:fail',...
+        'MackeyGlassDemo: branching off at period doubling failed');
+end
+figure(1);
+per2=br_contn(funcs,per2,60);
+[nunst_per2,dom,triv_defect]=GetStability(per2,'funcs',funcs,'exclude_trivial',true); 
+fprintf('max defect of Floquet multiplier at 1: %g\n',max(triv_defect));
+%% Continue period doublings in two parameters for secondary PD
+ind_pd2=find(diff(nunst_per2)==1);
+[pd2funcs,pdbranch2,suc]=SetupPeriodDoubling(funcs,per2,ind_pd2(1),...
+    'contpar',[beta_ind,tau_ind],'dir',beta_ind,'step',1e-3);
+if ~suc
+    error('MackeyGlassDemo:fail',...
+        'MackeyGlassDemo: initialization of 2nd period doubling failed');
+end
+figure(2);
+pdbranch2=br_contn(pdfuncs,pdbranch2,30);
+pdbranch2=br_rvers(pdbranch2);
+pdbranch2=br_contn(pdfuncs,pdbranch2,30);
+%% Check Floquet multipliers along period doubling bifurcation
+% (Note that Floquet multipliers are often unreliable.)
+[nunst_pd2,floqpd2,triv_defect2,pdbranch2.point]=GetStability(pdbranch2,...
+    'exclude_trivial',true,'funcs',pdfuncs);
+fprintf('max defect of Floquet multiplier at -1 or 1: %g\n',max(abs(triv_defect2)));
+
+%% Two-parameter bifurcation diagram
+% Assigning a name anda color to a curve. Others are chosen automatically
+figure(3)
+clf;ax3=gca;hold(ax3,'on')
+lg=Plot2dBranch(hbranch);
+lg=Plot2dBranch(pdbranch1,'lgname','PD1','funcs',pdfuncs,'oldlegend',lg);
+lg=Plot2dBranch(pdbranch2,'lgname','PD2','funcs',pdfuncs,'oldlegend',lg,'color',[0,0.5,0]);
+xlabel('\beta');
+ylabel('\tau');
+title(sprintf(['Bifurcation diagram of Mackey-Glass eqn,\nother parameters, ',...
+    ' n=%g, gamma=1'],n0));
+grid on
+%% Time profiles of period doubling orbits and errors of Floquet multipliers
+bifsols={pdbranch1.point,pdbranch2.point};
+floqpd={triv_defect1,triv_defect2};
+get_par=@(i,k)arrayfun(@(x)x.parameter(i),bifsols{k});
+figure(4)
+clf;
+for k=1:2
+    subplot(2,2,k);
+    hold on
+    for i=1:length(bifsols{k})
+        plot(bifsols{k}(i).mesh*bifsols{k}(i).period,bifsols{k}(i).profile(1,:),'-');
+    end
+    hold off
+    box on
+    grid on
+    title(sprintf('PD%d: time profiles of period doubling',k));
+    xlabel('t');
+    ylabel('x');
+    subplot(2,2,2+k);
+    semilogy(1:length(bifsols{k}),floqpd{k},'.-');
+    grid on
+    title(sprintf('PD%d: dist crit Floq mult to 1 or -1',k));
+    ylabel('error');
+    xlabel('point along branch');
+end
+%% save
+save('MGresults.mat');
+
+##### SOURCE END #####
+--></body></html>

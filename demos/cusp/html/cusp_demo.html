@@ -1,0 +1,271 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Demo - System with cusp and Takens-Bogdanov bifurcations</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-02-17"><meta name="DC.source" content="cusp_demo.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Demo - System with cusp and Takens-Bogdanov bifurcations</h1><!--introduction--><p>Demo contributed by Maikel Bosschaert</p><p>from Giannakopoulos, F. and Zapp, A. (2001). Bifurcations in a planar system of differential delay equations modeling neural activity. Physica D: Nonlinear Phenomena, 159(3):215-232.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Differential equations</a></li><li><a href="#3">continue stst in E</a></li><li><a href="#4">cfind bifurcations along steady state branch</a></li><li><a href="#5">Find fold and continue it in (E,Q)</a></li><li><a href="#6">Detect codimension 2 bifurcations: cusp and Bogdanov-Takens (no</a></li><li><a href="#7">Compute stability</a></li><li><a href="#8">Plot 2d bifurcation diagram of fold bifurcation</a></li></ul></div><h2>Differential equations<a name="1"></a></h2><p><img src="cusp_demo_eq06076393689779727659.png" alt="$$\mu\dot{u}_{1}(t)=-u_{1}(t)+q_{11}\alpha(u_{1}(t-T))-q_{12}u_{2}(t-T)+e_{1}$$"></p><p><img src="cusp_demo_eq16360302275264720844.png" alt="$$\mu\dot{u}_{2}(t)=-u_{2}(t)+q_{21}\alpha(u_{1}(t-T))-q_{22}u_{2}(t-T)+e_{2}$$"></p><p>
+$Id: cusp_demo.m 127 2016-09-05 22:53:17Z jansieber $
+</p><pre class="codeinput"><span class="comment">%#ok&lt;*NOPTS&gt;</span>
+clear <span class="comment">% clear variables</span>
+close <span class="string">all</span>; <span class="comment">% close figures</span>
+addpath(<span class="string">'../../ddebiftool'</span>,<span class="keyword">...</span>
+    <span class="string">'../../ddebiftool_extra_psol'</span>,<span class="keyword">...</span>
+    <span class="string">'../../ddebiftool_extra_nmfm'</span>,<span class="keyword">...</span>
+    <span class="string">'../../ddebiftool_utilities'</span>);
+
+disp(<span class="string">'Cusp demo'</span>);
+
+funcs=set_funcs(<span class="keyword">...</span>
+    <span class="string">'sys_rhs'</span>, @cusp_rhs,<span class="keyword">...</span>
+    <span class="string">'sys_tau'</span>, @()6,<span class="keyword">...</span>
+    <span class="string">'sys_deri'</span>, @cusp_deri,<span class="keyword">...</span>
+    <span class="string">'sys_mfderi'</span>,@(xx,par,varargin)cusp_mfderi(xx,par,varargin{:}));
+</pre><pre class="codeoutput">Cusp demo
+</pre><h2>continue stst in E<a name="3"></a></h2><pre class="codeinput">Q=0;
+E=0;
+
+q11=2.6; q12=Q; q21=1; e1=E; e2=0; T=1;
+par = [q11,q12,q21,e1,e2,T];
+
+stst_br = SetupStst(funcs,<span class="string">'x'</span>,[0;0],<span class="string">'parameter'</span>,par,<span class="keyword">...</span>
+    <span class="string">'contpar'</span>,4,<span class="string">'max_step'</span>,[4 0.02],<span class="string">'max_bound'</span>,[4 1],<span class="string">'min_bound'</span>,[4 0],<span class="keyword">...</span>
+    <span class="string">'newheuristics_tests'</span>,0);
+nsteps=300;
+figure(1);clf;ax1=gca;
+stst_br = br_contn(funcs,stst_br,nsteps,<span class="string">'plotaxis'</span>,ax1);
+</pre><pre class="codeoutput">BR_CONTN warning: boundary hit.
+</pre><img vspace="5" hspace="5" src="cusp_demo_01.png" alt=""> <h2>cfind bifurcations along steady state branch<a name="4"></a></h2><pre class="codeinput">[stst_br,stst_tests,codim1_ind,stst_bif]=LocateSpecialPoints(funcs,stst_br)
+stst_nunst=GetStability(stst_br);
+cla(ax1);
+Plot2dBranch(stst_br,<span class="string">'y'</span>,@(p)p.x(1),<span class="string">'ax'</span>,ax1);
+xlabel(ax1,<span class="string">'E'</span>);
+ylabel(ax1,<span class="string">'x1'</span>);
+</pre><pre class="codeoutput">StstCodimension1: calculate stability if not yet present
+StstCodimension1: (provisional) 1 fold  detected.
+br_insert: detected 1 of 1: fold. Normalform:
+    b: 0.53589
+
+
+stst_br = 
+
+       method: [1x1 struct]
+    parameter: [1x1 struct]
+        point: [1x54 struct]
+
+
+stst_tests = 
+
+    fold: [1x54 double]
+    hopf: [1x54 double]
+
+
+codim1_ind =
+
+    29
+
+
+stst_bif = 
+
+    'fold'
+
+</pre><img vspace="5" hspace="5" src="cusp_demo_02.png" alt=""> <h2>Find fold and continue it in (E,Q)<a name="5"></a></h2><pre class="codeinput">[fold_branch, suc] = SetupFold(funcs, stst_br, codim1_ind, <span class="string">'contpar'</span>, [2 4], <span class="string">'dir'</span>, 4, <span class="string">'step'</span>, 0.02);
+
+Qmin=-0.1; Qmax=2; Emin=-0.6; Emax=0.6;
+fold_branch.parameter.min_bound=[2 Qmin; 4 Emin];
+fold_branch.parameter.max_bound=[2 Qmax; 4 Emax];
+fold_branch.parameter.max_step=[2 0.02; 4 0.02];
+
+figure(2);clf;ax2=gca;
+fold_branch=br_contn(funcs,fold_branch,300,<span class="string">'plotaxis'</span>,ax2);
+fold_branch = br_rvers(fold_branch);
+fold_branch=br_contn(funcs,fold_branch,300,<span class="string">'plotaxis'</span>,ax2);
+</pre><pre class="codeoutput">BR_CONTN warning: boundary hit.
+BR_CONTN warning: boundary hit.
+</pre><img vspace="5" hspace="5" src="cusp_demo_03.png" alt=""> <h2>Detect codimension 2 bifurcations: cusp and Bogdanov-Takens (no<a name="6"></a></h2><pre class="codeinput">[fold_branch,fold_tests,codim2_ind,codim2types]=LocateSpecialPoints(funcs,fold_branch)
+</pre><pre class="codeoutput">FoldCodimension2: calculate stability if not yet present
+FoldCodimension2: calculate fold normal form coefficients
+FoldCodimension2: (provisional) 1 cusp 2 Takens-Bogdanov  detected.
+br_insert: detected 1 of 3: BT. Normalform:
+    a2: -0.19038
+    b2: -0.95191
+
+br_insert: detected 2 of 3: cusp. Normalform:
+    b: -0.10152
+    c: 1.0818
+
+br_insert: detected 3 of 3: BT. Normalform:
+    a2: 0.19038
+    b2: 0.95191
+
+
+fold_branch = 
+
+       method: [1x1 struct]
+    parameter: [1x1 struct]
+        point: [1x203 struct]
+
+
+fold_tests = 
+
+    cusp: [2x203 double]
+      bt: [1x203 double]
+    zeho: [1x203 double]
+
+
+codim2_ind =
+
+    71    88   132
+
+
+codim2types = 
+
+    'BT'    'cusp'    'BT'
+
+</pre><h2>Compute stability<a name="7"></a></h2><pre class="codeinput">fold_nunst=GetStability(fold_branch,<span class="string">'exclude_trivial'</span>,true);
+</pre><h2>Plot 2d bifurcation diagram of fold bifurcation<a name="8"></a></h2><pre class="codeinput">Plot2dBranch(fold_branch,<span class="string">'ax'</span>,ax2);
+grid <span class="string">on</span>
+xlabel(ax2,<span class="string">'Q'</span>);
+ylabel(ax2,<span class="string">'E'</span>);
+</pre><img vspace="5" hspace="5" src="cusp_demo_04.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Demo - System with cusp and Takens-Bogdanov bifurcations
+%
+% Demo contributed by Maikel Bosschaert
+% 
+% from Giannakopoulos, F. and Zapp, A. (2001). Bifurcations in a planar
+% system of differential delay equations modeling neural activity. Physica
+% D: Nonlinear Phenomena, 159(3):215-232.
+%
+%% Differential equations
+%
+% 
+% $$\mu\dot{u}_{1}(t)=-u_{1}(t)+q_{11}\alpha(u_{1}(t-T))-q_{12}u_{2}(t-T)+e_{1}$$
+%
+% $$\mu\dot{u}_{2}(t)=-u_{2}(t)+q_{21}\alpha(u_{1}(t-T))-q_{22}u_{2}(t-T)+e_{2}$$
+%
+% <html>
+% $Id: cusp_demo.m 127 2016-09-05 22:53:17Z jansieber $
+% </html>
+%%
+%#ok<*NOPTS>
+clear % clear variables
+close all; % close figures
+addpath('../../ddebiftool',...
+    '../../ddebiftool_extra_psol',...
+    '../../ddebiftool_extra_nmfm',...
+    '../../ddebiftool_utilities');
+
+disp('Cusp demo');
+
+funcs=set_funcs(...
+    'sys_rhs', @cusp_rhs,...
+    'sys_tau', @()6,...
+    'sys_deri', @cusp_deri,...
+    'sys_mfderi',@(xx,par,varargin)cusp_mfderi(xx,par,varargin{:}));
+%% continue stst in E
+Q=0;
+E=0;
+
+q11=2.6; q12=Q; q21=1; e1=E; e2=0; T=1;
+par = [q11,q12,q21,e1,e2,T];
+
+stst_br = SetupStst(funcs,'x',[0;0],'parameter',par,...
+    'contpar',4,'max_step',[4 0.02],'max_bound',[4 1],'min_bound',[4 0],...
+    'newheuristics_tests',0);
+nsteps=300;
+figure(1);clf;ax1=gca;
+stst_br = br_contn(funcs,stst_br,nsteps,'plotaxis',ax1);
+%% cfind bifurcations along steady state branch
+[stst_br,stst_tests,codim1_ind,stst_bif]=LocateSpecialPoints(funcs,stst_br) 
+stst_nunst=GetStability(stst_br);
+cla(ax1);
+Plot2dBranch(stst_br,'y',@(p)p.x(1),'ax',ax1);
+xlabel(ax1,'E');
+ylabel(ax1,'x1');
+%% Find fold and continue it in (E,Q)
+[fold_branch, suc] = SetupFold(funcs, stst_br, codim1_ind, 'contpar', [2 4], 'dir', 4, 'step', 0.02);
+
+Qmin=-0.1; Qmax=2; Emin=-0.6; Emax=0.6;
+fold_branch.parameter.min_bound=[2 Qmin; 4 Emin];
+fold_branch.parameter.max_bound=[2 Qmax; 4 Emax];
+fold_branch.parameter.max_step=[2 0.02; 4 0.02];
+
+figure(2);clf;ax2=gca;
+fold_branch=br_contn(funcs,fold_branch,300,'plotaxis',ax2);
+fold_branch = br_rvers(fold_branch);
+fold_branch=br_contn(funcs,fold_branch,300,'plotaxis',ax2);
+
+%% Detect codimension 2 bifurcations: cusp and Bogdanov-Takens (no 
+[fold_branch,fold_tests,codim2_ind,codim2types]=LocateSpecialPoints(funcs,fold_branch)
+%% Compute stability
+fold_nunst=GetStability(fold_branch,'exclude_trivial',true);
+%% Plot 2d bifurcation diagram of fold bifurcation
+Plot2dBranch(fold_branch,'ax',ax2);
+grid on
+xlabel(ax2,'Q');
+ylabel(ax2,'E');
+##### SOURCE END #####
+--></body></html>

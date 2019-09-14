@@ -1,0 +1,226 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Continuation of homoclinic connections</title><meta name="generator" content="MATLAB 9.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-02-03"><meta name="DC.source" content="demo1_hcli.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Continuation of homoclinic connections</h1><!--introduction--><p>
+$Id: demo1_hcli.m 47 2014-04-19 17:05:42Z jan.sieber $
+</p><p>(requires running <a href="demo1_psol.html">demo1_psol.html</a> first to create branch5)</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Cutting a long-period periodic orbit</a></li><li><a href="#3">The second half of the profile</a></li><li><a href="#4">Figure: time profiles of both connection loop separately</a></li><li><a href="#5">Mesh Refinement</a></li><li><a href="#6">Continuation of homoclinic in two parameters</a></li><li><a href="#7">Figure: Two parameter bifurcation diagram with homoclinic connection</a></li></ul></div><pre class="codeinput"><span class="comment">%#ok&lt;*ASGLU,*NOPTS,*NASGU&gt;</span>
+<span class="comment">%</span>
+</pre><h2 id="2">Cutting a long-period periodic orbit</h2><p>The 7th last point along the branch of periodic orbits <tt>branch5</tt> was close to a homoclinic connection, consisting of two loops. Its period is also not too long such that the coarse mesh gives still an accurate solution. Using the (added) routines to compute homoclinic solutions, we correct each of the two loops to a homoclinic orbit, thereby obtaining also some stability information of the steady state point. We take the first half of the profile and rescale it to <img src="demo1_hcli_eq05816708510759450028.png" alt="$[0,1]$">. Then we convert it into a homoclinic/heteroclinic structure (point), and correct it with a Newton iteration (<tt>p_correc</tt>).</p><pre class="codeinput">hcli1=psol;
+hcli1.mesh=hcli1.mesh(1:65);
+hcli1.profile=hcli1.profile(:,1:65);
+hcli1.period=hcli1.period*hcli1.mesh(end);
+hcli1.mesh=hcli1.mesh/hcli1.mesh(end);
+
+hcli1=p_tohcli(funcs,hcli1) <span class="comment">% convert it to a point of homoclinic structure</span>
+
+mh=df_mthod(funcs,<span class="string">'hcli'</span>);
+[hcli1,success]=p_correc(funcs,hcli1,ind_a21,[],mh.point) <span class="comment">% and correct it</span>
+</pre><pre class="codeoutput">hcli1 = 
+  struct with fields:
+
+         kind: 'hcli'
+    parameter: [0.5000 -1 1 2.3460 0.2000 0.2000 1.5000]
+         mesh: [1&times;61 double]
+       degree: 4
+      profile: [2&times;61 double]
+       period: 42.2519
+           x1: [2&times;1 double]
+           x2: [2&times;1 double]
+     lambda_v: 0.3142
+            v: [2&times;1 double]
+     lambda_w: 0.3142
+            w: [2&times;1 double]
+        alpha: -1
+      epsilon: 0.0037
+hcli1 = 
+  struct with fields:
+
+...</pre><h2 id="3">The second half of the profile</h2><p>We apply the same procedure on the second half of the profile.</p><pre class="codeinput">hcli2=psol;
+hcli2.mesh=hcli2.mesh(81:end-16);
+hcli2.profile=hcli2.profile(:,81:end-16);
+hcli2.mesh=hcli2.mesh-hcli2.mesh(1);
+hcli2.period=hcli2.period*hcli2.mesh(end);
+hcli2.mesh=hcli2.mesh/hcli2.mesh(end);
+
+hcli2=p_tohcli(funcs,hcli2);
+[hcli2,success]=p_correc(funcs,hcli2,ind_a21,[],mh.point);
+figure(14);clf;subplot(2,1,1);
+p_pplot(hcli1);
+xlabel(<span class="string">'t/period'</span>);ylabel(<span class="string">'x1, x2'</span>);
+subplot(2,1,2);
+p_pplot(hcli2);
+xlabel(<span class="string">'t/period'</span>);ylabel(<span class="string">'x1, x2'</span>);
+</pre><img vspace="5" hspace="5" src="demo1_hcli_01.png" alt=""> <h2 id="4">Figure: time profiles of both connection loop separately</h2><p>Homoclinic profiles of the two loops depicted in figure <a href="demo1_psol.html#longperiod">demo1_psol.html#longperiod</a>, now computed using the defining system for homoclinic/heteroclinic connections.</p><h2 id="5">Mesh Refinement</h2><p>We recompute the first homoclinic orbit, using 70 intervals, and correct this point.</p><pre class="codeinput">hcli1=p_remesh(hcli1,4,70);
+[hcli1,success]=p_correc(funcs,hcli1,ind_a21,[],mh.point)
+</pre><pre class="codeoutput">hcli1 = 
+  struct with fields:
+
+         kind: 'hcli'
+    parameter: [0.5000 -1 1 2.3459 0.2000 0.2000 1.5000]
+         mesh: [1&times;277 double]
+       degree: 4
+      profile: [2&times;277 double]
+       period: 37.6088
+           x1: [2&times;1 double]
+           x2: [2&times;1 double]
+     lambda_v: 0.3141
+            v: [2&times;1 double]
+     lambda_w: 0.3141
+            w: [2&times;1 double]
+        alpha: -1
+      epsilon: 0.0037
+success =
+  logical
+   1
+</pre><h2 id="6">Continuation of homoclinic in two parameters</h2><p>If we free a second parameter, we can continue this homoclinic orbit with respect to two free parameters.  As a second free parameter, we choose <img src="demo1_hcli_eq16585733689390013092.png" alt="$\tau_s$">. We first create a default branch of homoclinic orbits, add <tt>hcli1</tt> as a first point, perturb it, and add the corrected perturbation as a second point.</p><pre class="codeinput">figure(15);
+branch6=df_brnch(funcs,[ind_a21 ind_taus],<span class="string">'hcli'</span>);
+branch6.point=hcli1;
+hcli1.parameter(ind_taus)=1.49;
+[hcli1,success]=p_correc(funcs,hcli1,ind_a21,[],mh.point);
+branch6.point(2)=hcli1;
+[branch6,s,r,f]=br_contn(funcs,branch6,19);
+xlabel(<span class="string">'a21'</span>);ylabel(<span class="string">'\tau_s'</span>);
+</pre><img vspace="5" hspace="5" src="demo1_hcli_02.png" alt=""> <h2 id="7">Figure: Two parameter bifurcation diagram with homoclinic connection</h2><pre class="codeinput">save(<span class="string">'demo1_hcli_results.mat'</span>);
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Continuation of homoclinic connections
+%
+% <html>
+% $Id: demo1_hcli.m 47 2014-04-19 17:05:42Z jan.sieber $
+% </html>
+%
+% (requires running <demo1_psol.html> first to create branch5)
+%%
+%#ok<*ASGLU,*NOPTS,*NASGU>
+%
+%% Cutting a long-period periodic orbit
+% The 7th last point along the branch of periodic orbits |branch5| was
+% close to a homoclinic connection, consisting of two loops. Its period is
+% also not too long such that the coarse mesh gives still an accurate
+% solution. Using the (added) routines to compute homoclinic solutions, we
+% correct each of the two loops to a homoclinic orbit, thereby obtaining
+% also some stability information of the steady state point. We take the
+% first half of the profile and rescale it to $[0,1]$. Then we convert it
+% into a homoclinic/heteroclinic structure (point), and correct it with a
+% Newton iteration (|p_correc|).
+hcli1=psol;
+hcli1.mesh=hcli1.mesh(1:65);
+hcli1.profile=hcli1.profile(:,1:65);
+hcli1.period=hcli1.period*hcli1.mesh(end);
+hcli1.mesh=hcli1.mesh/hcli1.mesh(end);
+
+hcli1=p_tohcli(funcs,hcli1) % convert it to a point of homoclinic structure
+
+mh=df_mthod(funcs,'hcli');
+[hcli1,success]=p_correc(funcs,hcli1,ind_a21,[],mh.point) % and correct it
+
+%% The second half of the profile
+% We apply the same procedure on the second half of the profile.
+hcli2=psol;
+hcli2.mesh=hcli2.mesh(81:end-16);
+hcli2.profile=hcli2.profile(:,81:end-16);
+hcli2.mesh=hcli2.mesh-hcli2.mesh(1);
+hcli2.period=hcli2.period*hcli2.mesh(end);
+hcli2.mesh=hcli2.mesh/hcli2.mesh(end);
+
+hcli2=p_tohcli(funcs,hcli2);
+[hcli2,success]=p_correc(funcs,hcli2,ind_a21,[],mh.point);
+figure(14);clf;subplot(2,1,1);
+p_pplot(hcli1);
+xlabel('t/period');ylabel('x1, x2');
+subplot(2,1,2);
+p_pplot(hcli2);
+xlabel('t/period');ylabel('x1, x2');
+%% Figure: time profiles of both connection loop separately
+% Homoclinic profiles of the two loops depicted in figure
+% <demo1_psol.html#longperiod>, now computed using the defining system for
+% homoclinic/heteroclinic connections.
+%% Mesh Refinement
+% We recompute the first homoclinic orbit, using 70 intervals, and correct
+% this point.
+hcli1=p_remesh(hcli1,4,70);
+[hcli1,success]=p_correc(funcs,hcli1,ind_a21,[],mh.point)
+%% Continuation of homoclinic in two parameters
+% If we free a second parameter, we can continue this homoclinic orbit with
+% respect to two free parameters.  As a second free parameter, we choose
+% $\tau_s$. We first create a default branch of homoclinic orbits, add
+% |hcli1| as a first point, perturb it, and add the corrected
+% perturbation as a second point.
+figure(15);
+branch6=df_brnch(funcs,[ind_a21 ind_taus],'hcli');
+branch6.point=hcli1;
+hcli1.parameter(ind_taus)=1.49;
+[hcli1,success]=p_correc(funcs,hcli1,ind_a21,[],mh.point);
+branch6.point(2)=hcli1;
+[branch6,s,r,f]=br_contn(funcs,branch6,19);
+xlabel('a21');ylabel('\tau_s');
+%% Figure: Two parameter bifurcation diagram with homoclinic connection
+save('demo1_hcli_results.mat');
+
+##### SOURCE END #####
+--></body></html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+  
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+  <title>Table of content for DDE-Biftool html documentation for demos</title>
+
+  
+</head><body>
+<h1>DDE-Biftool demos</h1>
+% $Id: index.html 129 2016-09-05 23:02:16Z jansieber $ <br>
+The subfolders contain examples demonstrating features and extensions
+of DDE-Biftool.
+<ul>
+
+  <li><a href="neuron/html/demo1.html">neuron</a>: Step-by-step walk-through of basic DDE-Biftool usage for a neuron model with parametric delays. This demo illustrates 
+    <ul>
+      <li>computation and continuation of steady states,     </li>
+      <li>computation of their stability,      </li>
+      <li>branching off to periodic orbits,</li>
+      <li>continuation of periodic orbits,</li>
+      <li>computation of their stability, </li>
+      <li>continuation of Hopf bifurcations in two parameters,</li>
+      <li>computation of normal form coefficients for Hopf bifurcations and Hopf-Hopf interactions,</li>
+      <li>computation of connecting orbits</li>
+    </ul>
+	An additional script <a href="neuron/html/demo1_simple.html">demo1_simple.m</a> demonstrates, how one can use convenience functions from the folder <span style="font-family: monospace;">ddebiftool_utilities</span> to perform the above tasks.<br> The script <a href="neuron/html/demo1_POfold.html">demo1_POfold.m</a> demonstrates the continuation of folds of periodic orbits.</li><br>
+  <li><a href="sd_demo/html/sd_demo.html">sd_demo</a>: step-by-step walk-through of basic DDE-Biftool usage for a system with state-dependent delays. This demo illustrates
+	<ul>
+	<li> computation and continuation of steady states,</li>
+      	<li>computation of their stability, </li>
+      <li>branching off to periodic orbits,</li>
+      <li>continuation of periodic orbits,</li>
+      <li>computation of their stability,  </li>
+      <li>continuation of Hopf bifurcations in two parameters,</li>
+      <li>continuation of Hopf bifurcations in two parameters.</li>
+	</ul>
+  </li>
+  <li><a href="hom_demo/html/hom_demo.html">hom_demo</a>: Step-by-step walk-through of constructing and continuing connecting orbits between equilibria using DDE-Biftool.
+  </li>
+  <li><a href="nmfm_demo/html/nmfm_demo.html">nmfm_demo</a>: A demo focussing on the features of the <span style="font-family: monospace;">ddebiftool_extra_nmfm</span> extension. Along two branches of Hopf bifurcations, normal form coefficients (determining if the bifurcation is sub- or supercritical) are computed. Also, a number of codimension-two points along the Hopf branch are detected and their normal forms are computed, too.
+  </li>
+  <li><a href="minimal_demo/html/minimal_demo.html">minimal_demo</a>: This example (a Duffing oscillator with delayed feedback) demonstrates how to use the convenience functions from the folder <span style="font-family: monospace;">ddebiftool_utilities</span>  and the extension in  the folder <span style="font-family: monospace;">ddebiftool_extra_psol</span> to continue torus bifurcations and folds of periodic orbits in systems with parametric delays. It also demonstrates the option to vectorize the right-hand side to speed up computations, and computes normal forms along Hopf branches.
+  </li>
+  <li><a href="nested/html/nested_demo.html">nested</a>: This example shows that DDE-Biftool can treat state-dependent delays with arbitrary levels of nesting. 
+  </li>
+  <li><a href="rotsym_demo/html/rotsym_demo.html">rotsym_demo</a>: A demonstration of the DDE-Biftool extension in <span style="font-family: monospace;">ddebiftool_extra_rotsym</span> for rotationally symmetric systems using the Lang-Kobayashi equations (a model of a semiconductor lasers with delayed optical feedback). The demo illustrates
+  <ul>
+  <LI>definition of the rotational symmetry with a skew-symmetric matrix and how to incorporate this into the system definition,
+  </LI>
+      <li>computation and continuation of relative equilibria (rotating waves),     </li>
+      <li>computation of their stability,      </li>
+      <li>branching off to relative periodic orbits (modulated waves),</li>
+      <li>continuation of relative periodic orbits,</li>
+      <li>computation of their stability, </li>
+      <li>continuation of Hopf and fold bifurcations of relative equilibria in two parameters,</li>
+      <li>continuation of period doublings and fold bifurcations of relative periodic orbits in two parameters,</li>
+  </ul>
+  </li>
+  <li><a href="Mackey-Glass/html/MackeyGlass_demo.html">Mackey-Glass</a>: This demo continues period doubling bifurcations in the well-known Mackey-Glass equation, a scalar DDE with parametric delay. It shows how one can branch off at a period doubling to track the period-doubled orbit. In this demo one can switch on or off vectorization to compare the speed of computations. Also included: normal form computation for Hopf bifurcation.
+  </li>
+  <li><a href="humphriesetal/html/humphriesetal_demo.html">Humphries et al</a>: This demo continues folds and torus bifrucations in a scalar DDE with two state-dependent delays.  It also demonstrates the option to vectorize right-hand side, delays, and their derivatives to speed up computations.
+  </li>
+  <li><a href="phase_oscillator/html/phase_oscillator.html">phase
+  oscillator</a> (contributed by Azamat Yeldesbay): This demo shows
+  that rotations (such as in phase oscillators or in a rotating forced
+  pendulum) can be treated as periodic orbits.
+  </li>
+  <li><a href="Holling-Tanner/html/HollingTanner_demo.html">Holling-Tanner
+  model - Demo for Takens-Bogdanov point normal form</a> (contributed
+  by Maikel Bosschaert). The demo shows the computation of test
+  functions for the Takens-Bogdanov point on a model discussed by Liu,
+  X., Liu, Y., and Wang, J. (2013): <emph>Bogdanov-Takens bifurcation
+  of a delayed ratio-dependent Holling-Tanner predator prey
+  system</emph> (in Abstract and Applied Analysis).
+  </li>
+  <li><a href="cusp/html/cusp_demo.html">System with cusp and
+  Takens-Bogdanov bifurcations</a> (contributed by Maikel Bosschaert)
+  from Giannakopoulos, F. and Zapp, A. (2001). <emph>Bifurcations in a
+  planar system of differential delay equations modeling neural
+  activity.</emph> Physica D: Nonlinear Phenomena, 159(3):215-232.
+</ul>
+</body></html>

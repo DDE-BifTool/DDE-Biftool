@@ -1,0 +1,10421 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass scrartcl
+\begin_preamble
+\usepackage[scaled=0.9]{helvet}
+\usepackage[T1]{fontenc}
+\usepackage[scaled=0.9]{beramono}
+
+\usepackage{microtype}
+\usepackage{mathpazo,textcomp}
+
+\usepackage{fancyvrb}
+\usepackage{color}
+\definecolor{lightgray}{gray}{0.5}
+\setlength{\parindent}{0pt}
+
+\typearea{12}
+
+\definecolor{darkblue}{cmyk}{1,0,0,0.8}
+\definecolor{darkred}{cmyk}{0,1,0,0.7}
+\definecolor{orange}{cmyk}{0,0.5,1,0}
+\hypersetup{anchorcolor=black,
+  citecolor=darkblue, filecolor=darkblue,
+  menucolor=darkblue,pagecolor=darkblue,urlcolor=darkblue,linkcolor=darkblue}
+
+\definecolor{var}{rgb}{0,0.25,0.25}
+\definecolor{comment}{rgb}{0,0.5,0}
+\definecolor{kw}{rgb}{0,0,0.5}
+\definecolor{str}{rgb}{0.5,0,0}
+
+\usepackage{upquote}
+
+\newcommand{\blist}[1]{\mbox{\lstinline!#1!}}
+\end_preamble
+\options 11pt
+\use_default_options true
+\begin_modules
+logicalmkup
+theorems-ams
+\end_modules
+\maintain_unincluded_children false
+\begin_local_layout
+Format 6
+InsetLayout Flex:blist
+LyxType               charstyle
+LabelString           blist
+LatexType             command
+LatexName             blist
+Font
+Family             Typewriter
+Color               Green
+EndFont
+Preamble
+\newcommand*{\Rinput}[1]{\mbox{\lstinline!#1!}}
+EndPreamble
+ResetsFont true
+End
+\end_local_layout
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref true
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder true
+\pdf_colorlinks true
+\pdf_backref false
+\pdf_pdfusetitle true
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\listings_params "basicstyle={\ttfamily\small},commentstyle={\color{comment}},identifierstyle={\color{var}},keywordstyle={\color{kw}},language=Matlab,stringstyle={\color{str}},upquote=true"
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Description of the extension ddebiftool_nmfm
+\end_layout
+
+\begin_layout Author
+Maikel Bosschaert, Bram Wage and Yuri Kuznetsov
+\end_layout
+
+\begin_layout Date
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+16 September 2015
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Abstract
+This addendum describes the normal form extension
+\family typewriter
+ 
+\family default
+to DDE-BifTool, a bifurcation analysis toolbox running in 
+\family typewriter
+Matlab
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset href
+LatexCommand href
+name "http://www.mathworks.com"
+target "http://www.mathworks.com"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\family default
+ or 
+\family typewriter
+GNU Octave
+\family default
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset href
+LatexCommand href
+name "http://www.gnu.org/software/octave"
+target "http://www.gnu.org/software/octave"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+.
+ For systems of DDEs with constant delays this extension is able to automaticall
+y detect and accurately locate fold and Hopf bifurcations on steady-state
+ branches, as well as generalized Hopf, double-Hopf, fold-Hopf, Bogdanov-Takens
+ and cusp bifurcations on Hopf and/or fold branches.
+ In addition, the critical normal from coefficients of the bifurcations
+ are computed.
+ This will be illustrated with three different example systems.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Overview
+\end_layout
+
+\begin_layout Standard
+Users unfamiliar with DDE-BifTool should look at the demo in the folder
+ 
+\family typewriter
+minimal_demo
+\family default
+ (script 
+\family typewriter
+rundemo.m
+\family default
+).
+ In Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Example1"
+
+\end_inset
+
+ a model of two interacting layers of neurons
+\series bold
+ 
+\series default
+will be used to demonstrate the detection of and normal form coefficient
+ computation for Hopf, generalized Hopf, double-Hopf and fold-Hopf bifurcations.
+ In Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Example2"
+
+\end_inset
+
+ a system exhibiting a Bogdanov-Takens bifurcation is considered.
+ Here, the sign of the critical normal form coefficients is verified by
+ looking at the stability of the cycles.
+ Lastly, in Section 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "sec:Example3"
+
+\end_inset
+
+ a system with cusp and Bogdanov-Takens is presented.
+\end_layout
+
+\begin_layout Standard
+In version 3.1 of DDE-BifTool a normal form extension, written by Bram Wage
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "W14"
+
+\end_inset
+
+, was supplied.
+ Here we give a short list of changes and additions that have been made:
+\end_layout
+
+\begin_layout Paragraph
+1.
+ 
+\end_layout
+
+\begin_layout Standard
+The normal form extension is now able to detect, locate and compute critical
+ normal form coefficients in the following situations
+\end_layout
+
+\begin_layout Itemize
+Hopf encountered along steady-state curves
+\end_layout
+
+\begin_layout Itemize
+Generalized Hopf, fold-Hopf and double-Hopf encountered along Hopf curves
+\end_layout
+
+\begin_layout Itemize
+Fold encountered along steady-state curves
+\end_layout
+
+\begin_layout Itemize
+Cusp, Bogdanov-Takens and fold-Hopf encountered along Fold curves
+\end_layout
+
+\begin_layout Itemize
+Bogdanov-Takens encountered along Hopf curves
+\end_layout
+
+\begin_layout Standard
+Previously only the first two items were supported.
+ In other words, all codimension-1 bifurcations typically encountered on
+ steady-state curves and codimension-2 bifurcations typically encountered
+ on either fold or Hopf curves are now implemented.
+\end_layout
+
+\begin_layout Paragraph
+2.
+ 
+\end_layout
+
+\begin_layout Standard
+The function to detect bifurcations, 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+br_bifdet.m
+\end_layout
+
+\end_inset
+
+, has been completely rewritten and is now supporting 
+\end_layout
+
+\begin_layout Itemize
+Detection of multiple bifurcations occurring in the same interval on a bifurcati
+on curve
+\end_layout
+
+\begin_layout Itemize
+Plotting of the test function used to detect the bifurcation
+\end_layout
+
+\begin_layout Itemize
+Realtime monitoring of the eigenvalues
+\end_layout
+
+\begin_layout Paragraph
+3.
+\end_layout
+
+\begin_layout Standard
+The code to locate codimension-2 bifurcation has been separated into a new
+ function 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+locate_codim2
+\end_layout
+
+\end_inset
+
+, instead of being repeated for every bifurcation detected.
+ In the previous version, the middle point selected in the bisection method
+ was not correct in the generalized Hopf and fold-Hopf cases; this has been
+ fixed.
+\end_layout
+
+\begin_layout Paragraph
+4.
+\end_layout
+
+\begin_layout Standard
+The test functions indicating Hopf encountered along steady-state curves
+ and fold-Hopf encountered along Hopf curves have been changed.
+ Now the test function for Hopf uses the same function as for the double-Hopf
+ bifurcation.
+ See 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:testfunction_FH_H"
+
+\end_inset
+
+ for the new test function used to detect fold-Hopf.
+ 
+\end_layout
+
+\begin_layout Paragraph
+5.
+\end_layout
+
+\begin_layout Standard
+Abbreviations used for codimension-2 bifurcation have been changed to mimic
+ those being used in MatCont
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset href
+LatexCommand href
+name "https://sourceforge.net/projects/matcont/"
+target "https://sourceforge.net/projects/matcont/"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Delay differential equations
+\end_layout
+
+\begin_layout Standard
+Consider a system of delay differential equations with constant delays (DDE),
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\dot{x}(t)=f(x(t-\tau_{0}),x(t-\tau_{1}),\ldots,x(t-\tau_{m}),\alpha),\label{eq:discrete_dde}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $x(t)\in\mathbb{R}^{n}$
+\end_inset
+
+, 
+\begin_inset Formula $f:\mathbb{R}^{n(m+1)}\times\mathbb{R}^{p}\rightarrow\mathbb{R}^{n}$
+\end_inset
+
+ is a smooth function depending on a number of parameters 
+\begin_inset Formula $\alpha\in\mathbb{R}^{p}$
+\end_inset
+
+, and delays 
+\begin_inset Formula $\tau_{i}$
+\end_inset
+
+, 
+\begin_inset Formula $i=0,\ldots,m$
+\end_inset
+
+, ordered such that 
+\begin_inset Formula $0=\tau_{0}\leq\tau_{1}\leq\dots\leq\tau_{m}$
+\end_inset
+
+ .
+ Assume that 
+\begin_inset Formula 
+\[
+f(x^{*},\ldots,x^{*},\alpha_{0})=0.
+\]
+
+\end_inset
+
+Then 
+\begin_inset Formula $x^{*}$
+\end_inset
+
+ is a stationary point at 
+\begin_inset Formula $\alpha=\alpha_{0}$
+\end_inset
+
+ and to which we can associate the linearized problem 
+\begin_inset Formula 
+\begin{equation}
+\dot{y}(t)=A_{0}(x^{*},\alpha_{0})y(t)+\sum_{i=1}^{m}A_{i}(x^{*},\alpha_{0})y(t-\tau_{i}),\label{eq:linearized_problem}
+\end{equation}
+
+\end_inset
+
+ where, using 
+\begin_inset Formula $f\equiv f(x^{0},x^{1},\ldots,x^{m},\alpha)$
+\end_inset
+
+, 
+\begin_inset Formula 
+\[
+A_{i}(x^{*},\alpha_{0})=\frac{\partial f}{\partial x^{i}}(x^{*}(0),x^{*}(-\tau_{1}),\ldots,x^{*}(-\tau_{m}),\alpha_{0}),\ i=0,\ldots,m
+\]
+
+\end_inset
+
+Define the 
+\begin_inset Formula $n\times n$
+\end_inset
+
+-dimensional matrix 
+\begin_inset Formula $\Delta$
+\end_inset
+
+ as 
+\begin_inset Formula 
+\begin{equation}
+\Delta(x^{*},\alpha_{0},\lambda)=\lambda I-A_{0}(x^{*},\alpha_{0})-\sum_{i=1}^{m}A_{i}(x^{*},\alpha_{0})e^{-\lambda\tau_{i}}.\label{eq:characteristic_matrix}
+\end{equation}
+
+\end_inset
+
+ Then the characteristic equation reads 
+\begin_inset Formula 
+\begin{equation}
+\det(\Delta(x^{*},\alpha_{0},\lambda))=0.\label{eq:characteristic_equation}
+\end{equation}
+
+\end_inset
+
+We refer to roots of the characteristic equation as eigenvalues.
+ The stability of a generic stationary point is determined by its eigenvalues,
+ see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "diekmann2012delay"
+
+\end_inset
+
+.
+ In particular, when eigenvalues cross the imaginary axis in the complex
+ plane, bifurcations occur.
+ To simplify notation we write 
+\begin_inset Formula $\Delta(\lambda)$
+\end_inset
+
+ for 
+\begin_inset Formula $\Delta(x^{*},\alpha_{0},\lambda)$
+\end_inset
+
+ when no confusion arises.
+\end_layout
+
+\begin_layout Section
+Detecting and locating codimension-1 bifurcation
+\end_layout
+
+\begin_layout Subsection
+Test functions
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Test-functions_stst"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A function along the considered branch that has a regular zero at a bifurcation
+ is called a test function.
+ Below we will simply list functions used for detecting certain bifurcations
+ without proving their regularity.
+\end_layout
+
+\begin_layout Standard
+There is a real number 
+\begin_inset Formula $\xi$
+\end_inset
+
+ such that all zeros of 
+\begin_inset Formula $\mbox{det}\Delta(\lambda)$
+\end_inset
+
+ are in the left half plane 
+\begin_inset Formula $\left\{ z\in\mathbb{C}\vert\mbox{Re}z<\xi\right\} $
+\end_inset
+
+.
+ If in the linearized problem 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:linearized_problem"
+
+\end_inset
+
+ not all 
+\begin_inset Formula $A_{i}$
+\end_inset
+
+ vanish simultaneously, then 
+\begin_inset Formula $\mbox{det}\Delta(\lambda)$
+\end_inset
+
+ has infinitely many roots such that there is only a finite number of solutions
+ in any vertical strip in the complex plane.
+ For detecting bifurcations depending on the eigenvalues we can therefore
+ look at a vertical strip containing zero.
+ Care must be taken when constructing test functions based on these eigenvalues
+ in a chosen vertical strip.
+ Indeed, the number of eigenvalues in the vertical strip may vary as parameters
+ change.
+ For this reason we prefer to use detection methods relaying on the Jordan
+ chains of the characteristic matrix 
+\begin_inset Formula $\Delta(\lambda)$
+\end_inset
+
+ whenever possible.
+\end_layout
+
+\begin_layout Standard
+After a test function indicates a bifurcation by changing its sign, we need
+ to locate the bifurcation point accurately in order to calculate the critical
+ normal form coefficients.
+ As we will see below, we use the bisection method or apply Newton on a
+ specially constructed defining system to achieve this.
+\end_layout
+
+\begin_layout Standard
+When continuing a steady-state of a DDE, we generally expect to encounter
+ codimension-1 bifurcations, that is fold or Hopf bifurcations.
+ We therefore start by defining test functions for these two bifurcations.
+\end_layout
+
+\begin_layout Subsection
+Fold 
+\begin_inset Formula $(\lambda_{1}=0)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+At a fold point the characteristic equation 
+\begin_inset Formula $\mbox{det}\Delta(\lambda)=0$
+\end_inset
+
+ has a simple eigenvalue 
+\begin_inset Formula $\lambda_{1}=0$
+\end_inset
+
+ and no other eigenvalues on the imaginary axis.
+ A test function to detect this bifurcation is given by
+\begin_inset Formula 
+\[
+\psi_{f}=\mbox{det}\Delta(0).
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To locate the fold point, the defining system
+\begin_inset Formula 
+\begin{equation}
+S_{f}(x,q,\alpha)=\begin{pmatrix}f(x,\dots,x,\alpha)\\
+\Delta(x,\alpha,0)q\\
+c^{T}q-1
+\end{pmatrix}=0\label{eq:DS_hopf_at_BT-1}
+\end{equation}
+
+\end_inset
+
+is used.
+ Here 
+\begin_inset Formula $c^{T}q-1$
+\end_inset
+
+ presents a suitable normalization of 
+\begin_inset Formula $q\in\mathbb{R}^{n}$
+\end_inset
+
+.
+ The vector 
+\begin_inset Formula $c\in\mathbb{R}^{n}$
+\end_inset
+
+ is chosen as 
+\begin_inset Formula $c=q^{(0)}/(q^{(0)^{T}}q^{(0)})$
+\end_inset
+
+, where 
+\begin_inset Formula $q^{(0)}$
+\end_inset
+
+ is the initial value of 
+\begin_inset Formula $q$
+\end_inset
+
+.
+ Solving this system by Newton's method gives 
+\begin_inset Formula $(x,q,\alpha)$
+\end_inset
+
+, corresponding to the fold point.
+\end_layout
+
+\begin_layout Subsection
+Hopf 
+\begin_inset Formula $(\lambda_{1,2}=\pm i\omega_{0})$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Hopf"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+At a Hopf point the characteristic equation 
+\begin_inset Formula $\det\Delta(\lambda)=0$
+\end_inset
+
+ has a pair of purely complex conjugate eigenvalues 
+\begin_inset Formula $\lambda=\pm i\omega$
+\end_inset
+
+, with 
+\begin_inset Formula $\omega>0$
+\end_inset
+
+, and no other eigenvalues on the imaginary axis.
+ For a test function we look at the sign of the smallest real part of the
+ complex eigenvalue pairs.
+ For this the following function has been constructed
+\begin_inset listings
+lstparams "basicstyle={\footnotesize},language=Matlab"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function [smallest_real_part, stability,selectedroot] = nmfm_smrp(...
+     
+\end_layout
+
+\begin_layout Plain Layout
+
+funcs,point, stmethod,varargin) 
+\end_layout
+
+\begin_layout Plain Layout
+
+%% Compute smallest real part of imaginary pairs or of real eigenvalues
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+% 
+\end_layout
+
+\begin_layout Plain Layout
+
+% * rmomega (logical): remove known imaginary roots 
+\end_layout
+
+\begin_layout Plain Layout
+
+% * threshold (function): threshold(abs(imag(roots)) selects roots to 
+\end_layout
+
+\begin_layout Plain Layout
+
+% consider 
+\end_layout
+
+\begin_layout Plain Layout
+
+% 
+\end_layout
+
+\begin_layout Plain Layout
+
+% $Id: nmfm_smrp.m 73 2014-12-31 10:47:51Z jan.sieber $ 
+\end_layout
+
+\begin_layout Plain Layout
+
+% 
+\end_layout
+
+\begin_layout Plain Layout
+
+%% default={'stabilityfield','l1','remove_omega',false, ...
+\end_layout
+
+\begin_layout Plain Layout
+
+%  'threshold',@(x)true(size(x))}; 
+\end_layout
+
+\begin_layout Plain Layout
+
+options=dde_set_options(default,varargin); 
+\end_layout
+
+\begin_layout Plain Layout
+
+if ~isfield(point, 'stability') || isempty(point.stability) || ...
+\end_layout
+
+\begin_layout Plain Layout
+
+		isempty(point.stability.l0)
+\end_layout
+
+\begin_layout Plain Layout
+
+	point.stability = p_stabil(funcs,point, stmethod); 
+\end_layout
+
+\begin_layout Plain Layout
+
+end
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+stability = point.stability; 
+\end_layout
+
+\begin_layout Plain Layout
+
+roots = stability.(options.stabilityfield);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+%% Remove roots closest to known eigenvalue pair 
+\end_layout
+
+\begin_layout Plain Layout
+
+if options.remove_omega
+\end_layout
+
+\begin_layout Plain Layout
+
+   [dum,ix]=sort(abs(roots - 1i*point.omega)); %#ok<ASGLU>
+\end_layout
+
+\begin_layout Plain Layout
+
+   roots(ix(1))=[];
+\end_layout
+
+\begin_layout Plain Layout
+
+   [dum,ix]=sort(abs(roots + 1i*point.omega)); %#ok<ASGLU>
+\end_layout
+
+\begin_layout Plain Layout
+
+   roots(ix(1))=[];
+\end_layout
+
+\begin_layout Plain Layout
+
+end
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+selectedroots = roots(options.threshold(abs(imag(roots)))); 
+\end_layout
+
+\begin_layout Plain Layout
+
+if isempty(selectedroots)
+\end_layout
+
+\begin_layout Plain Layout
+
+   smallest_real_part = 0;
+\end_layout
+
+\begin_layout Plain Layout
+
+   return 
+\end_layout
+
+\begin_layout Plain Layout
+
+end 
+\end_layout
+
+\begin_layout Plain Layout
+
+%% Assume all imaginary eigenvalues come in pairs
+\end_layout
+
+\begin_layout Plain Layout
+
+realparts = real(selectedroots); 
+\end_layout
+
+\begin_layout Plain Layout
+
+[dum, rpind] = sort(abs(realparts)); %#ok<ASGLU> 
+\end_layout
+
+\begin_layout Plain Layout
+
+smallest_real_part = realparts(rpind(1)); 
+\end_layout
+
+\begin_layout Plain Layout
+
+selectedroot=selectedroots(rpind(1)); 
+\end_layout
+
+\begin_layout Plain Layout
+
+end
+\end_layout
+
+\end_inset
+
+The value of the test function 
+\begin_inset Formula $\psi_{H}$
+\end_inset
+
+ at the 
+\begin_inset Formula $i$
+\end_inset
+
+th point on the steady-state branch is then given by
+\begin_inset Formula 
+\[
+\psi_{H}(i)=\text{nmfm\_smrp(funcs,p,stmethod,'remove\_omega',false,'threshold',isimag)}.
+\]
+
+\end_inset
+
+Here 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+isimag=@(x)x>imagthresh
+\end_layout
+
+\end_inset
+
+ is an anonymous function that selects all eigenvalues that have imaginary
+ parts greater than 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+imagthresh
+\end_layout
+
+\end_inset
+
+.
+ If there are no complex eigenvalues according to this rule the function
+ returns the zero value.
+ Since a sign change is monitored by
+\begin_inset Formula 
+\[
+|\text{sign}(\phi_{H}(i))+\text{sign}(\phi_{H}(i-1))|,
+\]
+
+\end_inset
+
+we have to exclude the case 
+\begin_inset Formula $\phi_{H}(i)=0$
+\end_inset
+
+ while detecting.
+\end_layout
+
+\begin_layout Standard
+When a bifurcation is detected we locate the Hopf point using the defining
+ system
+\begin_inset Formula 
+\begin{equation}
+S_{H}(x,q,\alpha,\omega)=\begin{pmatrix}f(x,\dots,x,\alpha)\\
+\Delta(x,\alpha,i\omega)q\\
+c^{H}q-1
+\end{pmatrix}=0.\label{eq:DS_hopf_at_BT}
+\end{equation}
+
+\end_inset
+
+Here 
+\begin_inset Formula $c^{H}q-1$
+\end_inset
+
+ presents a suitable normalization of 
+\begin_inset Formula $q\in\mathbb{C}^{n}$
+\end_inset
+
+.
+ The vector 
+\begin_inset Formula $c\in\mathbb{\mathbb{C}}^{n}$
+\end_inset
+
+ is chosen as 
+\begin_inset Formula $c=q^{(0)}/(q^{(0)^{H}}q^{(0)})$
+\end_inset
+
+, where 
+\begin_inset Formula $q^{(0)}$
+\end_inset
+
+ is the initial value of 
+\begin_inset Formula $q$
+\end_inset
+
+.
+ Solving this system by Newton's method gives 
+\begin_inset Formula $(x,q,\alpha,\omega)$
+\end_inset
+
+, corresponding to the Hopf point.
+\end_layout
+
+\begin_layout Section
+Detecting and locating codimension-2 bifurcations
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Detecting-and-locating"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Due to the existence of a finite-dimensional smooth center manifold for
+ Delay Differential Equations it is possible to `lift' the normal form theory
+ for Ordinary Differential Equations (ODEs) to DDEs.
+ The ODE on the center manifold can be transformed into a normal form by
+ smooth invertible substitutions of the coordinates.
+ The critical normal form coefficients can be calculated with different
+ methods.
+ In 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Janssens:Thesis"
+
+\end_inset
+
+ the theory of sun-star calculus was combined with the approach used in
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Kuznetsov:Elements:2004"
+
+\end_inset
+
+ for calculating critical normal form for ODEs.
+ We refer to 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Janssens:Thesis"
+
+\end_inset
+
+ for the derivation of the critical normal form coefficients.
+ Here we will simply list the critical normal forms on the center manifold
+ and demonstrate how to compute their coefficients.
+ Readers familiar with normal forms for ODEs will notice the similarity.
+ The major difference is seen in the vectors used in the critical coefficients.
+ In ODEs eigenvectors and generalized eigenvectors of the Jacobian of the
+ system appear in the coefficients.
+ In DDEs the vectors used in the coefficients are obtained from the Jordan
+ chains of the characteristic matrix 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:characteristic_matrix"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+When investigating two-parameter problems, one usually encounters higher-order
+ degeneracies along codimension-1 bifurcation curves.
+ Some of these degeneracies are determined by the characteristic matrix,
+ while others can only be detected using the non-linear terms of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:discrete_dde"
+
+\end_inset
+
+.
+ For this reason we start the section with the critical normal forms for
+ codimension-1 equilibrium bifurcations, namely the fold and Hopf.
+\end_layout
+
+\begin_layout Subsection
+Normal forms for codimension-1 bifurcations
+\end_layout
+
+\begin_layout Standard
+Consider the steady-state 
+\begin_inset Formula $x^{*}$
+\end_inset
+
+ of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:discrete_dde"
+
+\end_inset
+
+ at 
+\begin_inset Formula $\alpha=\alpha_{0}$
+\end_inset
+
+.
+ By a shift of coordinates and parameters it can always be arranged that
+ 
+\begin_inset Formula $x^{*}=0$
+\end_inset
+
+ and 
+\begin_inset Formula $\alpha_{0}=0$
+\end_inset
+
+.
+ Since we are only calculating the critical normal form coefficients, we
+ drop the parameter and write 
+\begin_inset Formula $f(x^{0},x^{1},\ldots,x^{m})$
+\end_inset
+
+.
+ To simplify notation we write 
+\begin_inset Formula $f^{0}$
+\end_inset
+
+ for 
+\begin_inset Formula $f(x^{*},x^{*},\ldots,x^{*})$
+\end_inset
+
+.
+ Expanding 
+\begin_inset Formula $f$
+\end_inset
+
+ in 
+\begin_inset Formula $X=\left(x^{0},x^{1},\ldots,x^{m}\right)\in\mathbb{R}^{n}\times\mathbb{R}^{m+1}$
+\end_inset
+
+ around 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $(x^{*},x^{*},\ldots,x^{*})$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ yields 
+\begin_inset Formula 
+\begin{align}
+\begin{aligned}f(X) & =\left(Df^{0}\right)X+\frac{1}{2}\left(D^{2}f^{0}\right)(X,X)+\frac{1}{3!}\left(D^{3}f^{0}\right)(X,X,X)\\
+ & \qquad+\frac{1}{4!}\left(D^{4}f^{0}\right)(X,X,X,X)+\frac{1}{5!}\left(D^{5}f^{0}\right)(X,X,X,X,X)+\mathcal{O}(X^{6}),
+\end{aligned}
+\label{eq:multilinear-form}
+\end{align}
+
+\end_inset
+
+where
+\begin_inset Formula 
+\begin{align*}
+Df_{i}^{0}(q) & =\sum_{j=0}^{m}\frac{\partial f_{i}^{0}}{\partial x^{j}}q^{j}=\sum_{k=1}^{n}\sum_{j=0}^{m}\frac{\partial f_{i}^{0}}{\partial x_{k}^{j}}q_{i}^{j},\\
+D^{2}f_{i}^{0}(q,p) & =\sum_{j_{1},j_{2}=0}^{m}\frac{\partial f_{i}^{0}}{\partial x^{j_{1}}\partial x^{j_{2}}}q^{j_{1}}p^{j_{2}}\\
+ & =\sum_{k_{1},k_{2}=1}^{n}\sum_{j_{1},j_{2}=0}^{m}\frac{\partial f_{i}^{0}}{\partial x_{k_{1}}^{j_{1}}\partial x_{k_{2}}^{j_{2}}}q_{i_{1}}^{j_{1}}p_{i_{2}}^{j_{2}},
+\end{align*}
+
+\end_inset
+
+for 
+\begin_inset Formula $1\leq i\leq n$
+\end_inset
+
+.
+ The multilinear forms 
+\begin_inset Formula $D^{3}f^{0}(p,q,z),\, D^{4}f^{0}(p,q,z,v)$
+\end_inset
+
+ and 
+\begin_inset Formula $D^{5}f^{0}(p,q,z,v,w)$
+\end_inset
+
+ can be expressed similarly.
+\end_layout
+
+\begin_layout Subsubsection
+Fold 
+\begin_inset Formula $(\lambda_{1}=0,\, b\neq0)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If the steady-state 
+\begin_inset Formula $x^{*}\equiv0$
+\end_inset
+
+ of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:discrete_dde"
+
+\end_inset
+
+ has a fold bifurcation at the parameter value 
+\begin_inset Formula $\alpha_{0}=0$
+\end_inset
+
+, then the characteristic equation 
+\begin_inset Formula $\det\Delta(\lambda)=0$
+\end_inset
+
+ has a simple zero 
+\begin_inset Formula $\lambda_{1}=0$
+\end_inset
+
+.
+ Then there exist vectors 
+\begin_inset Formula $q,p\in\mathbb{R}^{n}$
+\end_inset
+
+ such that
+\begin_inset Formula 
+\[
+\Delta(0)q=0,\qquad p^{T}\Delta(0)=0.
+\]
+
+\end_inset
+
+These can be normalized to satisfy 
+\begin_inset Formula 
+\[
+p^{T}\Delta'(0)q=1
+\]
+
+\end_inset
+
+Here 
+\begin_inset Formula $\Delta'$
+\end_inset
+
+ denotes the derivative of the characteristic equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:characteristic_equation"
+
+\end_inset
+
+ with respect to 
+\begin_inset Formula $\lambda.$
+\end_inset
+
+ The restriction of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:discrete_dde"
+
+\end_inset
+
+ to the one-dimensional center manifold 
+\begin_inset Formula $W^{c}$
+\end_inset
+
+ can be transformed to the form 
+\begin_inset Formula 
+\begin{equation}
+\dot{w}=bw^{2}+\mathcal{O}\left(|w|^{3}\right)\qquad w\in\mathbb{R},\label{eq:fold_nf}
+\end{equation}
+
+\end_inset
+
+where the critical normal form coefficient is given by
+\begin_inset Formula 
+\begin{equation}
+b=\frac{1}{2}p^{T}D^{2}f^{0}(\Phi,\Phi),\label{eq:normal_form_fold_coef}
+\end{equation}
+
+\end_inset
+
+with 
+\begin_inset Formula 
+\begin{equation}
+\Phi=(q,q,\dots,q)\in\mathbb{R}^{n}\times\mathbb{R}^{m+1}.\label{eq:PHI_fold}
+\end{equation}
+
+\end_inset
+
+When a fold point is detected and located, the critical normal form coefficient
+ 
+\begin_inset Formula $b$
+\end_inset
+
+ is reported in the Matlab console.
+\end_layout
+
+\begin_layout Subsubsection
+Hopf 
+\begin_inset Formula $(\lambda_{1,2}=\pm i\omega_{0},\,\ell_{1}\neq0)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If the steady-state 
+\begin_inset Formula $x^{*}\equiv0$
+\end_inset
+
+ of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:discrete_dde"
+
+\end_inset
+
+ has a Hopf bifurcation at the parameter value 
+\begin_inset Formula $\alpha_{0}=0$
+\end_inset
+
+, then the characteristic equation 
+\begin_inset Formula $\det\Delta(\lambda)=0$
+\end_inset
+
+ has a pair of purely imaginary eigenvalues 
+\begin_inset Formula $\lambda_{1,2}=\pm i\omega_{0}$
+\end_inset
+
+, with 
+\begin_inset Formula $\omega_{0}>0$
+\end_inset
+
+, and no other eigenvalues on the imaginary axis.
+ Let 
+\begin_inset Formula $q,p\in\mathbb{R}^{n}$
+\end_inset
+
+ such that
+\begin_inset Formula 
+\[
+\Delta(i\omega_{0})q=0,\qquad p^{T}\Delta(i\omega_{0})=0.
+\]
+
+\end_inset
+
+These can be normalized to satisfy
+\begin_inset Formula 
+\[
+p^{T}\Delta'(i\omega_{0})q=1.
+\]
+
+\end_inset
+
+The restriction of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:discrete_dde"
+
+\end_inset
+
+ to the two-dimensional center manifold 
+\begin_inset Formula $W^{c}$
+\end_inset
+
+ can be transformed into the form
+\begin_inset Formula 
+\[
+\dot{z}=i\omega_{0}z+c_{1}z^{2}\bar{z}+\mathcal{O}(|z|^{4})\qquad z\in\mathbb{C}.
+\]
+
+\end_inset
+
+The critical normal form coefficient in this expression is 
+\begin_inset Formula $c_{1}$
+\end_inset
+
+.
+ The first Lyapunov coefficient is given by 
+\begin_inset Formula 
+\begin{equation}
+\ell_{1}=\frac{1}{\omega_{0}}\mbox{Re\,}c_{1},\label{eq:first_lyapunov_coeff}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula 
+\begin{align*}
+c_{1} & =\frac{1}{2}p^{T}\Big[D^{2}f^{0}\left(\bar{\Phi},H_{20}\right)+2D^{2}f^{0}\left(\Phi,H_{11}\right)+D^{3}f^{0}(\Phi,\Phi,\overline{\Phi})\Big],
+\end{align*}
+
+\end_inset
+
+with 
+\begin_inset Formula $\Phi$
+\end_inset
+
+, 
+\begin_inset Formula $H_{20}$
+\end_inset
+
+ and 
+\begin_inset Formula $H_{11}$
+\end_inset
+
+ computed as follows.
+ Let
+\begin_inset Formula 
+\begin{align}
+h_{20}(\vartheta) & =e^{2i\omega_{0}\vartheta}\Delta(\phi,\alpha_{0},2i\omega_{0})^{-1}D^{2}f^{0}(\Phi,\Phi),\nonumber \\
+h_{11}(\vartheta) & =\Delta(\phi,\alpha_{0},0)^{-1}D^{2}f^{0}(\Phi,\overline{\Phi}),\label{eq:hopf_h11}\\
+\phi(\vartheta) & =e^{i\omega_{0}\vartheta}q,\nonumber 
+\end{align}
+
+\end_inset
+
+then 
+\begin_inset Formula 
+\begin{align}
+\Phi & =\left(\phi(0),\phi(-\tau_{1}),\dots,\phi(-\tau_{m})\right),\label{eq:PHI_Hopf}\\
+H_{20} & =\left(h_{20}(0),h_{20}(-\tau_{1}),\dots,h_{20}(-\tau_{m})\right),\nonumber \\
+H_{11} & =\left(h_{11}(0),h_{11}(-\tau_{1}),\dots,h_{11}(-\tau_{m})\right).\nonumber 
+\end{align}
+
+\end_inset
+
+When a Hopf point is detected and located, the critical normal form coefficient
+ 
+\begin_inset Formula $\ell_{1}$
+\end_inset
+
+ is reported in the Matlab console.
+\end_layout
+
+\begin_layout Subsection
+Codimension-2 points on a fold curve 
+\begin_inset Formula $(\lambda_{1}=0)$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:test_functions_fold"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+While continuing a fold branch, the following codim-2 points can be encountered:
+\end_layout
+
+\begin_layout Enumerate
+An additional real eigenvalue 
+\begin_inset Formula $\lambda_{2}$
+\end_inset
+
+ meets the imaginary axis, with their geometric multiplicity remaining one,
+ while the center manifold 
+\begin_inset Formula $W^{c}$
+\end_inset
+
+ becomes two-dimensional:
+\begin_inset Formula 
+\[
+\lambda_{1,2}=0.
+\]
+
+\end_inset
+
+These are the conditions for a Bogdanov-Takens bifurcation.
+ A test function to detect this bifurcation is given by
+\begin_inset Formula 
+\[
+\psi_{BT}^{f}=p^{T}\Delta'(0)q.
+\]
+
+\end_inset
+
+Here the vectors 
+\begin_inset Formula $p,q$
+\end_inset
+
+ are calculated using the function 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+eig
+\end_layout
+
+\end_inset
+
+ from 
+\family typewriter
+Matlab
+\family default
+.
+ Depending on the system being investigated, this function does not always
+ pass zero when a Bogdanov-Takens bifurcation takes place on a Fold curve.
+ For example the system in Section 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "sec:Example3"
+
+\end_inset
+
+ exhibits this behavior, see Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:fold_br_testfunctions"
+
+\end_inset
+
+.
+ Therefore we also monitor the derivative of 
+\begin_inset Formula $\psi_{BT}^{f}$
+\end_inset
+
+ with respect to the parameters.
+ We note that at a Bogdanov-Takens point the normalization for the calculation
+ of the critical normal form coefficient 
+\begin_inset Formula $b$
+\end_inset
+
+ of a fold point cannot be achieved anymore.
+ This we also see in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:fold_br_testfunctions"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+Two extra non-real eigenvalues 
+\begin_inset Formula $\lambda_{2,3}$
+\end_inset
+
+ meet the imaginary axis, and 
+\begin_inset Formula $W^{c}$
+\end_inset
+
+ becomes three-dimensional:
+\begin_inset Formula 
+\[
+\lambda_{1}=0,\qquad\lambda_{2,3}=\pm i\omega_{0},
+\]
+
+\end_inset
+
+for 
+\begin_inset Formula $\omega_{0}>0$
+\end_inset
+
+.
+ These conditions correspond to the fold-Hopf bifurcation, also known as
+ the Gavrilov-Guckenheimer bifurcation.
+ The test function is the same as the test function for a Hopf bifurcation
+ on a steady-sate branch, see Section 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "sub:Hopf"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+The eigenvalue 
+\begin_inset Formula $\lambda_{1}=0$
+\end_inset
+
+ remains simple and the only one on the imaginary axis (dim 
+\begin_inset Formula $W^{c}=1$
+\end_inset
+
+), but the normal form coefficient 
+\begin_inset Formula $a$
+\end_inset
+
+ in equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:fold_nf"
+
+\end_inset
+
+ vanishes
+\begin_inset Formula 
+\[
+\lambda_{1}=0,\, a=0.
+\]
+
+\end_inset
+
+These are the conditions for a cusp bifurcation.
+ The coefficient 
+\begin_inset Formula $b$
+\end_inset
+
+ given in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:normal_form_fold_coef"
+
+\end_inset
+
+ can be used as a test function to detect this bifurcation:
+\begin_inset Formula 
+\[
+\psi_{CP}^{f}=b,
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $b$
+\end_inset
+
+ is given by 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:normal_form_fold_coef"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Codimension-2 points on a Hopf curve 
+\begin_inset Formula $(\lambda_{1,2}=\pm i\omega_{0})$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:test_functions_Hopf"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+While continuing a Hopf branch, the following codim-2 points can be encountered:
+\end_layout
+
+\begin_layout Enumerate
+An additional eigenvalue 
+\begin_inset Formula $\lambda_{3}=0$
+\end_inset
+
+ meets the imaginary axis and 
+\begin_inset Formula $W^{c}$
+\end_inset
+
+ becomes three-dimensional:
+\begin_inset Formula 
+\[
+\lambda_{1,2}=\pm i\omega_{0},\qquad\lambda_{3}=0.
+\]
+
+\end_inset
+
+As seen before these are the conditions for a fold-Hopf bifurcation.
+ For detection we can use the test function for a fold 
+\begin_inset Formula 
+\begin{equation}
+\psi_{FH}^{H}=\det\left(\Delta(0)\right).\label{eq:testfunction_FH_H}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+A Bogdanov-Takens bifurcation occurs when the two purely imaginary eigenvalues
+ 
+\begin_inset Formula $\lambda_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $\lambda_{2}$
+\end_inset
+
+ collide.
+ We use 
+\begin_inset Formula 
+\[
+\psi_{BT}^{H}=\omega_{0}
+\]
+
+\end_inset
+
+as a test function.
+\end_layout
+
+\begin_layout Enumerate
+An additional pair of non-real eigenvalues
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\begin_inset Formula $\lambda_{3,4}=\pm i\omega_{1}$
+\end_inset
+
+,
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ meet the imaginary axis and 
+\begin_inset Formula $W^{c}$
+\end_inset
+
+ becomes four-dimensional:
+\begin_inset Formula 
+\[
+\lambda_{1,2}=\pm i\omega_{0},\qquad\lambda_{3,4}=\pm i\omega_{1}.
+\]
+
+\end_inset
+
+These conditions indicate a double-Hopf bifurcation.
+ The value of the test function for a double-Hopf bifurcation for the 
+\begin_inset Formula $i$
+\end_inset
+
+th point on a Hopf branch is given by
+\begin_inset Formula 
+\[
+\psi_{H}(i)=\text{nmfm\_mrp(funcs,p,stmethod,'remove\_omega',true,'threshold',isimag)}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+As in the fold case, where 
+\begin_inset Formula $\lambda_{1}=0$
+\end_inset
+
+ remains a simple zero and the bifurcation is determined by a critical normal
+ form coefficient, there is also a bifurcation in the Hopf case where the
+ dimension 
+\begin_inset Formula $W^{c}$
+\end_inset
+
+ remains the same.
+ When the first Lyapunov coefficient 
+\begin_inset Formula $\ell_{1}$
+\end_inset
+
+ from 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:first_lyapunov_coeff"
+
+\end_inset
+
+ vanishes we have a generalized Hopf bifurcation.
+ The test function for a generalized Hopf point is
+\begin_inset Formula 
+\[
+\psi_{GH}=\ell_{1}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Implementation in DDE-BifTool
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="10" columns="3">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0">
+<column alignment="left" valignment="top" width="0">
+<column alignment="left" valignment="top" width="7cm">
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Branch
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Bifurcation
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Test function
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+steady-state
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+fold
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\det\Delta(0)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Hopf
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+smallest real part of the complex eigenvalue pairs
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+fold
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+cusp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+critical normal form coefficient 
+\begin_inset Formula $a$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Bogdanov-Takens
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\psi_{BT}^{f}=p{}_{1}^{T}\Delta'(0)p_{0}$
+\end_inset
+
+ or the derivative of 
+\begin_inset Formula $\psi_{BT}^{f}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+fold-Hopf
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+smallest real part of the complex eigenvalue pairs
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Hopf
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Bogdanov-Takens
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\omega_{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+fold-Hopf
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\det\Delta(0)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+double-Hopf
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+smallest real part of the complex eigenvalue pairs
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+generalized Hopf
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+first Lyapunov coefficient 
+\begin_inset Formula $\ell_{1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+An overview of bifurcations and monitored test functions.
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:List-of-bifurcations"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The call to the bifurcation routine is as follows:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\footnotesize},language=Matlab"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+[newbranch, success] = br_bifdet(branch)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here, 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+branch
+\end_layout
+
+\end_inset
+
+ is either a steady-state branch, fold branch or Hopf branch, for which
+ the stability has been calculated with 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+br_stabl
+\end_layout
+
+\end_inset
+
+.
+ The 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+newbranch
+\end_layout
+
+\end_inset
+
+ is a copy of 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+branch
+\end_layout
+
+\end_inset
+
+, but with possible bifurcation points added.
+ If bifurcation points are added 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+success
+\end_layout
+
+\end_inset
+
+ is set to 1, otherwise 0 will be returned.
+ The function 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+br_bifdet
+\end_layout
+
+\end_inset
+
+ will calculate the test function from Section 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "sub:Test-functions_stst"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "sub:test_functions_fold"
+
+\end_inset
+
+ or 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "sub:test_functions_Hopf"
+
+\end_inset
+
+, depending on type of branch, for every point on the branch.
+ In Table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:List-of-bifurcations"
+
+\end_inset
+
+ these test functions are summarized.
+ If a sign change occurs the point is located.
+ For fold and Hopf points the function 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+p_correct
+\end_layout
+
+\end_inset
+
+, from the default package, is used.
+ For codim-2 bifurcations the auxiliary function 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+locate_codim2
+\end_layout
+
+\end_inset
+
+ has been written.
+ After a bifurcation point is located successfully the normal form coefficients
+ are computed and stored in the 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+nmfm
+\end_layout
+
+\end_inset
+
+ structure of the corrected point.
+ Lastly the function 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+add_to_branch
+\end_layout
+
+\end_inset
+
+ is called to add the corrected bifurcation point to the 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+newbranch
+\end_layout
+
+\end_inset
+
+.
+ In this function is checked if the distance between the bifurcation point
+ and the line connecting the last and second to last points on the branch
+ is no more than 25% of the length of this line.
+ If this condition is satisfied the corrected bifurcation point is inserted
+ into 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+newbranch
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Fields structure of 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+method.bifurcation
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Fields of the structure 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+method.bifurcation
+\end_layout
+
+\end_inset
+
+ , which is a substructure of a branch structure.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+correction_tolerance
+\end_layout
+
+\end_inset
+
+: Custom value for 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+method.point.minimal_accuracy
+\end_layout
+
+\end_inset
+
+ during 
+\begin_inset Newline newline
+\end_inset
+
+codimension-1 bifurcations correction.
+ The default value is 
+\begin_inset Formula $10^{-7}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+radial_tolerance_factor
+\end_layout
+
+\end_inset
+
+: The maximum distance to the branch the bifurcation point may have, relative
+ to the distance between the last two points.
+ The default value is 
+\begin_inset Formula $0.25$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+secant_iterations
+\end_layout
+
+\end_inset
+
+: The maximum number of iterations for the bisection method used to correct
+ codimension-2 points.
+ The default value is 30.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+secant_tolerance
+\end_layout
+
+\end_inset
+
+: The minimal accuracy for the bisection method.
+ The default value is 
+\begin_inset Formula $10^{-9}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+plot_testfunctions
+\end_layout
+
+\end_inset
+
+: When set to 1 the test functions are plotted.
+ The default value is 
+\begin_inset Formula $0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+monitor_eigenvalues
+\end_layout
+
+\end_inset
+
+: When set to 1 the eigenvalues of the 
+\begin_inset Formula $i$
+\end_inset
+
+th point on the branch are plotted.
+ The default value is 
+\begin_inset Formula $0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+pause_on_bifurcation
+\end_layout
+
+\end_inset
+
+: When set to 1 the script will pause when a bifurcation is detected and
+ corrected.
+ By pressing any key the script will continue.
+ The default value is 
+\begin_inset Formula $0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+monitor_eigenvalues_time
+\end_layout
+
+\end_inset
+
+: The time in seconds to pause after plotting the eigenvalues of the 
+\begin_inset Formula $i$
+\end_inset
+
+th point on the branch.
+ The default value is 
+\begin_inset Formula $0.1$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+imagthreshold
+\end_layout
+
+\end_inset
+
+: Threshold for treating a number as complex used in the function
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+nmfm_smrp
+\end_layout
+
+\end_inset
+
+, see subsection 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Hopf"
+
+\end_inset
+
+.
+ The default value is set to 
+\begin_inset Formula $10^{-9}$
+\end_inset
+
+.
+ We note that setting this parameter to zero didn't seem to affect the examples
+ used in this manual.
+\end_layout
+
+\begin_layout Subsection
+Locating codim-2 bifurcations, except Bogdanov-Takens
+\end_layout
+
+\begin_layout Standard
+If a codimension-2 bifurcation is detected, we want to locate the bifurcation
+ point.
+ This is done with the bisection method:
+\end_layout
+
+\begin_layout Enumerate
+Start with one point at which a test function is negative and one point
+ at which the test function is positive 
+\end_layout
+
+\begin_layout Enumerate
+Construct the point halfway between the positive and the negative point
+\end_layout
+
+\begin_layout Enumerate
+Correct this point
+\end_layout
+
+\begin_layout Enumerate
+Compute the test function at this point 
+\end_layout
+
+\begin_layout Enumerate
+If the test function is negative, make this point the new negative point;
+ otherwise, the new positive point
+\end_layout
+
+\begin_layout Enumerate
+Repeat until the absolute value of the test function is smaller than some
+ predefined tolerance
+\end_layout
+
+\begin_layout Subsection
+Locating Bogdanov-Takens
+\end_layout
+
+\begin_layout Standard
+\noindent
+For a Bogdanov-Takens bifurcation the defining system
+\begin_inset Formula 
+\[
+S(x,v,w,\alpha)=\begin{pmatrix}f(x,x,\dots,x,\alpha)\\
+\Delta(x,\alpha,0)v\\
+\Delta'(x,\alpha,0)v+\Delta(x,\alpha,0)w\\
+(v,v)-1\\
+(w,v)
+\end{pmatrix}
+\]
+
+\end_inset
+
+is used.
+\end_layout
+
+\begin_layout Subsection
+Flagging bifurcation points
+\end_layout
+
+\begin_layout Standard
+When one has a branch of steady-states on which a Hopf bifurcation occurs,
+ one typically wants to plot the branch as a line and give the Hopf point
+ a special marker (e.g.
+ a big dot).
+ Ideally, one simply passes an entire branch to a plot routine, along with
+ an instruction how to display the various bifurcations occurring along
+ a branch.
+\end_layout
+
+\begin_layout Standard
+Within the architecture of Matlab, this task provided a challenge.
+ As DDE-BifTool branches are stored as simple arrays of point-structures,
+ it was not possible to have a branch of 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+stst
+\end_layout
+
+\end_inset
+
+ points containing a 
+\family typewriter
+hopf
+\family default
+ point as well, because different types of structures cannot occur in the
+ same array.
+ Therefore, we chose to introduce an extra field to all point structures,
+ called 
+\family typewriter
+
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+flag
+\end_layout
+
+\end_inset
+
+
+\family default
+, to store information on what kind of bifurcation occurs at this point.
+ For example, a 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+stst
+\end_layout
+
+\end_inset
+
+ can have 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+stst.flag = 'hopf'
+\end_layout
+
+\end_inset
+
+ or a 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+hopf
+\end_layout
+
+\end_inset
+
+ can have hopf.flag = 'GH' (for generalized Hopf).
+\end_layout
+
+\begin_layout Standard
+To make this work, two changes had to be made throughout all DDE-BifTool
+ source files.
+ First, all subroutines creating new point structures have been modified
+ to also set
+\family typewriter
+ 
+\family default
+
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+point.flag = ''
+\end_layout
+
+\end_inset
+
+ (so that all points in a branch have precisely the same structure).
+ Second, all subroutines adding points to branches had to be modified at
+ the lines where the concatenation takes place.
+ 
+\end_layout
+
+\begin_layout Standard
+Given a branch with bifurcations, one also wants to extract all points flagged
+ as a particular bifurcation.
+ This is possible using the new function 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+br_getflags
+\end_layout
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Description
+FPI=br_getflags(branch) This function extracts a list of flagged point indices
+ out of branch.
+ 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+FPI(1,:)
+\end_layout
+
+\end_inset
+
+ holds the indices of all points marked as 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+hopf
+\end_layout
+
+\end_inset
+
+ , 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+FPI(2,:)
+\end_layout
+
+\end_inset
+
+ those of 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+fold
+\end_layout
+
+\end_inset
+
+ , etc.
+\end_layout
+
+\begin_layout Standard
+To streamline this process, we set up an indexing scheme to uniquely identify
+ a type of bifurcation by a number.
+ Two new functions are available to simplify this process.
+\end_layout
+
+\begin_layout Description
+num=bif2num(bifstring) This function extracts a list of flagged point indices
+ out of branch.
+ FPI(1,:) holds the indices of all points marked as hopf , FPI(2,:) those
+ of fold , etc.
+\end_layout
+
+\begin_layout Description
+bifstring=num2bif(num) Converts the bifurcation index num to its bifurcation
+ type.
+\end_layout
+
+\begin_layout Standard
+So, for instance, we have 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+num2bif(1) = 'hopf'
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+bif2num('fold') = 2
+\end_layout
+
+\end_inset
+
+.
+ See Table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:Bifurcation-type-numbering"
+
+\end_inset
+
+ for the full specification.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="11" columns="4">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0">
+<column alignment="left" valignment="top" width="0">
+<column alignment="left" valignment="top" width="7cm">
+<column alignment="left" valignment="top" width="7cm">
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Index
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Flag
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Point type
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Codimension
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+stst
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+staedy-state
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+hopf
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Hopf
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+fold
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Fold
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+psol
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Periodic Solution
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+hcli
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Homoclinic
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+GH
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Generalized Hopf
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+6
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+HH
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Double-Hopf
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+7
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ZH
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Fold-Hopf (zero-Hopf)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+8
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+BT
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Bogdanov-Takens
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+9
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+CP
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Cusp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Bifurcation type numbering 
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:Bifurcation-type-numbering"
+
+\end_inset
+
+scheme.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Storage of the normal form coefficients
+\end_layout
+
+\begin_layout Standard
+As was already indicated above, the critical normal form coefficients are
+ stored in the new point field structure 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+nmfm
+\end_layout
+
+\end_inset
+
+ .
+ This field contains all normal form coefficients as elements.
+ For the specifics, see Table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:Normal-form-coefficients"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="11" columns="3">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top" width="0">
+<column alignment="left" valignment="top" width="0">
+<column alignment="left" valignment="top" width="0">
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Point type
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Fields
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Reported in Matlab console
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Fold
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+b
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+b
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Hopf
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+L1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+L1
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Cusp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+c
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+c
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Bogdanov-Takens
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+a2,b2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+a,b
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Generalized Hopf
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+L2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+L2
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Fold-Hopf
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+g200, g110, g011 , 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+s, theta
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+g300, g111, g210 ,
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+g021, a, b, c, d, e, s, theta
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Double-Hopf
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+g2100, g1011, g1110, 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+theta, delta and eigenvalues
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+g0021, theta, delta
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+A list of normal form coefficients as stored in the 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+point.nmfm
+\end_layout
+
+\end_inset
+
+ structure and what is being reported in the Matlab console.
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:Normal-form-coefficients"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+All point manipulation routines have been updated to ensure that the 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+nmfm
+\end_layout
+
+\end_inset
+
+ field is always present in all point types.
+ Note, however, that not all point manipulation routines actually compute
+ the normal form coefficients when creating a new point: they leave the
+ field empty.
+ We chose to do this in order to reduce overhead in contexts where the normal
+ form coefficients are not specifically wanted.
+ The only place where the normal form coefficients are set is in 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+br_contn
+\end_layout
+
+\end_inset
+
+ if bifurcation detection is enabled.
+\end_layout
+
+\begin_layout Section
+Critical normal forms for codimension-2 bifurcations
+\end_layout
+
+\begin_layout Standard
+In some cases of the calculations of the critical normal form coefficients
+ we use implicitly defined solutions or certain linear systems.
+ Suppose that 
+\begin_inset Formula $\lambda\in\mathbb{C}$
+\end_inset
+
+ is a simple root of 
+\begin_inset Formula $\Delta(\lambda)$
+\end_inset
+
+.
+ Let 
+\begin_inset Formula $q$
+\end_inset
+
+ be a null vector of 
+\begin_inset Formula $\Delta(\lambda)$
+\end_inset
+
+ and 
+\begin_inset Formula $p$
+\end_inset
+
+ be a null vector of the transpose matrix 
+\begin_inset Formula $\Delta(\lambda)^{T}.$
+\end_inset
+
+ Then the 
+\begin_inset Flex Emph
+status open
+
+\begin_layout Plain Layout
+bordered inverse
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Formula 
+\[
+\Delta(\lambda)^{INV}y
+\]
+
+\end_inset
+
+is the unique solution 
+\begin_inset Formula $x$
+\end_inset
+
+ of the nonsingular linear system 
+\begin_inset Formula 
+\[
+\begin{pmatrix}\Delta(\lambda) & q\\
+p^{T} & 0
+\end{pmatrix}\begin{pmatrix}x\\
+s
+\end{pmatrix}=\begin{pmatrix}y\\
+0
+\end{pmatrix}.
+\]
+
+\end_inset
+
+Furthermore the operator 
+\begin_inset Formula $B_{\lambda}^{INV}$
+\end_inset
+
+ is defined by
+\begin_inset Formula 
+\[
+B_{\lambda}^{INV}\left(\zeta,\kappa\right)=\left(\theta\mapsto e^{\lambda\theta}\left(\Delta(\lambda)^{INV}\left(\zeta+\kappa\Delta'(\lambda)q\right)+\left(-p\Delta'(\lambda)\xi+\frac{1}{2}p\Delta''(\lambda)q\right)q-\kappa\theta q\right)\right)
+\]
+
+\end_inset
+
+for 
+\begin_inset Formula $\left(\theta\in[-h,0]\right)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Cusp 
+\begin_inset Formula $(\lambda=0,\, a=0,\, c\neq0)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If the steady-state 
+\begin_inset Formula $x^{*}\equiv0$
+\end_inset
+
+ of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:discrete_dde"
+
+\end_inset
+
+ has a cusp bifurcation at the parameter value 
+\begin_inset Formula $\alpha_{0}=0$
+\end_inset
+
+, then the characteristic equation 
+\begin_inset Formula $\det\Delta(\lambda)=0$
+\end_inset
+
+ has a simple zero 
+\begin_inset Formula $\lambda_{1}=0$
+\end_inset
+
+ and the critical normal form coefficient 
+\begin_inset Formula $b=0$
+\end_inset
+
+ in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:normal_form_fold_coef"
+
+\end_inset
+
+.
+ Let 
+\begin_inset Formula $q,p\in\mathbb{R}^{n}$
+\end_inset
+
+ be as in the fold case.
+ The restriction of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:discrete_dde"
+
+\end_inset
+
+ to the one-dimensional center manifold 
+\begin_inset Formula $W^{c}$
+\end_inset
+
+ has the form 
+\begin_inset Formula 
+\begin{equation}
+\dot{w}=cw^{3}+\mathcal{O}\left(|w|^{4}\right)\qquad w\in\mathbb{R}.\label{eq:fold_nf-1}
+\end{equation}
+
+\end_inset
+
+The critical normal form coefficient is given by
+\begin_inset Formula 
+\begin{equation}
+c=\frac{1}{6}p^{T}\left[3D^{2}f^{0}(\Phi,H_{2})+D^{3}f^{0}(\Phi,\Phi,\Phi)\right],\label{eq:cusp_nmfm_coef}
+\end{equation}
+
+\end_inset
+
+Where 
+\begin_inset Formula $H_{2}$
+\end_inset
+
+ is computed as follows.
+ Let 
+\begin_inset Formula 
+\begin{equation}
+h_{2}=-\Delta(0)^{INV}D^{2}f^{0}\left(\Phi,\Phi\right)+p^{T}\Delta'(0)\Delta(0)^{INV}D^{2}f^{0}(\Phi,\Phi)q\label{eq:cusp_h2}
+\end{equation}
+
+\end_inset
+
+then
+\begin_inset Formula 
+\[
+H_{2}=(h_{2},h_{2},\dots,h_{2})\in\mathbb{R}^{n}\times\mathbb{R}^{m+1}
+\]
+
+\end_inset
+
+and 
+\begin_inset Formula $\Phi$
+\end_inset
+
+ is as in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:PHI_fold"
+
+\end_inset
+
+.
+ When a cusp point is detected and located, the critical normal form coefficient
+s 
+\begin_inset Formula $b$
+\end_inset
+
+ from 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:normal_form_fold_coef"
+
+\end_inset
+
+ and 
+\begin_inset Formula $c$
+\end_inset
+
+ from 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:cusp_nmfm_coef"
+
+\end_inset
+
+ are reported in the Matlab console.
+\end_layout
+
+\begin_layout Subsection
+Bogdanov-Takens 
+\begin_inset Formula $(\lambda_{1}=\lambda_{2}=0)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If the steady-state 
+\begin_inset Formula $x^{*}\equiv0$
+\end_inset
+
+ of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:discrete_dde"
+
+\end_inset
+
+ has a Bogdanov-Takens bifurcation at the parameter value 
+\begin_inset Formula $\alpha_{0}=0$
+\end_inset
+
+, then there are vectors 
+\begin_inset Formula $q_{0},q_{1},p_{1},p_{0}\in\mathbb{R}^{n}$
+\end_inset
+
+ such that the following relations hold
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\begin{aligned}\Delta(0)q_{0} & =0,\\
+\Delta'(0)q_{0} & =-\Delta(0)q_{1},\\
+p_{1}^{T}\Delta(0) & =0,\\
+p_{1}^{T}\Delta(0)' & =-p_{0}^{T}\Delta(0).
+\end{aligned}
+\label{eq:bt_jordanchains}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These can be normalized to satisfy 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\begin{aligned}1 & =p_{0}^{T}\Delta(0)'q_{0}+\frac{1}{2!}p_{1}^{T}\Delta(0)''q_{0},\\
+0 & =p_{0}^{T}\Delta(0)'q_{1}+\dfrac{1}{2!}p_{0}^{T}\Delta(0)''q_{0}+\dfrac{1}{2!}p_{1}^{T}\Delta(0)''q_{1}+\dfrac{1}{3!}p_{1}^{T}\Delta(0)'''q_{0}.
+\end{aligned}
+\label{eq:bt_normalized_eigenvectors}
+\end{equation}
+
+\end_inset
+
+The restriction of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:discrete_dde"
+
+\end_inset
+
+ to the two-dimensional center manifold 
+\begin_inset Formula $W^{c}$
+\end_inset
+
+ at the critical parameter values can be transformed to the normal form
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\left\{ \begin{array}{rl}
+\dot{w}_{0} & =w_{1},\\
+\dot{w}_{1} & =aw_{0}^{2}+bw_{0}w_{1}+\mathcal{O}(\|\left(w_{0},w_{1}\right)\|^{3}),
+\end{array}\right.
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $a,b,z_{0},z_{1}\in\mathbb{R}$
+\end_inset
+
+.
+ Define the functions
+\begin_inset Formula 
+\begin{align*}
+\phi_{0}(\vartheta) & =q_{0},\\
+\phi_{1}(\vartheta) & =\vartheta q_{0}+q_{1},
+\end{align*}
+
+\end_inset
+
+then the critical normal form coefficients are given by
+\begin_inset Formula 
+\begin{equation}
+\begin{aligned}a & =\dfrac{1}{2}p_{1}^{T}D^{2}f^{0}\left(\Phi_{0},\Phi_{0}\right),\\
+b & =p_{0}^{T}D^{2}f^{0}\left(\Phi_{0},\Phi_{0}\right)+p_{1}^{T}D^{2}f^{0}\left(\Phi_{0},\Phi_{1}\right),
+\end{aligned}
+\label{eq:bt_coef}
+\end{equation}
+
+\end_inset
+
+where
+\begin_inset Formula 
+\begin{align*}
+\Phi_{0} & =\left(\phi_{0}(0),\phi_{0}(-\tau_{1}),\dots,\phi_{0}(-\tau_{m})\right),\\
+\Phi_{1} & =\left(\phi_{1}(0),\phi_{1}(-\tau_{1}),\dots,\phi_{1}(-\tau_{m})\right).
+\end{align*}
+
+\end_inset
+
+When a Bogdanov-Takens point is detected and located, the critical normal
+ form coefficients 
+\begin_inset Formula $a$
+\end_inset
+
+ and 
+\begin_inset Formula $b$
+\end_inset
+
+ are reported in the Matlab console.
+\end_layout
+
+\begin_layout Subsection
+Generalized Hopf 
+\begin_inset Formula $(\lambda_{1,2}=\pm i\omega_{0},\,\ell_{1}=0,\,\ell_{2}\neq0)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If the steady-state 
+\begin_inset Formula $x^{*}\equiv0$
+\end_inset
+
+ of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:discrete_dde"
+
+\end_inset
+
+ has a Hopf bifurcation at the parameter value 
+\begin_inset Formula $\alpha_{0}=0$
+\end_inset
+
+, then the characteristic equation 
+\begin_inset Formula $\det\Delta(\lambda_{1})=0$
+\end_inset
+
+ has a simple pair of purely imaginary conjugate eigenvalues 
+\begin_inset Formula $\lambda=\pm i\omega_{0}$
+\end_inset
+
+ and all other eigenvalues are in the left or right open half plane.
+ Let 
+\begin_inset Formula $q,p\in\mathbb{R}^{n}$
+\end_inset
+
+ such that
+\begin_inset Formula 
+\[
+\Delta(i\omega_{0})q=0,\qquad p^{T}\Delta(i\omega_{0})=0,\qquad p^{T}\Delta'(i\omega_{0})q=1.
+\]
+
+\end_inset
+
+Furthermore, suppose that the first Lyapunov coefficient 
+\begin_inset Formula $\ell_{1}=0$
+\end_inset
+
+, then the restriction of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:discrete_dde"
+
+\end_inset
+
+ to the two-dimensional center manifold 
+\begin_inset Formula $W^{c}$
+\end_inset
+
+ can be transformed to the normal form
+\begin_inset Formula 
+\[
+\dot{z}=i\omega_{0}z+c_{1}z^{2}\bar{z}+c_{2}z^{3}\bar{z}^{2}+\mathcal{O}(|z|^{4}),
+\]
+
+\end_inset
+
+where
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Formula $c_{1},c_{2},z\in\mathbb{C}$
+\end_inset
+
+ with 
+\begin_inset Formula $\mbox{Re}\, c_{1}=0$
+\end_inset
+
+.
+ The second Lyapunov coefficient is defined to be 
+\begin_inset Formula 
+\begin{equation}
+\ell_{2}=\frac{1}{\omega_{0}}\mbox{Re\,}c_{2},\label{eq:second_lyapunov_coeff}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula 
+\begin{align*}
+c_{2} & =\frac{1}{12}p^{T}\left[6D^{2}f^{0}(H_{11},H_{21})+3D^{2}f^{0}(\overline{H}_{21},H_{20})\right.\\
+ & +3D^{2}f^{0}(\overline{H}_{20},H_{30})+3D^{2}f^{0}(\Phi,H_{22})+2D^{2}f^{0}(\overline{\Phi},H_{31})\\
+ & +6D^{3}f^{0}(\overline{\Phi},H_{20},H_{11})+6D^{3}f^{0}(\Phi,H_{11},H_{11})\\
+ & +3D^{3}f^{0}(\Phi,H_{20},\overline{H}_{20})+6D^{3}f^{0}(\Phi,\overline{\Phi},H_{21})+3D^{3}f^{0}(\Phi,\Phi,\overline{H}_{21})\\
+ & +D^{3}f^{0}(\overline{\Phi},\overline{\Phi},H_{30})+6D^{4}f^{0}(\Phi,\Phi,\overline{\Phi},H_{11})\\
+ & +3D^{4}f^{0}(\Phi,\overline{\Phi},\overline{\Phi},H_{20})+D^{4}f^{0}(\Phi,\Phi,\Phi,\overline{H}_{20})\\
+ & +\left.D^{5}f^{0}(\Phi,\Phi,\Phi,\overline{\Phi},\overline{\Phi})\right].
+\end{align*}
+
+\end_inset
+
+Here the quantities involved are computed as follows.
+ Let
+\begin_inset Formula 
+\begin{align*}
+h_{20}(\vartheta) & =e^{2i\omega_{0}\vartheta}(\Delta(2i\omega_{0}))^{-1}D^{2}f^{0}[\Phi,\Phi],\\
+h_{11}(\vartheta) & =(\Delta(0))^{-1}D^{2}f^{0}[\Phi,\overline{\Phi}],\\
+h_{30}(\vartheta) & =e^{3i\omega_{0}\vartheta}(\Delta(3i\omega_{0}))^{-1}[3D^{2}f^{0}[\Phi,H_{20}]+D^{3}f^{0}[\Phi,\Phi,\Phi]],\\
+c_{1} & =\frac{1}{2}p^{T}\cdot\Big[D^{2}f^{0}\left(\Phi,H_{20}\right)+2D^{2}f^{0}\left(\Phi,H_{11}\right)+D^{3}f^{0}(\Phi,\Phi,\overline{\Phi})\Big],\\
+h_{21}(\vartheta) & =e^{\lambda\vartheta}c_{1}\left(2\theta-p\Delta''(i\omega_{0})\right)q,\\
+h_{31}(\vartheta) & =e^{2i\omega_{0}\vartheta}(\Delta(2i\omega_{0}))^{-1}\left[D^{2}f^{0}[\overline{\Phi},H_{30}]+3D^{2}f^{0}[H_{20},H_{11}]+3D^{2}f^{0}[\Phi,H_{21}]\right.\\
+ & \quad\left.+3D^{3}f^{0}[\Phi,\overline{\Phi},H_{20}]+3D^{3}f^{0}[\Phi,\Phi,H_{11}]+D^{4}f^{0}[\Phi,\Phi,\Phi,\overline{\Phi}]\right]\\
+ & \quad-6c_{1}(\Delta(2i\omega_{0}))^{-1}[\Delta'(2i\omega_{0})-I-\theta\Delta(2i\omega_{0})]H_{20},\\
+h_{22}(\vartheta) & =\Delta(0)^{-1}\left[2D^{2}f^{0}[\overline{\Phi},H_{21}]+2D^{2}f^{0}[H_{11},H_{11}]+2D^{2}f^{0}[\Phi,\overline{H_{21}}]\right.\\
+ & \quad+D^{2}f^{0}[H_{20},\overline{H_{20}}]+D^{3}f^{0}[\overline{\Phi},\overline{\Phi},H_{20}]+D^{3}f^{0}[\Phi,\Phi,\overline{H_{20}}]\\
+ & \quad+\left.4D^{3}f^{0}[\Phi,\overline{\Phi},H_{11}]+D^{4}f^{0}[\Phi,\Phi,\overline{\Phi},\overline{\Phi}]\right],\\
+\phi(\vartheta) & =e^{i\omega_{0}\vartheta}q,
+\end{align*}
+
+\end_inset
+
+then 
+\begin_inset Formula 
+\begin{align*}
+\Phi & =\left(\phi(0),\phi(-\tau_{1}),\dots,\phi(-\tau_{m})\right),\\
+H_{ij} & =(h_{ij}(-\tau_{0}),\dots,h_{ij}(-\tau_{m})),
+\end{align*}
+
+\end_inset
+
+for 
+\begin_inset Formula $(i,j)\in\left\{ (2,0),(1,1),(3,0),(2,1),(3,1),(2,2)\right\} $
+\end_inset
+
+.
+ When a generalized Hopf point is detected and located, the critical normal
+ form coefficient 
+\begin_inset Formula $\ell_{2}$
+\end_inset
+
+ from 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:second_lyapunov_coeff"
+
+\end_inset
+
+ is reported in the Matlab console.
+\end_layout
+
+\begin_layout Subsection
+Fold-Hopf 
+\begin_inset Formula $(\lambda_{1}=0,\,\lambda_{2,3}=\pm i\omega_{0})$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If the steady-state 
+\begin_inset Formula $x^{*}\equiv0$
+\end_inset
+
+ of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:discrete_dde"
+
+\end_inset
+
+ has a fold-Hopf bifurcation at the parameter value 
+\begin_inset Formula $\alpha_{0}=0$
+\end_inset
+
+, then there are eigenvectors 
+\begin_inset Formula $q_{0}\in\mathbb{R}^{n}$
+\end_inset
+
+ and 
+\begin_inset Formula $q_{1}\in\mathbb{C}^{n}$
+\end_inset
+
+, satisfying 
+\begin_inset Formula 
+\[
+\Delta(0)q_{0}=0,\qquad\Delta(i\omega_{0})q_{1}=0,
+\]
+
+\end_inset
+
+and adjoint eigenvectors 
+\begin_inset Formula $p_{0}\in\mathbb{R}^{n}$
+\end_inset
+
+ and 
+\begin_inset Formula $p_{1}\in\mathbb{C}^{n}$
+\end_inset
+
+, satisfying 
+\begin_inset Formula 
+\[
+p_{0}^{T}\Delta(0)=0,\qquad p_{1}^{T}\Delta(i\omega_{0})=0.
+\]
+
+\end_inset
+
+These can be normalized to satisfy 
+\begin_inset Formula 
+\[
+p_{0}^{T}\Delta'(0)q_{0}=1\qquad\mbox{and }\qquad p_{1}^{T}\Delta'(i\omega_{0})q_{1}=1.
+\]
+
+\end_inset
+
+The restriction of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:discrete_dde"
+
+\end_inset
+
+ to the three-dimensional center manifold 
+\begin_inset Formula $W^{c}$
+\end_inset
+
+ can be transformed to the normal form
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\left\{ \begin{array}{rl}
+\dot{w} & =g_{200}w^{2}+g_{011}|z|^{2}+g_{300}w^{3}+g_{111}w|z|^{2}+\mathcal{O}\left(\|\left(w,z,\overline{z}\right)\|^{4}\right),\\
+\dot{z} & =i\omega_{0}z+g_{110}wz+g_{210}w^{2}z+g_{021}z|z|^{2}+\mathcal{O}\left(\|\left(w,z,\overline{z}\right)\|^{4}\right),
+\end{array}\right.
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $w\in\mathbb{R}$
+\end_inset
+
+, 
+\begin_inset Formula $z\in\mathbb{C}$
+\end_inset
+
+ and the coefficients 
+\begin_inset Formula $g_{jkl}$
+\end_inset
+
+ are real in the first equation and complex in the second.
+ Suppose that the 
+\begin_inset Formula $b$
+\end_inset
+
+ and 
+\begin_inset Formula $c$
+\end_inset
+
+ are real constants such that 
+\begin_inset Formula $g_{110}g_{011}\neq0$
+\end_inset
+
+, then, generically, the restriction of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:discrete_dde"
+
+\end_inset
+
+ to the three-dimensional center manifold 
+\begin_inset Formula $W^{c}$
+\end_inset
+
+ can be reduced to the system
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\left\{ \begin{array}{rl}
+\dot{w} & =bw^{2}+c|z|^{2}+\mathcal{O}(\|\left(w,z,\overline{z}\right)\|^{4}),\\
+\dot{z} & =i\omega_{0}z+dwz+ew^{2}z+\mathcal{O}(\|\left(w,z,\overline{z}\right)\|^{4}),
+\end{array}\right.
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula 
+\[
+b=g_{200},c=g_{011},d=g_{110}-i\omega_{0}\frac{g_{300}}{g_{200}}
+\]
+
+\end_inset
+
+and
+\begin_inset Formula 
+\[
+e=\mbox{Re}\left(g_{210}+g_{110}\left(\frac{\mbox{Re}g_{021}}{g_{011}}-\frac{3}{2}\frac{g_{300}}{g_{200}}+\frac{g_{111}}{2g_{011}}\right)-\frac{g_{021}g_{200}}{g_{011}}\right).
+\]
+
+\end_inset
+
+Depending on the signs of
+\begin_inset Formula 
+\[
+s=bc\qquad\mbox{and}\qquad\theta=\mbox{Re }\frac{g_{100}}{g_{200}}
+\]
+
+\end_inset
+
+4 bifurcation diagrams for nearby parameter values can be distinguished,
+ see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Kuznetsov:Elements:2004"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Define the functions
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+h_{200}(\vartheta) & =B_{0}^{INV}\left(D^{2}f^{0}(\Phi_{0},\Phi_{0}),-p_{0}\cdot D^{2}f^{0}(\Phi_{0},\Phi_{0})\right),\\
+h_{020}(\vartheta) & =e^{2i\omega_{0}\theta}\Delta(2i\omega_{0})^{INV}D^{2}f^{0}(\Phi_{1},\Phi_{1}),\\
+h_{110}(\vartheta) & =B_{i\omega_{0}}^{INV}\left(D^{2}f^{0}(\Phi_{0},\Phi_{1}),-p_{1}\cdot D^{2}f^{0}(\Phi_{0},\Phi_{1}),\right),\\
+h_{011}(\vartheta) & =B_{0}^{INV}\left(D^{2}f^{0}(\Phi_{1},\overline{\Phi_{1}}),-p_{0}\cdot D^{2}f^{0}(\Phi_{1},\overline{\Phi_{1}})\right),\\
+\phi_{0}(\vartheta) & =q_{0},\\
+\phi_{1}(\vartheta) & =e^{i\omega_{1}\vartheta}q_{1},
+\end{align*}
+
+\end_inset
+
+then the critical normal form coefficients become
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+g_{200} & =\frac{1}{2}p_{0}^{T}D^{2}f^{0}(\Phi_{0},\Phi_{0}),\\
+g_{110} & =p_{1}^{T}D^{2}f^{0}(\Phi_{0},\Phi_{1}),\\
+g_{011} & =p_{0}^{T}D^{2}f^{0}(\Phi_{1},\overline{\Phi_{1}}),\\
+g_{300} & =\frac{1}{6}p_{0}^{T}\left(3D^{2}f^{0}(\Phi_{0},H_{200})+D^{3}f^{0}(\Phi_{0},\Phi_{0},\Phi_{0})\right),\\
+g_{111} & =p_{0}^{T}\left(D^{2}f^{0}(\Phi_{0},H_{011})+D^{2}f^{0}(\overline{\Phi_{1}},H_{110})+D^{2}f^{0}(\Phi_{1},H_{110})+D^{3}f^{0}(\Phi_{0},\Phi_{0},\overline{\Phi_{1}})\right),\\
+g_{210} & =\frac{1}{2}p_{1}^{T}\left(D^{2}f^{0}(\Phi_{1},H_{200})+2D^{2}f^{0}(\Phi_{0},H_{110})+D^{3}f^{0}(\Phi_{0},\Phi_{0},\Phi_{1})\right),\\
+g_{021} & =\frac{1}{2}p_{1}^{T}\left(D^{2}f^{0}(\overline{\Phi_{1}},H_{020})+2D^{2}f^{0}(\Phi_{1},H_{011})+D^{3}f^{0}(\Phi_{1},\Phi_{1},\overline{\Phi_{1}})\right),
+\end{align*}
+
+\end_inset
+
+where 
+\begin_inset Formula 
+\begin{align*}
+H_{jkl} & =(h_{jkl}(-\tau_{0}),\dots,h_{jkl}(-\tau_{m}))\in\mathbb{R}^{n}\times\mathbb{R}^{m+1},\\
+\Phi_{0} & =\left(\phi_{0}(0),\phi_{0}(-\tau_{1}),\dots,\phi_{0}(-\tau_{m})\right),\\
+\Phi_{1} & =\left(\phi_{1}(0),\phi_{1}(-\tau_{1}),\dots,\phi_{1}(-\tau_{m})\right).
+\end{align*}
+
+\end_inset
+
+When a fold-Hopf point is detected and located, the quantities 
+\begin_inset Formula $s$
+\end_inset
+
+ and 
+\begin_inset Formula $\theta$
+\end_inset
+
+ are reported in the Matlab console.
+\end_layout
+
+\begin_layout Subsection
+Double-Hopf 
+\begin_inset Formula $(\lambda_{1,2}=\pm i\omega_{1}\,\lambda_{1,2}=\pm i\omega_{2})$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Double-Hopf"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If the steady-state 
+\begin_inset Formula $x^{*}\equiv0$
+\end_inset
+
+ of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:discrete_dde"
+
+\end_inset
+
+ has a double-Hopf bifurcation at the parameter value 
+\begin_inset Formula $\alpha_{0}=0$
+\end_inset
+
+, then there are eigenvectors 
+\begin_inset Formula $q_{1},q_{2}\in\mathbb{C}^{n}$
+\end_inset
+
+, satisfying 
+\begin_inset Formula 
+\[
+\Delta(i\omega_{1})q_{1}=0,\qquad\Delta(i\omega_{2})q_{2}=0,
+\]
+
+\end_inset
+
+and adjoint eigenvectors 
+\begin_inset Formula $p_{1},p_{2}\in\mathbb{C}^{n}$
+\end_inset
+
+, satisfying 
+\begin_inset Formula 
+\[
+p_{1}^{T}\Delta(i\omega_{1})=0,\qquad p_{2}^{T}\Delta(i\omega_{2})=0.
+\]
+
+\end_inset
+
+These can be normalized to satisfy 
+\begin_inset Formula 
+\[
+p_{1}^{T}\Delta'(i\omega_{1})q_{1}=1\qquad\mbox{and }\qquad p_{2}^{T}\Delta'(i\omega_{2})q_{2}=1.
+\]
+
+\end_inset
+
+Assume that
+\begin_inset Formula 
+\begin{equation}
+k\omega_{1}\neq l\omega_{2},\qquad k,l>0,\qquad k+l\leq5,\label{eq:non-resonance}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $k,l$
+\end_inset
+
+ are integer numbers.
+ The restriction of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:discrete_dde"
+
+\end_inset
+
+ to the four-dimensional center manifold 
+\begin_inset Formula $W^{c}$
+\end_inset
+
+ can be transformed to the normal form
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\left\{ \begin{array}{rl}
+\dot{z}_{1} & =i\omega_{1}z_{1}+g_{2100}z_{1}|z_{1}|^{2}+g_{1011}z_{1}|z_{2}|^{2}+g_{3200}z_{1}|z_{1}|^{4}\\
+ & \qquad+g_{2111}z_{1}|z_{1}|^{2}|z_{2}|^{2}+g_{1022}z_{1}|z_{2}|^{4}+\mathcal{O}\left(\|z_{1},\overline{z_{1}},z_{2},\overline{z_{2}}\|^{6}\right),\\
+\dot{z}_{2} & =i\omega_{2}z_{2}+g_{1110}z_{2}|z_{1}|^{2}+g_{0021}z_{2}|z_{2}|^{2}+g_{2210}z_{2}|z_{1}|^{4}\\
+ & \qquad+g_{1121}z_{2}|z_{1}|^{2}|z_{2}|^{2}+g_{0032}z_{2}|z_{2}|^{4}+\mathcal{O}\left(\|z_{1},\overline{z_{1}},z_{2},\overline{z_{2}}\|^{6}\right),
+\end{array}\right.
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $z_{1,},z_{2}\in\mathbb{C}^{2}$
+\end_inset
+
+ and 
+\begin_inset Formula $g_{jklm}\in\mathbb{C}.$
+\end_inset
+
+ Moreover, if
+\begin_inset Formula 
+\[
+\left(\mbox{Re }g_{2100}\right)\left(\mbox{Re }g_{1011}\right)\left(\mbox{Re }g_{1110}\right)\left(\mbox{Re }g_{0021}\right)\neq0
+\]
+
+\end_inset
+
+and the critical eigenpairs cross the imaginary axis with nonzero velocities,
+ then the system 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:discrete_dde"
+
+\end_inset
+
+ can be reduced to the system
+\begin_inset Formula 
+\[
+\left\{ \begin{array}{rl}
+\dot{z}_{1} & =i\omega_{1}z_{1}+\frac{1}{2}p_{11}z_{1}|z_{1}|^{2}+p_{12}z_{1}|z_{2}|^{2}+ir_{1}z_{1}|z_{1}|^{4}\\
+ & \qquad+\frac{1}{4}s_{1}z_{1}|z_{2}|^{4}+\mathcal{O}\left(\|z_{1},\overline{z_{1}},z_{2},\overline{z_{2}}\|^{6}\right),\\
+\dot{z}_{2} & =i\omega_{2}z_{2}+p_{21}z_{2}|z_{1}|^{2}+\frac{1}{2}p_{22}z_{2}|z_{2}|^{2}+\frac{1}{4}s_{2}z_{2}|z_{1}|^{4}\\
+ & \qquad+ir_{2}z_{2}|z_{2}|^{4}+\mathcal{O}\left(\|z_{1},\overline{z_{1}},z_{2},\overline{z_{2}}\|^{6}\right),
+\end{array}\right.
+\]
+
+\end_inset
+
+where the coefficients 
+\begin_inset Formula $P_{jk}$
+\end_inset
+
+ and 
+\begin_inset Formula $S_{k}$
+\end_inset
+
+ are complex, while the numbers 
+\begin_inset Formula $R_{k}$
+\end_inset
+
+ are real.
+ Moreover, the real parts of the critical values are given by the expressions
+\begin_inset Formula 
+\[
+\mbox{Re}\begin{pmatrix}\begin{array}{rl}
+p_{11} & p_{12}\\
+p_{21} & p_{22}
+\end{array}\end{pmatrix}=\mbox{Re}\begin{pmatrix}\begin{array}{rl}
+g_{2100} & g_{1011}\\
+g_{1110} & g_{0021}
+\end{array}\end{pmatrix}
+\]
+
+\end_inset
+
+and
+\begin_inset Formula 
+\begin{align*}
+\mbox{Re }s_{1} & =\mbox{Re }g_{1022}+\frac{1}{3}\mbox{Re }g_{1011}\left(6\frac{\mbox{Re }g_{1121}}{\mbox{Re }g_{1110}}-4\frac{\mbox{Re }g_{0032}}{\mbox{Re }g_{0021}}-6\frac{\left(\mbox{Re }g_{3200}\right)\left(\mbox{Re }g_{0021}\right)}{\left(\mbox{Re }g_{2100}\right)\left(\mbox{Re }g_{1110}\right)}\right),\\
+\mbox{Re }s_{2} & =\mbox{Re }g_{2210}+\frac{1}{3}\mbox{Re }g_{1110}\left(6\frac{\mbox{Re }g_{2111}}{\mbox{Re }g_{1011}}-4\frac{\mbox{Re }g_{3200}}{\mbox{Re }g_{2100}}-6\frac{\left(\mbox{Re }g_{2100}\right)\left(\mbox{Re }g_{0032}\right)}{\left(\mbox{Re }g_{1011}\right)\left(\mbox{Re }g_{0021}\right)}\right).
+\end{align*}
+
+\end_inset
+
+Depending on the sign of
+\begin_inset Formula 
+\[
+\left(\mbox{Re }p_{11}\right)\left(\mbox{Re }p_{22}\right)=\left(\mbox{Re }g_{2100}\right)\left(\mbox{Re }g_{0021}\right),
+\]
+
+\end_inset
+
+this bifurcation exhibits either ‘simple’ or ‘difficult’ dynamics for nearby
+ parameter values.
+ Each case includes many subcases depending on the signs of
+\begin_inset Formula 
+\[
+\theta=\frac{\mbox{Re }g_{1011}}{\mbox{Re }g_{0021}},\qquad\delta=\frac{\mbox{Re }g_{1110}}{\mbox{Re }g_{21000}},
+\]
+
+\end_inset
+
+see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Kuznetsov:Elements:2004"
+
+\end_inset
+
+.
+ Define the functions
+\begin_inset Formula 
+\begin{align*}
+h_{1100}\left(\vartheta\right) & =\Delta(0)^{-1}D^{2}f^{0}(\Phi_{1},\overline{\Phi}_{1}),\\
+h_{2000}\left(\vartheta\right) & =e^{2i\omega_{1}\vartheta}\Delta(2i\omega_{1})^{-1}D^{2}f^{0}(\Phi_{1},\Phi_{1})\\
+h_{1010}\left(\vartheta\right) & =e^{i(\omega_{1}+\omega_{2})\vartheta}\Delta(i(\omega_{1}+\omega_{2}))^{-1}D^{2}f^{0}(\Phi_{1},\Phi_{2}),\\
+h_{1001}\left(\vartheta\right) & =e^{i(\omega_{1}-\omega_{2})\vartheta}\Delta(i(\omega_{1}-\omega_{2}))^{-1}D^{2}f^{0}(\Phi_{1},\overline{\Phi}_{2}),\\
+h_{0020}\left(\vartheta\right) & =e^{2i\omega_{2}\vartheta}\Delta(2i\omega_{2})^{-1}D^{2}f^{0}(\Phi_{2},\Phi_{2}),\\
+h_{0011}\left(\vartheta\right) & =\Delta(0)^{-1}D^{2}f^{0}(\Phi_{2},\overline{\Phi}_{2}),\\
+\phi_{1}(\vartheta) & =e^{i\omega_{1}\vartheta}q_{1},\\
+\phi_{2}(\vartheta) & =e^{i\omega_{2}\vartheta}q_{2},
+\end{align*}
+
+\end_inset
+
+then the cubic coefficients become
+\begin_inset Formula 
+\begin{align*}
+g_{2100} & =\frac{1}{2}p_{1}^{T}\left\langle 2D^{2}f(0)(H_{1100},\Phi_{1})+D^{2}f(0)(H_{2000},\overline{\Phi}_{1})+D^{3}f(0)(\Phi_{1},\Phi_{1},\overline{\Phi}_{1})\right\rangle ,\\
+g_{1011} & =p_{1}^{T}\left\langle D^{2}f(0)(H_{0011},\Phi_{1})+D^{2}f(0)(H_{1001},\Phi_{2})\right.\\
+ & \qquad\left.+D^{2}f(0)(H_{1010},\overline{\Phi}_{2})+D^{3}f(0)(\Phi_{1},\Phi_{2},\overline{\Phi}_{2})\right\rangle ,\\
+g_{1110} & =p_{2}^{T}\left\langle D^{2}f(0)(\overline{H_{1001}},\Phi_{1})+D^{2}f(0)(H_{1010},\overline{\Phi}_{1})\right.\\
+ & \qquad\left.+D^{2}f(0)(H_{1100},\Phi_{2})+D^{3}f(0)(\Phi_{1},\overline{\Phi}_{1},\Phi_{2})\right\rangle ,\\
+g_{0021} & =\frac{1}{2}p_{2}^{T}\left\langle 2D^{2}f(0)(H_{0011},\Phi_{2})+D^{2}f(0)(H_{0020},\overline{\Phi}_{2})+D^{3}f(0)(\Phi_{2},\Phi_{2},\overline{\Phi}_{2})\right\rangle ,
+\end{align*}
+
+\end_inset
+
+where 
+\begin_inset Formula 
+\begin{align*}
+H_{jklm} & =(h_{jklm}(0),h_{jklm}(-\tau_{1})\dots,h_{jklm}(-\tau_{m}))\in\mathbb{R}^{n}\times\mathbb{R}^{m+1},\\
+\Phi_{1} & =\left(\phi_{1}(0),\phi_{1}(-\tau_{1}),\dots,\phi_{1}(-\tau_{m})\right),\\
+\Phi_{2} & =\left(\phi_{2}(0),\phi(-\tau_{1}),\dots,\phi_{2}(-\tau_{m})\right).
+\end{align*}
+
+\end_inset
+
+Higher order coefficients are not implemented.
+ When a double-Hopf point is detected and located the quantities 
+\begin_inset Formula $\theta$
+\end_inset
+
+ and 
+\begin_inset Formula $\delta$
+\end_inset
+
+ are reported in the Matlab console.
+ To verify the non-resonance conditions from 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:non-resonance"
+
+\end_inset
+
+ the eigenvalues are also reported.
+ In that case the normal form coefficients do not apply.
+\end_layout
+
+\begin_layout Section
+Example of a system with Hopf and degenerate Hopf bifurcations
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Example1"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The following non-dimensionalized model of two interacting layers of neurons
+ is considered
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left\{ \begin{array}{rl}
+\dot{x}_{1}(t) & =-x_{1}(t)-ag(bx_{1}(t-\tau_{1}))+cg(dx_{2}(t-\tau_{2})),\\
+\dot{x}_{2}(t) & =-x_{2}(t)-ag(bx_{2}(t-\tau_{1}))+cg(dx_{1}(t-\tau_{2}).,
+\end{array}\right.
+\end{equation}
+
+\end_inset
+
+The variables 
+\begin_inset Formula $x_{1}(t)$
+\end_inset
+
+ and 
+\begin_inset Formula $x_{2}(t)$
+\end_inset
+
+ represent the population-averaged neural activity at time 
+\begin_inset Formula $t$
+\end_inset
+
+ in layers one and two, respectively.
+ The parameter 
+\begin_inset Formula $a>0$
+\end_inset
+
+ is a measure of the strength of inhibitory feedback, while 
+\begin_inset Formula $c>0$
+\end_inset
+
+ measures the strength of the excitatory effect of one layer on the other.
+ The parameters 
+\begin_inset Formula $b>0$
+\end_inset
+
+ and 
+\begin_inset Formula $d>0$
+\end_inset
+
+ are saturation rates and the delays 
+\begin_inset Formula $\tau_{1,2}$
+\end_inset
+
+ represent time lags in the inhibitory feedback loop and excitatory inter-layer
+ connection.
+ Note that the system is symmetric with respect to interchanging the labels
+ 
+\begin_inset Formula $1$
+\end_inset
+
+ and 
+\begin_inset Formula $2$
+\end_inset
+
+, so equilibria are necessarily of the form 
+\begin_inset Formula $\ensuremath{(x_{0},x_{0})}$
+\end_inset
+
+.
+ The function 
+\begin_inset Formula $g$
+\end_inset
+
+ is smooth, strictly increasing and satisfies 
+\begin_inset Formula $g(0)=0$
+\end_inset
+
+ and 
+\begin_inset Formula $g'(0)=1$
+\end_inset
+
+.
+ In accordance with 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Janssens:Thesis"
+
+\end_inset
+
+ we fix the numerical values
+\begin_inset Formula 
+\[
+b=2.0,\qquad d=1.2,\qquad\tau_{1}=12.7,\qquad\tau_{2}=20.2
+\]
+
+\end_inset
+
+and take for 
+\begin_inset Formula $g:{\bf \mathbb{R}\rightarrow{\bf \mathbb{R}}}$
+\end_inset
+
+ the sigmoidal form
+\begin_inset Formula 
+\[
+g(z)=\left[\tanh(z-1)+\tanh(1)\right]\cosh(1)^{2}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For more information about the system and the meaning of the parameters
+ we refer to 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "visser2012analysis"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "eemcs23164"
+
+\end_inset
+
+.
+ We note that in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "visser2012analysis"
+
+\end_inset
+
+ the time delays are set differently to 
+\begin_inset Formula $\tau_{1}=11.6$
+\end_inset
+
+ and 
+\begin_inset Formula $\tau_{2}=20.3.$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The files of this demonstration are located in the folder 
+\family typewriter
+demos/nmfm_demo 
+\family default
+of the DDE-BifTool package.
+\end_layout
+
+\begin_layout Subsection
+Initialization
+\end_layout
+
+\begin_layout Standard
+First, we load the DDE-BifTool core, the DDE-BifTool utilities and the normal
+ form extension.
+ Then we initialize the 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+funcs
+\end_layout
+
+\end_inset
+
+ structure.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\footnotesize},language=Matlab,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+clear variables;
+\end_layout
+
+\begin_layout Plain Layout
+
+close all;
+\end_layout
+
+\begin_layout Plain Layout
+
+addpath('../../ddebiftool',...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'../../ddebiftool_utilities',...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'../../ddebiftool_extra_nmfm');
+\end_layout
+
+\begin_layout Plain Layout
+
+funcs=set_funcs(...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'sys_rhs', @(xx,par) sys_rhs(xx,par),...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'sys_tau', @() sys_tau(),...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'sys_deri', @(xx,par,nx,np,v) sys_deri(xx,par,nx,np,v),...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'sys_mfderi', @(xx,par,varargin) sys_mfderi(xx,par,varargin{:}));
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The function 
+\begin_inset Flex blist
+status collapsed
+
+\begin_layout Plain Layout
+sys_mfderi
+\end_layout
+
+\end_inset
+
+ computes the multilinear forms of the system needed for the calculation
+ of the normal form coefficients, see 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:multilinear-form"
+
+\end_inset
+
+.
+ In case 
+\begin_inset Flex blist
+status collapsed
+
+\begin_layout Plain Layout
+sys_mfderi
+\end_layout
+
+\end_inset
+
+ is not provided the higher order derivatives will be approximated calculated
+ with finite difference.
+ The Mathematica notebook 
+\family typewriter
+
+\begin_inset Flex Code
+status collapsed
+
+\begin_layout Plain Layout
+
+\family typewriter
+genr_sys.mth
+\end_layout
+
+\end_inset
+
+
+\family default
+ available with DDE-BifTool, only generate the first order derivatives.
+ To generate the function 
+\begin_inset Flex blist
+status collapsed
+
+\begin_layout Plain Layout
+sys_mfderi
+\end_layout
+
+\end_inset
+
+ a new Maple script 
+\family typewriter
+
+\begin_inset Flex Code
+status collapsed
+
+\begin_layout Plain Layout
+
+\family typewriter
+Maple_gen_sys.mw
+\end_layout
+
+\end_inset
+
+
+\family default
+ has been developed by Bram Wage.
+ For usage of the script we refer to the script itself.
+\end_layout
+
+\begin_layout Subsection
+Continuation of steady state point
+\end_layout
+
+\begin_layout Standard
+We set up a steady state branch using the function 
+\family typewriter
+
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+SetupStst
+\end_layout
+
+\end_inset
+
+
+\family default
+ from the utilities and do a standard continuation.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\footnotesize},language=Matlab"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+% Define the boundaries and step sizes 
+\end_layout
+
+\begin_layout Plain Layout
+
+% of the active parameters.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+astepsize = 0.005; 
+\end_layout
+
+\begin_layout Plain Layout
+
+cstepsize = 0.05; 
+\end_layout
+
+\begin_layout Plain Layout
+
+amin = 0.0; 
+\end_layout
+
+\begin_layout Plain Layout
+
+amax = 0.55; 
+\end_layout
+
+\begin_layout Plain Layout
+
+cmin = 0.0; 
+\end_layout
+
+\begin_layout Plain Layout
+
+cmax = 1.0;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% continue the trivial steady-state
+\end_layout
+
+\begin_layout Plain Layout
+
+a=0.25; b=2.0; c=15/29; d=1.2; tau1=12.7; tau2=20.2;
+\end_layout
+
+\begin_layout Plain Layout
+
+par = [a, b, c, d, tau1, tau2];
+\end_layout
+
+\begin_layout Plain Layout
+
+branch1 = SetupStst(funcs,'x',[0;0],'parameter',par,...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'contpar',1,'max_step',[1 astepsize],...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'max_bound',[1 amax],'min_bound',[1 amin],...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'newheuristics_tests',0);
+\end_layout
+
+\begin_layout Plain Layout
+
+branch1.method.continuation.plot = 0;
+\end_layout
+
+\begin_layout Plain Layout
+
+[branch1,s,f,r] = br_contn(funcs,branch1,300);
+\end_layout
+
+\begin_layout Plain Layout
+
+branch1 = br_rvers(branch1);
+\end_layout
+
+\begin_layout Plain Layout
+
+[branch1,s,f,r] = br_contn(funcs,branch1,300);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% plot branch1
+\end_layout
+
+\begin_layout Plain Layout
+
+figure; [xm,ym] = df_measr(0,branch1,1);
+\end_layout
+
+\begin_layout Plain Layout
+
+br_plot(branch1,xm,ym);
+\end_layout
+
+\begin_layout Plain Layout
+
+xlabel('a'); ylabel('x_1');
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+The plot of 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+branch1
+\end_layout
+
+\end_inset
+
+ is shown in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Plot-of-branch1"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename images/nmfm_demo_01.eps
+	scale 60
+	rotateOrigin center
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Plot of 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+branch1
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Plot-of-branch1"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+\noindent
+Bifurcation detection on the steady state branch
+\end_layout
+
+\begin_layout Standard
+\noindent
+Before calling the bifurcation detection script 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+br_bifdet
+\end_layout
+
+\end_inset
+
+ we first have to calculate the stability information
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\footnotesize},language=Matlab,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+branch1.method.bifurcation.plot_testfunctions = 1;
+\end_layout
+
+\begin_layout Plain Layout
+
+branch1.method.bifurcation.monitor_eigenvalues = 0;
+\end_layout
+
+\begin_layout Plain Layout
+
+branch1.method.bifurcation.pause_on_bifurcation= 0;
+\end_layout
+
+\begin_layout Plain Layout
+
+branch1.method.bifurcation.imagthreshold = 0;
+\end_layout
+
+\begin_layout Plain Layout
+
+branch1.method.stability.maximal_time_step=0.01;
+\end_layout
+
+\begin_layout Plain Layout
+
+branch1.method.stability.minimal_real_part=-0.01;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+fprintf('Calculating stability
+\backslash
+n');
+\end_layout
+
+\begin_layout Plain Layout
+
+branch1 = br_stabl(funcs,branch1,0,0);
+\end_layout
+
+\begin_layout Plain Layout
+
+fprintf('Bifurcation detection
+\backslash
+n');
+\end_layout
+
+\begin_layout Plain Layout
+
+branch1 = br_bifdet(funcs, branch1);
+\end_layout
+
+\end_inset
+
+in the 
+\family typewriter
+Matlab
+\family default
+ console we see the output
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{Verbatim}[commandchars=
+\backslash
+
+\backslash
+
+\backslash
+{
+\backslash
+},fontsize=
+\backslash
+scriptsize]
+\end_layout
+
+\begin_layout Plain Layout
+
+Calculating stability
+\end_layout
+
+\begin_layout Plain Layout
+
+Bifurcation detection 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Hopf detected near par(1) = 0.3000000000.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Hopf located at  par(1) = 0.2988605971.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Normal form coefficient: L1 = -0.0054576675
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Hopf detected near par(1) = 0.3250000000.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: the detected hopf point does not fall within the branch.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Hopf detected near par(1) = 0.3500000000.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Hopf located at  par(1) = 0.3453112603.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Normal form coefficient: L1 = -0.0133009607
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Hopf detected near par(1) = 0.3600000000.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: the detected hopf point does not fall within the branch.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Hopf detected near par(1) = 0.3700000000.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Hopf located at  par(1) = 0.3676281680.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Normal form coefficient: L1 = -0.0028635604
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Hopf detected near par(1) = 0.4300000000.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: the detected hopf point does not fall within the branch.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Hopf detected near par(1) = 0.4950000000.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Hopf located at  par(1) = 0.4923372193.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Normal form coefficient: L1 = -0.0024530632
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Hopf detected near par(1) = 0.5350000000.
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: the detected hopf point does not fall within the branch.
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{Verbatim}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The Hopf points detected that don't fall within the branch are explained
+ by looking at the test function 
+\begin_inset Formula $\psi_{H}$
+\end_inset
+
+ plotted in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:example_stst_br_testfunction"
+
+\end_inset
+
+.
+ We see discontinuities when the smallest real part of the complex eigenvalues
+ being followed, changes.
+ This yields in a sign change when there is no Hopf point.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename images/example1_stst_br_testfunctions.eps
+	width 100text%
+	rotateOrigin center
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Plot of test functions for 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+branch1
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:example_stst_br_testfunction"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Flagged points on 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+branch1
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Four Hopf points are detected and located.
+ These points are flagged in the branch, e.g.
+ 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+branch1.point(10).flag = 'hopf'
+\end_layout
+
+\end_inset
+
+.
+ Furthermore normal form information has been added for these points: 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+branch1.point(10).nmfm.L1 = -0.0055
+\end_layout
+
+\end_inset
+
+.
+ We will choose two Hopf points and continue them in the parameters 
+\begin_inset Formula $a$
+\end_inset
+
+ and 
+\begin_inset Formula $c$
+\end_inset
+
+.
+ To this end, we need to know where the bifurcations were found.
+ We do this by calling 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+br_getflags
+\end_layout
+
+\end_inset
+
+ on the steady state branch
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{Verbatim}[commandchars=
+\backslash
+
+\backslash
+
+\backslash
+{
+\backslash
+},fontsize=
+\backslash
+scriptsize]
+\end_layout
+
+\begin_layout Plain Layout
+
+>> FPI = br_getflags(branch1)
+\end_layout
+
+\begin_layout Plain Layout
+
+10    20    24    49
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{Verbatim}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Continuation of the first Hopf point
+\end_layout
+
+\begin_layout Standard
+We do a standard continuation, using the first starting index obtained from
+ the flagged point indices
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\footnotesize},breaklines=true,language=Matlab,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+astepsize = 0.05; % decrease stepsize a
+\end_layout
+
+\begin_layout Plain Layout
+
+FPI = br_getflags(branch1);
+\end_layout
+
+\begin_layout Plain Layout
+
+start_ind = FPI(bif2num('hopf'),1);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+[hopf_branch1, suc] = SetupHopf(funcs, branch1, start_ind,...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'contpar',[1 3], 'dir', 3, 'step', cstepsize);
+\end_layout
+
+\begin_layout Plain Layout
+
+hopf_branch1.parameter.min_bound=[5 0; 6 0; 3 cmin; 1 amin];
+\end_layout
+
+\begin_layout Plain Layout
+
+hopf_branch1.parameter.max_bound=[1 amax; 3 cmax];
+\end_layout
+
+\begin_layout Plain Layout
+
+hopf_branch1.parameter.max_step=[1 0.002; 3 cstepsize];
+\end_layout
+
+\begin_layout Plain Layout
+
+hopf_branch1.method.continuation.plot = 0;
+\end_layout
+
+\begin_layout Plain Layout
+
+hopf_branch1.method.stability.minimal_time_step = 0.005;
+\end_layout
+
+\begin_layout Plain Layout
+
+[hopf_branch1,s,f,r]=br_contn(funcs,hopf_branch1,300);
+\end_layout
+
+\begin_layout Plain Layout
+
+hopf_branch1 = br_rvers(hopf_branch1);
+\end_layout
+
+\begin_layout Plain Layout
+
+[hopf_branch1,s,f,r]=br_contn(funcs,hopf_branch1,300);
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Detection of bifurcations on the Hopf branch
+\end_layout
+
+\begin_layout Standard
+We repeat the steps for bifurcation detection, but now apply it to the Hopf
+ branch.
+ This yields several higher-order bifurcations
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{Verbatim}[commandchars=
+\backslash
+
+\backslash
+
+\backslash
+{
+\backslash
+},fontsize=
+\backslash
+scriptsize]
+\end_layout
+
+\begin_layout Plain Layout
+
+>> hopf_branch1.method.stability.minimal_real_part = -0.03; 
+\end_layout
+
+\begin_layout Plain Layout
+
+>> hopf_branch1 = br_stabl(funcs,hopf_branch1,0,0);
+\end_layout
+
+\begin_layout Plain Layout
+
+>> hopf_branch1 = br_bifdet(funcs,hopf_branch1);
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Zero Hopf detected near par(1) = 0.0141129425, par(3) = 0.8546265100.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: omega = 0.2958047065, par(1) = 0.0132898339, par(3) = 0.8554830515.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: s = 0.0000803554, theta = 2.0966153011.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Generalized Hopf detected near par(1) = 0.0141129425, par(3) =
+ 0.8546265100.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Failed to correct generalized Hopf.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Double-Hopf detected near par(1) = 0.0921713247, par(3) = 0.7712365372.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: omega1 = 0.2899790050, omega2 = 0.1560400855, par(1) = 0.0903758907,
+ par(3) = 0.7732081015.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: theta = 1.6991967765, delta = 1.5262842690.
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: The eigenvalues are    
+\end_layout
+
+\begin_layout Plain Layout
+
+	0.0000 + 0.1560i    
+\end_layout
+
+\begin_layout Plain Layout
+
+	0.0000 - 0.1560i    
+\end_layout
+
+\begin_layout Plain Layout
+
+	0.0000 + 0.2900i    
+\end_layout
+
+\begin_layout Plain Layout
+
+	0.0000 - 0.2900i
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Generalized Hopf detected near par(1) = 0.2523811833, par(3) =
+ 0.5805259207.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: L2 = 0.0011032785, omega = 0.2759094349, par(1) = 0.2518651159,
+ par(3) = 0.5812019758.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+color{orange}{Warning: Matrix is close to singular or badly scaled.
+ Results may be inaccurate.
+ RCOND =  2.775558e-17.}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+color{orange}{> In nmfm_border at 26}
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\backslash
+color{orange}{In nmfm_hopf at 75}
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\backslash
+color{orange}{In br_bifdet at 202}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+color{orange}{Warning: Matrix is close to singular or badly scaled.
+ Results may be inaccurate.
+ RCOND =  2.775558e-17.}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+color{orange}{> In nmfm_border at 28}
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\backslash
+color{orange}{In nmfm_hopf at 75}
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\backslash
+color{orange}{In br_bifdet at 202}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{Verbatim}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Since the characteristic matrix in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:hopf_h11"
+
+\end_inset
+
+ becomes close to the zero matrix near the parameter values 
+\begin_inset Formula $(a,c)\approx(0.5130,0)$
+\end_inset
+
+, the calculations for the normal form coefficients of a Hopf point produce
+ warning messages.
+\end_layout
+
+\begin_layout Standard
+The falsely detected generalized Hopf point at the zero-Hopf point with
+ parameter values 
+\begin_inset Formula $(a,c)=(0.0141129425,0.8546265100)$
+\end_inset
+
+ can be explained by comparing the test function 
+\begin_inset Formula $\psi_{FH}^{H}=\det\left(\Delta(0)\right)$
+\end_inset
+
+, which vanishes at a zero-Hopf point, and the calculation of the term 
+\begin_inset Formula $h_{11}$
+\end_inset
+
+ in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:hopf_h11"
+
+\end_inset
+
+.
+ Without going into detail we see in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:test_functions_hopf_branch1"
+
+\end_inset
+
+ that the test function for the generalized Hopf point goes to 
+\begin_inset Formula $\pm\infty$
+\end_inset
+
+ at the zero-Hopf point.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename images/example1_hopf_branch1_testfunctions.eps
+	width 100text%
+	rotateOrigin center
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Plot of the test functions for 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+hopf_branch1
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:test_functions_hopf_branch1"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+The second Hopf branch
+\end_layout
+
+\begin_layout Standard
+We repeat the same procedure for second Hopf branch
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\footnotesize},breaklines=true,language=Matlab,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+start_ind = FPI(bif2num('hopf'),2);
+\end_layout
+
+\begin_layout Plain Layout
+
+[hopf_branch2, suc] = SetupHopf(funcs, branch1, start_ind,...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'contpar', [1 3], 'dir', 3, 'step', cstepsize);
+\end_layout
+
+\begin_layout Plain Layout
+
+hopf_branch2.parameter.min_bound=[5 0; 6 0; 3 cmin; 1 amin];
+\end_layout
+
+\begin_layout Plain Layout
+
+hopf_branch2.parameter.max_bound=[1 amax; 3 cmax];
+\end_layout
+
+\begin_layout Plain Layout
+
+hopf_branch2.parameter.max_step=[1 0.002; 3 cstepsize];
+\end_layout
+
+\begin_layout Plain Layout
+
+hopf_branch2.method.continuation.plot = 0;
+\end_layout
+
+\begin_layout Plain Layout
+
+hopf_branch2.method.stability.minimal_time_step = 0.005;
+\end_layout
+
+\begin_layout Plain Layout
+
+[hopf_branch2,s,f,r]=br_contn(funcs,hopf_branch2,300);
+\end_layout
+
+\begin_layout Plain Layout
+
+hopf_branch2 = br_rvers(hopf_branch2);
+\end_layout
+
+\begin_layout Plain Layout
+
+[hopf_branch2,s,f,r]=br_contn(funcs,hopf_branch2,300);
+\end_layout
+
+\begin_layout Plain Layout
+
+hopf_branch2.method.stability.minimal_real_part = -0.03;
+\end_layout
+
+\begin_layout Plain Layout
+
+hopf_branch2 = br_stabl(funcs,hopf_branch2,0,0);
+\end_layout
+
+\begin_layout Plain Layout
+
+hopf_branch2 = br_bifdet(funcs, hopf_branch2);
+\end_layout
+
+\end_inset
+
+which generates the output
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{Verbatim}[commandchars=
+\backslash
+
+\backslash
+
+\backslash
+{
+\backslash
+},fontsize=
+\backslash
+scriptsize]
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Zero Hopf detected near par(1) = 0.0045472202, par(3) = 0.8391205690.
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: omega = 0.1485574983, par(1) = 0.0038001792, par(3) = 0.8396669570.
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: s = 0.0000855576, theta = 2.0243171041.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Generalized Hopf detected near par(1) = 0.0045472202, par(3) =
+ 0.8391205690.
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Failed to correct generalized Hopf.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Double-Hopf detected near par(1) = 0.0906215708, par(3) = 0.7730096131.
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: omega1 = 0.1560400907, omega2 = 0.2899790005, par(1) = 0.0903759486,
+ par(3) = 0.7732080509.
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: The eigenvalues are
+\end_layout
+
+\begin_layout Plain Layout
+
+   0.0000 + 0.2900i
+\end_layout
+
+\begin_layout Plain Layout
+
+   0.0000 - 0.2900i
+\end_layout
+
+\begin_layout Plain Layout
+
+  -0.0000 + 0.1560i
+\end_layout
+
+\begin_layout Plain Layout
+
+  -0.0000 - 0.1560i
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Generalized Hopf detected near par(1) = 0.2568681881, par(3) =
+ 0.6208054350.
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: L2 = 0.0018108424, omega = 0.1722172445, par(1) = 0.2566152979,
+ par(3) = 0.6210718434.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+color{orange}{Warning: Matrix is close to singular or badly scaled.
+ Results may be inaccurate.
+ RCOND =  2.775558e-17.}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+color{orange}{> In nmfm_border at 26}
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\backslash
+color{orange}{In nmfm_hopf at 75}
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\backslash
+color{orange}{In br_bifdet at 182} 
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+color{orange}{Warning: Matrix is close to singular or badly scaled.
+ Results may be inaccurate.
+ RCOND =  2.775558e-17.}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+color{orange}{> In nmfm_border at 28}
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\backslash
+color{orange}{In nmfm_hopf at 75}
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\backslash
+color{orange}{In br_bifdet at 182}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Double-Hopf detected near par(1) = 0.5130096560, par(3) = 0.0000000000.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: omega1 = 0.2295988426, omega2 = 0.2295988426, par(1) = 0.5130096560,
+ par(3) = 0.0000000002.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: theta = 2.0000000000, delta = 2.0000000000.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: The eigenvalues are    
+\end_layout
+
+\begin_layout Plain Layout
+
+	0.0000 + 0.2296i    
+\end_layout
+
+\begin_layout Plain Layout
+
+	0.0000 - 0.2296i    
+\end_layout
+
+\begin_layout Plain Layout
+
+	0.0000 + 0.2296i    
+\end_layout
+
+\begin_layout Plain Layout
+
+	0.0000 - 0.2296i
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{Verbatim}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As in the previous subsection there is a falsely detected generalized Hopf
+ at a zero-Hopf point.
+ Also the warning messages appear again as expected near 
+\begin_inset Formula $(a,c)\approx(0.5130,0)$
+\end_inset
+
+.
+ There is a double-Hopf located at 
+\begin_inset Formula $(a,c)\approx(0.5130,0)$
+\end_inset
+
+.
+ The eigenvalues show there is 1:1 resonance.
+ Therefore the computed normal form coefficients do not apply here.
+\end_layout
+
+\begin_layout Subsection
+The Fold branch through the zero-Hopf
+\end_layout
+
+\begin_layout Standard
+To demonstrate the detection of zero-Hopf points on fold curves we continue
+ the fold curve emanating from the zero-Hopf point detected on 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+hopf_branch1
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\footnotesize},breaklines=true,language=Matlab,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+%% Continue Fold emanating from Zero Hopf 
+\end_layout
+
+\begin_layout Plain Layout
+
+FPI2 = br_getflags(hopf_branch1); 
+\end_layout
+
+\begin_layout Plain Layout
+
+start_ind = FPI2(bif2num('ZH'));
+\end_layout
+
+\begin_layout Plain Layout
+
+[fold_branch, suc] = SetupFold(funcs, hopf_branch1, start_ind, ...
+\end_layout
+
+\begin_layout Plain Layout
+
+    'contpar', [1 3], 'dir', 3, 'step', cstepsize);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+cmin=0; cmax=1; amin=0; amax=1;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+fold_branch.parameter.min_bound=[3 cmin; 1 amin]; 
+\end_layout
+
+\begin_layout Plain Layout
+
+fold_branch.parameter.max_bound=[1 amax; 3 cmax]; 
+\end_layout
+
+\begin_layout Plain Layout
+
+fold_branch.parameter.max_step=[1 0.001; 3 0.001];
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+[fold_branch,s,f,r]=br_contn(funcs,fold_branch,300); 
+\end_layout
+
+\begin_layout Plain Layout
+
+fold_branch = br_rvers(fold_branch);
+\end_layout
+
+\begin_layout Plain Layout
+
+[fold_branch,s,f,r]=br_contn(funcs,fold_branch,300);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+fold_branch = br_stabl(funcs,fold_branch,0,0);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+fold_branch.method.bifurcation.monitor_eigenvalues = 1; 
+\end_layout
+
+\begin_layout Plain Layout
+
+fold_branch.method.bifurcation.pause_on_bifurcation= 0; 
+\end_layout
+
+\begin_layout Plain Layout
+
+fold_branch = br_bifdet(funcs, 
+\end_layout
+
+\begin_layout Plain Layout
+
+fold_branch); FPI=br_getflags(fold_branch);
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Which generates the output:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{Verbatim}[commandchars=
+\backslash
+
+\backslash
+
+\backslash
+{
+\backslash
+},fontsize=
+\backslash
+scriptsize]
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_CONTN warning: boundary hit.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_CONTN warning: boundary hit.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Zero-Hopf detected near par(1) = 0.0684898635, par(3) = 0.9474830977.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Zero Hopf located at par(1) = 0.0689934962, par(3) = 0.9483224999.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: s = 0.0000554219, theta = 2.5704064406.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Zero-Hopf detected near par(1) = 0.0672898543, par(3) = 0.9454830980.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Failed to correct zero-Hopf.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Zero-Hopf detected near par(1) = 0.0660898775, par(3) = 0.9434831017.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Zero Hopf located at par(1) = 0.0661546818, par(3) = 0.9435911421.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: s = 0.0000583652, theta = 2.3917304978.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Zero-Hopf detected near par(1) = 0.0564898556, par(3) = 0.9274830981.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Failed to correct zero-Hopf.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Zero-Hopf detected near par(1) = 0.0132898339, par(3) = 0.8554830964.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Zero Hopf located at par(1) = 0.0132898452, par(3) = 0.8554830917.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: s = 0.0000803554, theta = 2.0966153774.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Zero-Hopf detected near par(1) = 0.0084898655, par(3) = 0.8474830901.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Failed to correct zero-Hopf.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Zero-Hopf detected near par(1) = 0.0036898645, par(3) = 0.8394830954.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Zero Hopf located at par(1) = 0.0038001703, par(3) = 0.8396669952.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: s = 0.0000855576, theta = 2.0243170475.
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{Verbatim}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The false detection of the zero-Hopf points is caused by the chaining of
+ the eigenvalues with the smallest real part in the function 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+nmfm_smrp
+\end_layout
+
+\end_inset
+
+.
+ This can be seen by monitoring the eigenvalues.
+ The last two located zero-Hopf points are the same as the ones located
+ on the Hopf branches.
+ In addition two extra zero-Hopf points are detected.
+ The Hopf branches emanating from these points could be continued as well.
+ However no new insights regarding detection, location and normal form computati
+on would be giant.
+ Therefore we will stop our analysis here.
+\end_layout
+
+\begin_layout Subsection
+Plotting the bifurcations on the branches
+\end_layout
+
+\begin_layout Standard
+We are now ready to make a bifurcation diagram.
+ To visualize the different bifurcation points we use the function
+\series bold
+ 
+\series default
+
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+br_bifplot
+\end_layout
+
+\end_inset
+
+.
+\begin_inset listings
+lstparams "basicstyle={\footnotesize},breaklines=true,language=Matlab,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+figure;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+bifplot = df_bifplot(); bifplot.zeho = '*';
+\end_layout
+
+\begin_layout Plain Layout
+
+bifplot.hoho = 'o';
+\end_layout
+
+\begin_layout Plain Layout
+
+bifplot.genh = '+';
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+[xm,ym] = df_measr(0,hopf_branch1,1);
+\end_layout
+
+\begin_layout Plain Layout
+
+br_plot(hopf_branch1,xm,ym,'-');
+\end_layout
+
+\begin_layout Plain Layout
+
+br_bifplot(hopf_branch1,xm,ym,bifplot);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+[xm,ym] = df_measr(0,hopf_branch2,1);
+\end_layout
+
+\begin_layout Plain Layout
+
+br_plot(hopf_branch2,xm,ym,'-');
+\end_layout
+
+\begin_layout Plain Layout
+
+br_bifplot(hopf_branch2,xm,ym,bifplot);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+[xm,ym] = df_measr(0,fold_branch,1);
+\end_layout
+
+\begin_layout Plain Layout
+
+br_plot(fold_branch,xm,ym,'-g'); 
+\end_layout
+
+\begin_layout Plain Layout
+
+br_bifplot(fold_branch,xm,ym,bifplot);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+br_plot(branch1,xm,ym,'--');
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+xlabel('a'); ylabel('c');
+\end_layout
+
+\end_inset
+
+See Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Plot-of-Hopf-branches"
+
+\end_inset
+
+ for the resulting bifurcation diagram.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename images/nmfm_demo_02.eps
+	scale 40
+	rotateOrigin center
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Plot of detected bifurcations on the fold and Hopf branches.
+ The asterisks '
+\color blue
+*
+\color inherit
+' indicates fold-Hopf bifurcations, the open circle '
+\color blue
+o
+\color inherit
+' indicates a double-Hopf, the plus '
+\color blue
++
+\color inherit
+' indicates generalized Hopf.
+ 
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Plot-of-Hopf-branches"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Section
+Example with Bogdanov-Takens bifurcation
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Example2"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "liu2013bogdanov"
+
+\end_inset
+
+ the Bogdanov-Takens bifurcation of the following delayed predator prey
+ system
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\left\{ \begin{array}{rl}
+\dot{x} & =rx\left(1-\dfrac{x}{K}\right)-\dfrac{\alpha y(x-\bar{m})}{Ay+x-\bar{m}}-\bar{h,}\\
+\dot{y} & =sy\left(1-\dfrac{dy(t-\bar{\tau})}{x(t-\bar{\tau})-\bar{m}}\right),
+\end{array}\right.\label{eq:Holling-Tanner-1}
+\end{equation}
+
+\end_inset
+
+is considered.
+ Here 
+\begin_inset Formula $x$
+\end_inset
+
+ and 
+\begin_inset Formula $y$
+\end_inset
+
+ stand for prey and predator population (or densities) at time 
+\begin_inset Formula $t$
+\end_inset
+
+, respectively.
+ The predator growth is of logistic type with growth rate r and carrying
+ capacity 
+\begin_inset Formula $K$
+\end_inset
+
+ in the absence of predation; 
+\begin_inset Formula $α$
+\end_inset
+
+ and 
+\begin_inset Formula $A$
+\end_inset
+
+ stand for the predator capturing rate and half saturation constant, respectivel
+y; 
+\begin_inset Formula $s$
+\end_inset
+
+ is the intrinsic growth rate of predator; however, carrying capacity 
+\begin_inset Formula $x/b$
+\end_inset
+
+ (
+\begin_inset Formula $b$
+\end_inset
+
+ is the conversion rate of prey into predators) is the function on the populatio
+n size of prey.
+ The parameters 
+\begin_inset Formula $α,A,\bar{m},\bar{h},s,b,$
+\end_inset
+
+ and 
+\begin_inset Formula $\bar{τ}$
+\end_inset
+
+ are all positive constants.
+ 
+\begin_inset Formula $\bar{m}$
+\end_inset
+
+ is a constant number of prey using refuges; 
+\begin_inset Formula $h$
+\end_inset
+
+ is the rate of prey harvesting.
+ System 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Holling-Tanner-1"
+
+\end_inset
+
+ can be transformed into
+\begin_inset Formula 
+\begin{equation}
+\left\{ \begin{array}{rl}
+\dot{x} & =(x+m)(1-x-m)-\dfrac{xy}{ay+x}-h,\\
+\dot{y} & =\delta y\left(\beta-\dfrac{y(t-\tau)}{x(t-\tau)}\right),
+\end{array}\right.\label{eq:Holling-Tanner-1-1}
+\end{equation}
+
+\end_inset
+
+see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "liu2013bogdanov"
+
+\end_inset
+
+ for the transformation and the meaning of the new parameters.
+ 
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula 
+\begin{equation}
+\begin{aligned}0<m<\dfrac{1}{2}\left(1-\dfrac{\beta}{a\beta+1}\right),\\
+h=\dfrac{1}{4}\left(\dfrac{\beta}{a\beta+1}-1\right)^{2}+\dfrac{m\beta}{a\beta+1}.
+\end{aligned}
+\label{eq:conditions_mh}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+Then 
+\begin_inset Formula $P_{*}=(x_{*},y_{*})$
+\end_inset
+
+ is an interior positive equilibrium point of systems 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Holling-Tanner-1-1"
+
+\end_inset
+
+, where
+\begin_inset Formula 
+\begin{equation}
+x_{*}=-\frac{1}{2}\left(\frac{\beta}{a\beta+1}+2m-1\right),\qquad y_{*}=\beta x_{*}.\label{eq:steady-state}
+\end{equation}
+
+\end_inset
+
+In order to discuss the properties of system 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Holling-Tanner-1-1"
+
+\end_inset
+
+ in the neighborhood of the equilibrium point 
+\begin_inset Formula $P_{∗}=(x_{∗},y_{∗})$
+\end_inset
+
+, let 
+\begin_inset Formula $x=x−x_{∗}$
+\end_inset
+
+, 
+\begin_inset Formula $y=y−y_{∗}$
+\end_inset
+
+; then 
+\begin_inset Formula $P_{∗}$
+\end_inset
+
+ is translated to 
+\begin_inset Formula $(0,0)$
+\end_inset
+
+, and the linearization of system 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Holling-Tanner-1-1"
+
+\end_inset
+
+ becomes (still denoting 
+\begin_inset Formula $\bar{x},\ \bar{y}$
+\end_inset
+
+ as 
+\begin_inset Formula $x,\ y$
+\end_inset
+
+)
+\begin_inset Formula 
+\begin{equation}
+\left\{ \begin{aligned}\dot{x} & =\dfrac{\tau\beta}{\left(a\beta+1\right)^{2}}x-\dfrac{\tau}{\left(a\beta+1\right)^{2}}y,\\
+\dot{y} & =\tau\delta\beta^{2}x(t-1)-\tau\delta\beta y(t-1).
+\end{aligned}
+\right.\label{eq:linearized}
+\end{equation}
+
+\end_inset
+
+Here we have rescaled the time as 
+\begin_inset Formula $t\rightarrow\dfrac{t}{\tau}$
+\end_inset
+
+, so that 
+\begin_inset Formula $\tau$
+\end_inset
+
+ can be treated as an ordinary parameter.
+ Denoting 
+\begin_inset Formula $\mathbf{x}\equiv(x,y)$
+\end_inset
+
+ system 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:linearized"
+
+\end_inset
+
+ can be written as
+\begin_inset Formula 
+\[
+\dot{\mathbf{x}}=\dfrac{\tau}{\left(a\beta+1\right)^{2}}\left(\begin{array}{cc}
+\beta & -1\\
+0 & 0
+\end{array}\right)\mathbf{x}+\tau\delta\beta\begin{pmatrix}0 & 0\\
+\beta & -1
+\end{pmatrix}\mathbf{x}(t-1).
+\]
+
+\end_inset
+
+The characteristic matrix becomes
+\begin_inset Formula 
+\[
+\Delta(\lambda)=\begin{pmatrix}\lambda-\dfrac{\tau\beta}{\left(a\beta+1\right)^{2}} & \dfrac{\tau}{\left(a\beta+1\right)^{2}}\\
+-\tau\delta\beta^{2}e^{-\lambda} & \lambda+\tau\delta\beta e^{-\lambda}
+\end{pmatrix}.
+\]
+
+\end_inset
+
+It follows that the characteristic equation of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:linearized"
+
+\end_inset
+
+ is given by
+\begin_inset Formula 
+\begin{equation}
+\det(\Delta(\lambda))=\lambda^{2}+\beta\tau\left(\delta e^{-\lambda\tau}-\dfrac{1}{\left(a\beta+1\right)^{2}}\right)\lambda.\label{eq:chareq}
+\end{equation}
+
+\end_inset
+
+Expanding 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:chareq"
+
+\end_inset
+
+ around 
+\begin_inset Formula $\lambda=0$
+\end_inset
+
+ yields
+\begin_inset Formula 
+\[
+\det(\Delta(\lambda))=\beta\tau\left(\delta-\frac{1}{(a\beta+1)^{2}}\right)\lambda+2\left(1-\beta\delta\tau\right)\lambda^{2}+\mathcal{O}(\lambda^{3}).
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+Clearly, if
+\begin_inset Formula 
+\begin{equation}
+\begin{array}{c}
+\delta=\dfrac{1}{\left(a\beta+1\right)^{2}},\\
+\tau\neq\dfrac{1}{\delta\beta},\qquad\text{that is,}\qquad\tau\neq\dfrac{\left(a\beta+1\right)^{2}}{\beta};
+\end{array}\label{eq:example2_delta_bt_point}
+\end{equation}
+
+\end_inset
+
+then 
+\begin_inset Formula $\lambda=0$
+\end_inset
+
+ is a double zero eigenvalue.
+\end_layout
+
+\begin_layout Standard
+We now assume that we are at a Bogdanov-Takens point such that 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:example2_delta_bt_point"
+
+\end_inset
+
+ are satisfied.
+ Then the vectors
+\begin_inset Formula 
+\begin{align*}
+q_{0} & =\left(\frac{1}{\sqrt{\beta^{2}+1}},\frac{\beta}{\sqrt{\beta^{2}+1}}\right)^{T},\\
+q_{1} & =\left(\frac{a^{2}\beta-\frac{\beta\tau^{2}}{2(a\beta+1)^{2}-2\beta\tau}+2a+\frac{1}{\beta}-\tau}{\sqrt{\beta^{2}+1}},\frac{\beta\tau\left(\beta\tau-2(a\beta+1)^{2}\right)}{2\sqrt{\beta^{2}+1}\left((a\beta+1)^{2}-\beta\tau\right)}\right)^{T},\\
+p1 & =\left(\frac{\beta\sqrt{\beta^{2}+1}}{(a\beta+1)^{2}-\beta\tau},-\frac{\sqrt{\beta^{2}+1}}{(a\beta+1)^{2}-\beta\tau}\right)^{T},\\
+p_{0} & =\left(0,\frac{\sqrt{\beta^{2}+1}}{\beta}\right)^{T},
+\end{align*}
+
+\end_inset
+
+satisfy the relations 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:bt_jordanchains"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:bt_normalized_eigenvectors"
+
+\end_inset
+
+.
+ Using a computer algebra system like 
+\family typewriter
+Mathematica
+\family default
+, the coefficients in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:bt_coef"
+
+\end_inset
+
+ become 
+\begin_inset Formula 
+\begin{equation}
+\begin{aligned}a & =-\dfrac{\beta}{\sqrt{\beta^{2}+1}\left((a\beta+1)^{2}-\beta\tau\right)},\\
+b & =\dfrac{4\beta\tau(a\beta+1)^{2}-2(a\beta+1)^{4}-\beta^{2}\tau^{2}}{\sqrt{\beta^{2}+1}\left((a\beta+1)^{2}-\beta\tau\right)^{2}}.
+\end{aligned}
+\label{eq:example2_coef_ab}
+\end{equation}
+
+\end_inset
+
+We note that although these coefficients are slightly different from the
+ coefficients derived in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "liu2013bogdanov"
+
+\end_inset
+
+, the sign of the product of 
+\begin_inset Formula $ab$
+\end_inset
+
+ remains the same.
+ Here we choose to normalize the vector 
+\begin_inset Formula $q_{0}$
+\end_inset
+
+ to have length 1, as done in the Matlab scripts, see the file 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+p_tobt.m
+\end_layout
+
+\end_inset
+
+.
+ Furthermore, the coefficients here have been derived from system 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Holling-Tanner-1-1"
+
+\end_inset
+
+ directly, whereas in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "liu2013bogdanov"
+
+\end_inset
+
+ first the time as been rescaled by 
+\begin_inset Formula $t\rightarrow\dfrac{t}{\tau}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The files of this demonstration are located in the folder 
+\family typewriter
+demos/Holling-Tanner 
+\family default
+of the DDE-BifTool package.
+\end_layout
+
+\begin_layout Subsection
+Generating system files for DDE-BifTool
+\end_layout
+
+\begin_layout Standard
+\noindent
+To generate the system files
+\series bold
+ 
+\series default
+we again use the 
+\family typewriter
+Maple
+\family default
+ script 
+\family typewriter
+Maple_gen_sys.mw
+\family default
+\series bold
+.
+
+\series default
+ We only display the file 
+\begin_inset Flex blist
+status collapsed
+
+\begin_layout Plain Layout
+sys_rhs.m
+\end_layout
+
+\end_inset
+
+
+\series bold
+ 
+\series default
+here, since the files 
+\begin_inset Flex blist
+status collapsed
+
+\begin_layout Plain Layout
+sys_deri
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset Flex blist
+status collapsed
+
+\begin_layout Plain Layout
+sys_mfderi
+\end_layout
+
+\end_inset
+
+ are too long
+\begin_inset listings
+lstparams "basicstyle={\footnotesize},breaklines=true,language=Matlab,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function f = sys_rhs(xx,par)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+f(1,1) = (xx(1,1)+par(4))*(1-xx(1,1)-par(4))-...
+\end_layout
+
+\begin_layout Plain Layout
+
+	xx(1,1)*xx(2,1)/(par(3)*xx(2,1)+xx(1,1))-par(5);
+\end_layout
+
+\begin_layout Plain Layout
+
+f(2,1) = par(6)*xx(2,1)*(par(1)-xx(2,2)/xx(1,2));
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+end 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Initialization of the system in DDE-BifTool
+\end_layout
+
+\begin_layout Standard
+We add the necessary paths to our workspace so that we can access the script
+ files of 
+\family typewriter
+ddebiftool
+\family default
+, 
+\family typewriter
+ddebiftool_utilities
+\family default
+, 
+\family typewriter
+ddebiftool_extra_nmfm
+\family default
+.
+ We also add the extension 
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+ddebiftool_extra_psol
+\family default
+ for the continuation of the homoclinic orbit emanating from the Bogdanov-Takens
+ point .
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\footnotesize},breaklines=true,language=Matlab,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+clear;
+\end_layout
+
+\begin_layout Plain Layout
+
+close all;
+\end_layout
+
+\begin_layout Plain Layout
+
+addpath('../../../ddebiftool',...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'../../../ddebiftool_extra_psol',...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'../../../ddebiftool_extra_nmfm',...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'../../../ddebiftool_utilities');
+\end_layout
+
+\begin_layout Plain Layout
+
+funcs=set_funcs(...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'sys_rhs', @(xx,par) sys_rhs(xx,par),...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'sys_tau', @() 2,...
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+	'sys_deri', @(xx,par,nx,np,v) sys_deri(xx,par,nx,np,v),...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'sys_mfderi',@(xx,par,varargin) sys_mfderi(xx,par,varargin{:}));
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+disp('Holling-Tanner');
+\end_layout
+
+\begin_layout Plain Layout
+
+% par=(beta,tau,a,m,h,delta)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Continuation of steady-state branch
+\end_layout
+
+\begin_layout Standard
+We fixed the parameters 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\begin{array}{l}
+a=0.5,\qquad\tau=0.78125,\qquad m=0.02,\\
+h=0.098,\qquad\beta=0.4,\qquad\delta=0.54089.
+\end{array}\label{eq:example2_fixedparameters}
+\end{equation}
+
+\end_inset
+
+Then we continue the positive steady-state 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:steady-state"
+
+\end_inset
+
+ in 
+\begin_inset Formula $\beta$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\footnotesize},breaklines=true,language=Matlab,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+beta=0.5;a=0.5; 
+\end_layout
+
+\begin_layout Plain Layout
+
+m=(1/30)*(1-beta/(a*beta+1)); 
+\end_layout
+
+\begin_layout Plain Layout
+
+h=(1/4)*(beta/(a*beta+1)-1)^2+m*beta/(a*beta+1); 
+\end_layout
+
+\begin_layout Plain Layout
+
+tau=1/4*(a*beta+1)^2/beta; delta=1/(a*beta+1)^2;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+beta=0.4;
+\end_layout
+
+\begin_layout Plain Layout
+
+delta=0.5409; 
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+stst.parameter=[beta,tau,a,m,h,delta];
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+xster=-(1/2)*((beta/(a*beta+1)+2*m-1)+...
+\end_layout
+
+\begin_layout Plain Layout
+
+		sqrt((1-2*m-beta/(a*beta+1))^2+4*(m*(1-m)-h)));
+\end_layout
+
+\begin_layout Plain Layout
+
+yster=beta*xster;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+contpar=1; 
+\end_layout
+
+\begin_layout Plain Layout
+
+stst_branch = SetupStst(funcs,'x',[xster; yster],'parameter',stst.parameter,...
+\end_layout
+
+\begin_layout Plain Layout
+
+    'contpar',contpar,'max_step',[contpar 0.02],'min_bound',...
+     
+\end_layout
+
+\begin_layout Plain Layout
+
+	[contpar 0.4],'max_bound',[contpar 0.6],...
+     
+\end_layout
+
+\begin_layout Plain Layout
+
+	'newheuristics_tests',0);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+stst_branch.method.continuation.plot = 1;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+[stst_branch,s,f,r] = br_contn(funcs,stst_branch,100); 
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+stst_branch.method.bifurcation.monitor_eigenvalues=0; 
+\end_layout
+
+\begin_layout Plain Layout
+
+stst_branch.method.bifurcation.plot_testfunctions=1; 
+\end_layout
+
+\begin_layout Plain Layout
+
+stst_branch.method.bifurcation.pause_on_bifurcation=0;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+stst_branch = br_stabl(funcs,stst_branch,0,0);
+\end_layout
+
+\begin_layout Plain Layout
+
+stst_branch=br_bifdet(funcs,stst_branch);
+\end_layout
+
+\end_inset
+
+Running the above code outputs:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{Verbatim}[commandchars=
+\backslash
+
+\backslash
+
+\backslash
+{
+\backslash
+},fontsize=
+\backslash
+scriptsize]
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_CONTN warning: boundary hit.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Fold detected near par(1) = 0.4998182859.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Fold located at  par(1) = 0.5000000000.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Normal form coefficient: b = 4.8721895296
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Hopf detected near par(1) = 0.4916389145.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Hopf located at  par(1) = 0.4939507149.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Normal form coefficient: L1 = 192.7259505902
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{Verbatim}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:stst_branch"
+
+\end_inset
+
+ we have plotted the continuation of the steady-state branch and the test
+ functions 
+\begin_inset Formula $\psi_{f}$
+\end_inset
+
+ and 
+\begin_inset Formula $\psi_{H}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename images/continuation_stst_branch_plot.eps
+	scale 40
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/exm2_stst_br_testfunctions.eps
+	scale 40
+	rotateOrigin center
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Left is a plot of the continuation of the steady-state point.
+ In the right figure the test functions are plotted.
+ Here we see that the Hopf bifurcation is near the fold bifurcation, as
+ predicted by a Bogdanov-Takens bifurcation.
+ 
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:stst_branch"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Continuation of the Hopf point
+\end_layout
+
+\begin_layout Standard
+We continue the detected Hopf point at 
+\begin_inset Formula $\beta=0.4886954168$
+\end_inset
+
+ in 
+\begin_inset Formula $(\beta,\delta)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\footnotesize},breaklines=true,language=Matlab,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+FPI = br_getflags(stst_branch); 
+\end_layout
+
+\begin_layout Plain Layout
+
+start_ind = FPI(1);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% We do a standard continuation, using the starting index obtained from
+ the 
+\end_layout
+
+\begin_layout Plain Layout
+
+% flagged point indices.
+\end_layout
+
+\begin_layout Plain Layout
+
+fprintf('----- Hopf branch -----
+\backslash
+n'); 
+\end_layout
+
+\begin_layout Plain Layout
+
+[hopf_branch, suc] = SetupHopf(funcs, stst_branch, start_ind,...
+     
+\end_layout
+
+\begin_layout Plain Layout
+
+	'contpar', [1 6], 'dir', 1, 'step', 0.002);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+betamin=0.4; betamax=0.6; deltamin=0.4; deltamax=0.7;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+hopf_branch.parameter.min_bound=[1 betamin; 6 deltamin]; 
+\end_layout
+
+\begin_layout Plain Layout
+
+hopf_branch.parameter.max_bound=[1 betamax; 6 deltamax]; 
+\end_layout
+
+\begin_layout Plain Layout
+
+hopf_branch.parameter.max_step=[1 0.0005; 6 0.0005];
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+hopf_branch.method.stability.minimal_time_step = 0.005; % default 0.01
+\end_layout
+
+\begin_layout Plain Layout
+
+[hopf_branch,s,f,r]=br_contn(funcs,hopf_branch,250);
+\end_layout
+
+\end_inset
+
+In Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:hopf_branch"
+
+\end_inset
+
+ we see two plots of the Hopf branch.
+ In the first plot we have plotted the two continuation parameters 
+\begin_inset Formula $\beta$
+\end_inset
+
+ against 
+\begin_inset Formula $\delta$
+\end_inset
+
+.
+ In the second plot we have plotted the point number along the branch versus
+ 
+\begin_inset Formula $\delta$
+\end_inset
+
+.
+ From the two graphs we conclude that the Hopf curve makes a turn at 
+\begin_inset Formula $(\beta,\delta)\approx(0.5,0.64)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename images/hopf_branch.eps
+	scale 40
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/hopf_branch_pointnumber_vs_delta.eps
+	scale 40
+	rotateOrigin center
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Left is a plot of the continuation of the steady-state point.
+ At the right side we see a plot of the point number along the branch versus
+ 
+\begin_inset Formula $\delta$
+\end_inset
+
+.
+ 
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:hopf_branch"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:example2_test_functions_hopf_branch"
+
+\end_inset
+
+ we have plotted the test functions.
+ We see that the test function for a Bogdanov-Takens point on a Hopf curve
+ passes 0 even when the parameters make a turn.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename images/exm2_hopfbr1_testfunctions.eps
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Plot of the test function along
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+hopf_branch
+\end_layout
+
+\end_inset
+
+.
+ 
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:example2_test_functions_hopf_branch"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Detection on the Hopf branch
+\end_layout
+
+\begin_layout Standard
+We use the function 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+br_bifdet
+\end_layout
+
+\end_inset
+
+ to detect bifurcations on the Hopf branch
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{Verbatim}[commandchars=
+\backslash
+
+\backslash
+
+\backslash
+{
+\backslash
+},fontsize=
+\backslash
+scriptsize]
+\end_layout
+
+\begin_layout Plain Layout
+
+>> hopf_branch = br_stabl(funcs,hopf_branch,0,0); 
+\end_layout
+
+\begin_layout Plain Layout
+
+>> [hopf_branch,success] = br_bifdet(funcs,hopf_branch);
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Bogdanov-Takens detected near par(1) = 0.4999998471, par(6) =
+ 0.6395308481.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: a = -0.3812625439, b = -1.6892715659, par(1) = 0.5000000000, par(6)
+ = 0.6400000000.
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{Verbatim}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As predicted we see a Bogdanov-Takens point (BT point) located at 
+\begin_inset Formula $(\beta,\delta)=(0.5,0.64)$
+\end_inset
+
+.
+ From the normal form coefficients we conclude that the Hopf bifurcation
+ generates an unstable limit cycle.
+ Combining 
+\begin_inset Formula $(\beta,\delta)=(0.5,0.64)$
+\end_inset
+
+ with 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:example2_fixedparameters"
+
+\end_inset
+
+ we confirm that the equations for a Bogdanov-Takens point derived analytically
+ in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:example2_delta_bt_point"
+
+\end_inset
+
+ and the coefficients in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:example2_coef_ab"
+
+\end_inset
+
+ are satisfied.
+\end_layout
+
+\begin_layout Subsection
+Direct calculation of the Bogdanov-Takens normal form coefficients
+\end_layout
+
+\begin_layout Standard
+Since in this example we know the position of the Bogdanov-Takens through
+ analytic calculations, we could calculate the normal form coefficients
+ directly as shown below.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\footnotesize},breaklines=true,language=Matlab,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+beta=0.5;a=0.5; 
+\end_layout
+
+\begin_layout Plain Layout
+
+m=(1/30)*(1-beta/(a*beta+1)); 
+\end_layout
+
+\begin_layout Plain Layout
+
+h=(1/4)*(beta/(a*beta+1)-1)^2+m*beta/(a*beta+1); 
+\end_layout
+
+\begin_layout Plain Layout
+
+tau=1/4*(a*beta+1)^2/beta; 
+\end_layout
+
+\begin_layout Plain Layout
+
+delta=1/(a*beta+1)^2;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+xster=-(1/2)*(beta/(a*beta+1)+2*m-1); 
+\end_layout
+
+\begin_layout Plain Layout
+
+yster=beta*xster;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+p.kind='stst'; 
+\end_layout
+
+\begin_layout Plain Layout
+
+p.parameter=[beta,tau,a,m,h,delta]; 
+\end_layout
+
+\begin_layout Plain Layout
+
+p.x=[xster;yster];
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+bt=p_tobt(funcs,p); 
+\end_layout
+
+\begin_layout Plain Layout
+
+bt=nmfm_bt(funcs,bt); 
+\end_layout
+
+\begin_layout Plain Layout
+
+bt.nmfm
+\end_layout
+
+\end_inset
+
+The last line gives the following output:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{Verbatim}[commandchars=
+\backslash
+
+\backslash
+
+\backslash
+{
+\backslash
+},fontsize=
+\backslash
+scriptsize]
+\end_layout
+
+\begin_layout Plain Layout
+
+ans = 
+\end_layout
+
+\begin_layout Plain Layout
+
+	a2: -0.3816     
+\end_layout
+
+\begin_layout Plain Layout
+
+	b2: -1.6895
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{Verbatim}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here 
+\begin_inset Formula $a=a_{2}$
+\end_inset
+
+ and 
+\begin_inset Formula $b=b_{2}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Continue fold point
+\end_layout
+
+\begin_layout Standard
+We will continue the fold point detected on the steady-state.
+\begin_inset listings
+lstparams "basicstyle={\footnotesize},breaklines=true,language=Matlab,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+FPI = br_getflags(stst_branch); 
+\end_layout
+
+\begin_layout Plain Layout
+
+start_ind = FPI(bif2num('fold'),1);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+[fold_branch, suc] = SetupFold(funcs, stst_branch, start_ind, ...
+\end_layout
+
+\begin_layout Plain Layout
+
+    'contpar', [1 6], 'dir', 6, 'step', 0.005);
+\end_layout
+
+\begin_layout Plain Layout
+
+betamin=0.4; betamax=0.6; deltamin=0.3; deltamax=0.7;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+fold_branch.parameter.min_bound=[1 betamin; 6 deltamin]; 
+\end_layout
+
+\begin_layout Plain Layout
+
+fold_branch.parameter.max_bound=[1 betamax; 6 deltamax]; 
+\end_layout
+
+\begin_layout Plain Layout
+
+fold_branch.parameter.max_step=[1 0.005; 6 0.005];
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+[fold_branch,s,f,r]=br_contn(funcs,fold_branch,300); 
+\end_layout
+
+\begin_layout Plain Layout
+
+fold_branch = br_rvers(fold_branch); 
+\end_layout
+
+\begin_layout Plain Layout
+
+[fold_branch,s,f,r]=br_contn(funcs,fold_branch,300);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+fold_branch = br_stabl(funcs,fold_branch,0,0); 
+\end_layout
+
+\begin_layout Plain Layout
+
+[fold_branch,success] = br_bifdet(funcs,fold_branch);
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the Matlab console the following output is given:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{Verbatim}[commandchars=
+\backslash
+
+\backslash
+
+\backslash
+{
+\backslash
+},fontsize=
+\backslash
+scriptsize]
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_CONTN warning: boundary hit.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_CONTN warning: boundary hit.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Cusp detected near par(1) = 0.5000000000, par(6) = 0.6387723214.
+ BR_BIFDET: 
+\end_layout
+
+\begin_layout Plain Layout
+
+Failed to correct cusp.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Bogdanov-Takens detected near par(1) = 0.5000000000, par(6) =
+ 0.6387723214.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: a = -0.3812625439, b = -1.6892715659, par(1) = 0.5000000000, par(6)
+ = 0.6400000000.
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{Verbatim}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Why there is a falsely detected cusp at near the Bogdanov-Takens point is
+ explained in the next Section, where we treat the cusp bifurcation in detail.
+\end_layout
+
+\begin_layout Subsection
+Homoclinic orbit
+\end_layout
+
+\begin_layout Standard
+We continue the periodic orbit emanating from the Hopf curve in 
+\begin_inset Formula $\delta$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\footnotesize},breaklines=true,language=Matlab,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+hopf=hopf_branch.point(20); 
+\end_layout
+
+\begin_layout Plain Layout
+
+[psol,stp]=p_topsol(funcs,hopf,1e-2,3,27);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+ind_delta=6; 
+\end_layout
+
+\begin_layout Plain Layout
+
+mpsol=df_mthod(funcs,'psol'); 
+\end_layout
+
+\begin_layout Plain Layout
+
+[psol,s]=p_correc(funcs,psol,ind_delta,stp,mpsol.point); 
+\end_layout
+
+\begin_layout Plain Layout
+
+psol_branch=df_brnch(funcs,ind_delta,'psol'); 
+\end_layout
+
+\begin_layout Plain Layout
+
+psol_branch.point=psol; 
+\end_layout
+
+\begin_layout Plain Layout
+
+[psol,stp]=p_topsol(funcs,hopf,1.1e-2,3,27); 
+\end_layout
+
+\begin_layout Plain Layout
+
+[psol,s]=p_correc(funcs,psol,ind_delta,stp,mpsol.point); 
+\end_layout
+
+\begin_layout Plain Layout
+
+psol_branch.point(2)=psol; 
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+figure(2);clf; 
+\end_layout
+
+\begin_layout Plain Layout
+
+[xm,ym]=df_measr(0,psol_branch); 
+\end_layout
+
+\begin_layout Plain Layout
+
+ym.field='period'; 
+\end_layout
+
+\begin_layout Plain Layout
+
+ym.col=1; 
+\end_layout
+
+\begin_layout Plain Layout
+
+ym.row=1; 
+\end_layout
+
+\begin_layout Plain Layout
+
+psol_branch.method.continuation.plot_measure.x=xm; 
+\end_layout
+
+\begin_layout Plain Layout
+
+psol_branch.method.continuation.plot_measure.y=ym; 
+\end_layout
+
+\begin_layout Plain Layout
+
+[psol_branch,s,r,f]=br_contn(funcs,psol_branch,40); 
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+xlabel('$
+\backslash
+delta$','interpreter','latex');
+\end_layout
+
+\begin_layout Plain Layout
+
+ylabel('period');
+\end_layout
+
+\end_inset
+
+In Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:limit-cycle"
+
+\end_inset
+
+ we have plotted 
+\begin_inset Formula $\delta$
+\end_inset
+
+ against the period of the limit cycle.
+ Around 
+\begin_inset Formula $\delta\approx0.577$
+\end_inset
+
+ the period goes to infinity, indicating a homoclinic orbit.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename images/limitcycle_period.eps
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Plot of the cycle emanating from the Hopf curve.
+ At 
+\begin_inset Formula $\delta\approx0.577$
+\end_inset
+
+ the period of the cycles goes to infinity, indicating a homoclinic obit.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:limit-cycle"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+We select the last cycle on the 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+psol_branch
+\end_layout
+
+\end_inset
+
+ and convert it to a homoclinic orbit.
+ Then we continue the homoclinic orbit in 
+\begin_inset Formula $(\beta,\delta)$
+\end_inset
+
+
+\begin_inset listings
+lstparams "basicstyle={\footnotesize},breaklines=true,language=Matlab,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+psol=psol_branch.point(end);
+\end_layout
+
+\begin_layout Plain Layout
+
+hcli=p_tohcli(funcs,psol);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+mhcli=df_mthod(funcs,'hcli');
+\end_layout
+
+\begin_layout Plain Layout
+
+[hcli,s]=p_correc(funcs,hcli,ind_delta,[],mhcli.point);	% correct
+\end_layout
+
+\begin_layout Plain Layout
+
+hcli=p_remesh(hcli,3,50);	% remesh it and 
+\end_layout
+
+\begin_layout Plain Layout
+
+[hcli,s]=p_correc(funcs,hcli,ind_delta,[],mhcli.point)	% correct it again
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+%% perturb hcli, correct and continue ind_beta=1; 
+\end_layout
+
+\begin_layout Plain Layout
+
+hcli_br=df_brnch(funcs,[ind_beta, ind_delta],'hcli'); 
+\end_layout
+
+\begin_layout Plain Layout
+
+hcli_br.point=hcli; 
+\end_layout
+
+\begin_layout Plain Layout
+
+hcli.parameter(ind_beta)=hcli.parameter(ind_beta)-6e-6; 
+\end_layout
+
+\begin_layout Plain Layout
+
+[hcli,s]=p_correc(funcs,hcli,ind_delta,[],mhcli.point); 
+\end_layout
+
+\begin_layout Plain Layout
+
+hcli_br.point(2)=hcli;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+figure(1); 
+\end_layout
+
+\begin_layout Plain Layout
+
+[hcli_br,s,r,f]=br_contn(funcs,hcli_br,28); 
+\end_layout
+
+\begin_layout Plain Layout
+
+hcli_br=br_rvers(hcli_br); 
+\end_layout
+
+\begin_layout Plain Layout
+
+[hcli_br,s,r,f]=br_contn(funcs,hcli_br,40);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+xlabel('$
+\backslash
+beta$','interpreter','latex'); 
+\end_layout
+
+\begin_layout Plain Layout
+
+ylabel('$
+\backslash
+delta$','interpreter','latex');
+\end_layout
+
+\end_inset
+
+In Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:homoclinic-orbit"
+
+\end_inset
+
+ we see the homoclinic orbit continued.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename images/homoclinic_branch.eps
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Continuation of the homoclinic orbit in 
+\begin_inset Formula $(\beta,\delta)$
+\end_inset
+
+.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:homoclinic-orbit"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Stability of the cycles
+\end_layout
+
+\begin_layout Standard
+The following code calculates the stability of the cycles from 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+psol_branch
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\footnotesize},breaklines=true,language=Matlab,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+psol_branch = br_stabl(funcs,psol_branch,0,0);
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the field 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+psol_branch.point(i).stability.mu
+\end_layout
+
+\end_inset
+
+ the multipliers for the 
+\begin_inset Formula $i$
+\end_inset
+
+th point on the branch are given.
+ In Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:exam2_multipliers"
+
+\end_inset
+
+ we have plotted the multipliers for point number 10.
+ There we see that the cycle is indeed unstable as predicted by the product
+ of the coefficients 
+\begin_inset Formula $ab>0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename images/exm2_psol_br_multipliers.eps
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Multipliers for point number 10 from 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+psol_branch
+\end_layout
+
+\end_inset
+
+.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:exam2_multipliers"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Bifurcation diagram
+\end_layout
+
+\begin_layout Standard
+In Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:bifurcation_diagram"
+
+\end_inset
+
+ we have plotted the fold branch as well as the homoclinic and the Hopf
+ branch, giving a complete bifurcation diagram of the Bogdanov-Takens point.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename images/bifurcation_diagram.eps
+	width 80text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Plot of Hopf, homoclinic and fold branch emanating from the Bogdanov-Takens
+ point.
+ 
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:bifurcation_diagram"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Example with cusp and Bogdanov-Takens bifurcations
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Example3"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this last example we will consider the mathematical model 
+\begin_inset Formula 
+\begin{equation}
+\begin{cases}
+\mu\dot{u}_{1}(t)=-u_{1}(t)+q_{11}\alpha(u_{1}(t\text{-}T))-q_{12}u_{2}(t\text{-}T)+e_{1},\\
+\mu\dot{u}_{2}(t)=-u_{2}(t)+q_{21}\alpha(u_{1}(t\text{-}T))-q_{22}u_{2}(t\text{-}T)+e_{2},
+\end{cases}\label{eq:neural_network}
+\end{equation}
+
+\end_inset
+
+which describes the dynamics of a neural network consisting of an excitatory
+ and inhibitory neuron 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "giannakopoulos2001bifurcations"
+
+\end_inset
+
+.
+ The variables and parameters occurring in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:neural_network"
+
+\end_inset
+
+ have the following neurophysiological meaning:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $u_{1},u_{2}:\mathbb{R}\rightarrow R$
+\end_inset
+
+ denote the total post-synaptic potential of the excitatory and inhibitory
+ neuron, respectively.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\mu>0$
+\end_inset
+
+ is a time constant characterizing the dynamical properties of cell membrane.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $q_{ik}\geq0$
+\end_inset
+
+ represents the strength of the connection line from the 
+\begin_inset Formula $k$
+\end_inset
+
+th neuron to the 
+\begin_inset Formula $i$
+\end_inset
+
+th neuron.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\alpha:\mathbb{R}\rightarrow\mathbb{R}$
+\end_inset
+
+ is the transfer function which describes the activity generation of the
+ excitatory neuron as a function of its total potential 
+\begin_inset Formula $u_{1}$
+\end_inset
+
+.
+ The function 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ is smooth, increasing and has an unique turning point at 
+\begin_inset Formula $u_{1}=\theta$
+\end_inset
+
+.
+ The transfer function corresponding to the inhibitory neuron is assumed
+ to be the identity.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $T\geq0$
+\end_inset
+
+ is a time delay reflecting synaptic delay, axonal and dendritic propagation
+ time.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $e_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $e_{2}$
+\end_inset
+
+ are external stimuli acting on the excitatory and inhibitory neuron, respective
+ly.
+\end_layout
+
+\begin_layout Standard
+We consider equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:neural_network"
+
+\end_inset
+
+ with
+\begin_inset Formula 
+\begin{align*}
+\alpha(u_{1}) & =\frac{1}{1+e^{-4u_{1}}}-\frac{1}{2},\qquad q_{11}=2.6,\qquad q_{21}=1.0,\qquad q_{22}=0.0,\\
+\mu & =1.0,\qquad T=1.0,\qquad e_{2}=0.0,
+\end{align*}
+
+\end_inset
+
+and 
+\begin_inset Formula $Q:=q_{12},\, E:=e_{1}$
+\end_inset
+
+ as bifurcation parameters.
+ Substituting into 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:neural_network"
+
+\end_inset
+
+ yields
+\begin_inset Formula 
+\begin{equation}
+\begin{cases}
+\dot{u}_{1}(t)=-u_{1}(t)+2.6\alpha(u_{1}(t\text{-}T))-Qu_{2}(t\text{-}T)+E,\\
+\dot{u}_{2}(t)=-u_{2}(t)+\alpha(u_{1}(t\text{-}T)).
+\end{cases}\label{eq:neural_network_subs}
+\end{equation}
+
+\end_inset
+
+A steady-state solution of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:neural_network_subs"
+
+\end_inset
+
+ is given by 
+\begin_inset Formula $(u_{1},u_{2})\equiv(0,0)$
+\end_inset
+
+ with 
+\begin_inset Formula $E=0$
+\end_inset
+
+ and 
+\begin_inset Formula $Q$
+\end_inset
+
+ arbitrary.
+ 
+\end_layout
+
+\begin_layout Standard
+The files of this demonstration are located in the folder 
+\family typewriter
+demos/cusp 
+\family default
+of the DDE-BifTool package.
+\end_layout
+
+\begin_layout Subsection
+Initialization
+\end_layout
+
+\begin_layout Standard
+As before we start by loading the necessary script files and setting the
+ 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+funcs
+\end_layout
+
+\end_inset
+
+ structure.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\footnotesize},language=Matlab,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+%% setup system clear all;
+\end_layout
+
+\begin_layout Plain Layout
+
+clear variables close all;
+\end_layout
+
+\begin_layout Plain Layout
+
+close figures addpath('../../ddebiftool',...
+\end_layout
+
+\begin_layout Plain Layout
+
+    '../../ddebiftool_extra_psol',...
+\end_layout
+
+\begin_layout Plain Layout
+
+    '../../ddebiftool_extra_nmfm',...
+\end_layout
+
+\begin_layout Plain Layout
+
+    '../../ddebiftool_utilities');
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+funcs=set_funcs(...
+\end_layout
+
+\begin_layout Plain Layout
+
+    'sys_rhs', @(xx,par) sys_rhs(xx,par),...
+\end_layout
+
+\begin_layout Plain Layout
+
+    'sys_tau', @() 6,...
+\end_layout
+
+\begin_layout Plain Layout
+
+    'sys_deri', @(xx,par,nx,np,v) sys_deri(xx,par,nx,np,v),...
+\end_layout
+
+\begin_layout Plain Layout
+
+    'sys_mfderi',@(xx,par,varargin) sys_mfderi(xx,par,varargin{:}));
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Continuation of steady state point
+\end_layout
+
+\begin_layout Standard
+We continue the steady state 
+\begin_inset Formula $(u_{1},u_{2})\equiv(0,0)$
+\end_inset
+
+ at 
+\begin_inset Formula $(Q,E)=(0,0)$
+\end_inset
+
+ in 
+\begin_inset Formula $Q$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\footnotesize},language=Matlab"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Q=0; E=0;
+\end_layout
+
+\begin_layout Plain Layout
+
+q11=2.6; q12=Q; q21=1; e1=E; e2=0; T=1;
+\end_layout
+
+\begin_layout Plain Layout
+
+par = [q11,q12,q21,e1,e2,T];
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+stst_br = SetupStst(funcs,'x',[0;0],'parameter',par,...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'contpar',4,'max_step',[4 0.02],'max_bound',[4 1],'min_bound',[4 0],...
+\end_layout
+
+\begin_layout Plain Layout
+
+    'newheuristics_tests',0);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+[stst_br,s,f,r] = br_contn(funcs,stst_br,300);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+stst_br=br_stabl(funcs,stst_br,0,0);
+\end_layout
+
+\begin_layout Plain Layout
+
+stst_br=br_bifdet(funcs,stst_br); 
+\end_layout
+
+\end_inset
+
+In the matlab console the following output is given:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{Verbatim}[commandchars=
+\backslash
+
+\backslash
+
+\backslash
+{
+\backslash
+},fontsize=
+\backslash
+scriptsize]
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_CONTN warning: boundary hit.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Fold detected near par(4) = 0.4899601374.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Fold located at  par(4) = 0.4913668450.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Normal form coefficient: b = 0.7321765321
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{Verbatim}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+In Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:stst_br_testfunctions"
+
+\end_inset
+
+ we have plotted the test functions 
+\begin_inset Formula $\psi_{f}$
+\end_inset
+
+ and 
+\begin_inset Formula $\psi_{H}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename images/exm3_stst_testfunctions.eps
+	width 100text%
+	rotateOrigin center
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Plot of test function for stst_br
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:stst_br_testfunctions"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+The discontinuity in the test function for a Hopf point 
+\begin_inset Formula $\phi_{H}$
+\end_inset
+
+ is produced, since the only complex eigenvalues pass the default lower
+ bound of -1 when calculating the eigenvalues of the points on the steady-state
+ points.
+ This can be seen by monitoring the eigenvalues on the steady-state branch
+ by calling 
+\begin_inset listings
+lstparams "basicstyle={\footnotesize},language=Matlab"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+stst_br.method.bifurcation.plot_testfunctions = 1;
+\end_layout
+
+\begin_layout Plain Layout
+
+stst_br.method.bifurcation.monitor_eigenvalues = 0;
+\end_layout
+
+\begin_layout Plain Layout
+
+stst_br=br_bifdet(funcs, stst_br);
+\end_layout
+
+\end_inset
+
+By setting 
+\begin_inset Flex blist
+status open
+
+\begin_layout Plain Layout
+stst_br.method.stability.minimal_real_part=-5
+\end_layout
+
+\end_inset
+
+ before calculating the stability along the steady-state branch we get a
+ smooth curve for 
+\begin_inset Formula $\psi_{H}$
+\end_inset
+
+, see Figure 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "fig:stst_br_testfunctions_smooth"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename images/exm3_stst_testfunctions_smooth.eps
+	width 100text%
+	rotateOrigin center
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Plot of test functions for stst_br
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:stst_br_testfunctions_smooth"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Continuation of the Fold point and detecting codim-2 bifurcations
+\end_layout
+
+\begin_layout Standard
+We continue the fold point detected on the steady-state branch.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\footnotesize},language=Matlab"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+FPI=br_getflags(stst_br);
+\end_layout
+
+\begin_layout Plain Layout
+
+start_ind = FPI(bif2num('fold'),1);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+[fold_branch, suc] = SetupFold(funcs, stst_br, start_ind, ...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'contpar', [2 4], 'dir', 4, 'step', 0.02);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Qmin=-0.1; Qmax=2; Emin=-0.6; Emax=0.6; 
+\end_layout
+
+\begin_layout Plain Layout
+
+fold_branch.parameter.min_bound=[2 Qmin; 4 Emin]; 
+\end_layout
+
+\begin_layout Plain Layout
+
+fold_branch.parameter.max_bound=[2 Qmax; 4 Emax]; 
+\end_layout
+
+\begin_layout Plain Layout
+
+fold_branch.parameter.max_step=[2 0.02; 4 0.02];
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+[fold_branch,s,f,r]=br_contn(funcs,fold_branch,300); 
+\end_layout
+
+\begin_layout Plain Layout
+
+fold_branch = br_rvers(fold_branch); 
+\end_layout
+
+\begin_layout Plain Layout
+
+[fold_branch,s,f,r]=br_contn(funcs,fold_branch,300);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+fold_branch = br_stabl(funcs,fold_branch,0,0); 
+\end_layout
+
+\begin_layout Plain Layout
+
+fold_branch=br_bifdet2(funcs,fold_branch);
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In figure 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "fig:fold_branch"
+
+\end_inset
+
+ we have plotted the fold branch.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename images/exm3_fold_branch.eps
+	scale 60
+	rotateOrigin center
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Plot the fold branch.
+ Here we see a cusp bifurcation at 
+\begin_inset Formula $(Q,E)=(1.6,0)$
+\end_inset
+
+.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:fold_branch"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+In the matlab console we have the following output:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{Verbatim}[commandchars=
+\backslash
+
+\backslash
+
+\backslash
+{
+\backslash
+},fontsize=
+\backslash
+scriptsize]
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_CONTN warning: boundary hit.
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_CONTN warning: boundary hit.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Bogdanov-Takens detected near par(2) = -0.0908385124, par(4) =
+ 0.5271860637.
+\end_layout
+
+\begin_layout Plain Layout
+
+Failed to correct Bogdanov-Takens point.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Bogdanov-Takens detected near par(2) = 0.0000000000, par(4) =
+ 0.4913668450.
+\end_layout
+
+\begin_layout Plain Layout
+
+Failed to correct Bogdanov-Takens point.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Bogdanov-Takens detected near par(2) = 0.0199989457, par(4) =
+ 0.4835320970.
+\end_layout
+
+\begin_layout Plain Layout
+
+Failed to correct Bogdanov-Takens point.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Bogdanov-Takens detected near par(2) = 0.0399981183, par(4) =
+ 0.4757164567.
+\end_layout
+
+\begin_layout Plain Layout
+
+Failed to correct Bogdanov-Takens point.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Cusp detected near par(2) = 1.3179630819, par(4) = 0.0462438690.
+\end_layout
+
+\begin_layout Plain Layout
+
+Failed to correct cusp.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Bogdanov-Takens detected near par(2) = 1.3179630819, par(4) =
+ 0.0462438690.
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: a = -0.2307473313, b = -0.9154839442, par(2) = 1.3000000000, par(4)
+ = 0.0505079212.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Cusp detected near par(2) = 1.5990696079, par(4) = -0.0000094571.
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Cusp located at  par(2) = 1.6000000000, par(4) = -0.0000000000.
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Normal form coefficients: b = -0.0000000002, c = 0.5555557861.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Bogdanov-Takens detected near par(2) = 1.5811766051, par(4) =
+ -0.0008560336.
+\end_layout
+
+\begin_layout Plain Layout
+
+Failed to correct Bogdanov-Takens point.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Cusp detected near par(2) = 1.2852191807, par(4) = -0.0540913384.
+\end_layout
+
+\begin_layout Plain Layout
+
+Failed to correct cusp.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: Bogdanov-Takens detected near par(2) = 1.2852191807, par(4) =
+ -0.0540913384.
+\end_layout
+
+\begin_layout Plain Layout
+
+BR_BIFDET: a = 0.2353902067, b = 0.9123599189, par(2) = 1.3000000000, par(4)
+ = -0.0505079212.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{Verbatim}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:fold_br_testfunctions"
+
+\end_inset
+
+ we have plotted the test functions.
+ The detection of a cusp point near a Bogdanov-Takens point can be explained.
+ Indeed, the test function for the Bogdanov-Takens point 
+\begin_inset Formula $\psi_{BT}^{f}=p^{T}\Delta'(0)q$
+\end_inset
+
+ is normalized to 1 in the calculation for the critical normal form of the
+ fold point.
+ This is done by scaling the vector 
+\begin_inset Formula $p$
+\end_inset
+
+.
+ Near a Bogdanov-Takens point 
+\begin_inset Formula $p^{T}\Delta'(0)q$
+\end_inset
+
+ becomes really small, which means the length of 
+\begin_inset Formula $p$
+\end_inset
+
+ becomes very large in order to achieve the normalization 
+\begin_inset Formula $p^{T}\Delta'(0)q$
+\end_inset
+
+=1 .
+ As a result the length of the critical normal form coefficient 
+\begin_inset Formula $b$
+\end_inset
+
+ in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:normal_form_fold_coef"
+
+\end_inset
+
+ of a fold point becomes very large.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename images/exm3_fold_testfunctions_big.eps
+	width 100text%
+	rotateOrigin center
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename images/exm3_fold_testfunctions_small.eps
+	width 100text%
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Plot of test functions for fold_br
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:fold_br_testfunctions"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+clearpage
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "nmfm_extension_description"
+options "apalike"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

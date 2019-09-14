@@ -1,0 +1,807 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Worksheet>
+<Version major="2016" minor="2"/>
+<Label-Scheme value="2" prefix=""/>
+<View-Properties presentation="false" autoexpanding_sections="true" UserProfileName="Maple Default Profile" NumericFormat-ApplyInteger="true" NumericFormat-ApplyRational="true" NumericFormat-ApplyExponent="false">
+</View-Properties>
+<MapleNet-Properties prettyprint="3" warnlevel="3" preplot="" helpbrowser="standard" contextmenusize="automatic" displayprecision="-1" echo="1" unitattributes="&quot;fontweight&quot; = &quot;bold&quot;" imaginaryunit="I" longdelim="true" elisiontermsthreshold="10000" elisiondigitsafter="100" elisiondigitsbefore="100" plotdevice="inline" errorbreak="1" plotoptions="" plotdriver="opengl" quiet="false" elisiontermsbefore="100" elisiontermsafter="100" screenwidth="79" indentamount="4" plotoutput="terminal" screenpixelheight="1080" rtablesize="10" useclientjvm="true" labelwidth="20" postplot="" typesetting="standard" ansi="false" elisiondigitsthreshold="10000" showassumed="1" errorcursor="false" labelling="true" screenheight="25" prompt="&gt; " verboseproc="1" latexwidth="8.0" ShowLabels="true"/>
+<Styles>
+<Font name="Heading 1" background="[255,255,255]" bold="true" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="18" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Warning" background="[255,255,255]" bold="false" executable="false" family="Courier New" foreground="[0,0,255]" italic="false" opaque="false" readonly="true" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="2D Output" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,255]" italic="false" opaque="false" readonly="true" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Heading 4" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="true" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Line Printed Output" background="[255,255,255]" bold="false" executable="false" family="Courier New" foreground="[0,0,255]" italic="false" opaque="false" readonly="true" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Heading 2" background="[255,255,255]" bold="true" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="16" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Maple Output" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="2D Inert Output" background="[255,255,255]" bold="false" executable="true" family="Times New Roman" foreground="[144,144,144]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Heading 3" background="[255,255,255]" bold="true" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="true" opaque="false" readonly="false" size="14" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Diagnostic" background="[255,255,255]" bold="false" executable="false" family="Courier New" foreground="[40,120,40]" italic="false" opaque="false" readonly="true" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Ordered List 1" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Maple Input" background="[255,255,255]" bold="true" executable="true" family="Courier New" foreground="[120,0,14]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Text Output" background="[255,255,255]" bold="false" executable="false" family="Courier New" foreground="[0,0,255]" italic="false" opaque="false" readonly="true" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Ordered List 2" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Ordered List 3" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Ordered List 4" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Ordered List 5" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Annotation Title" background="[255,255,255]" bold="true" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="18" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Header and Footer" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="10" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="HyperlinkError" background="[255,255,255]" bold="false" executable="false" family="Courier New" foreground="[255,0,255]" italic="false" opaque="false" readonly="true" size="12" subscript="false" superscript="false" underline="true" placeholder="false"/>
+<Font name="Atomic Variable" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[175,0,175]" italic="true" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="HyperlinkWarning" background="[255,255,255]" bold="false" executable="false" family="Courier New" foreground="[0,0,255]" italic="false" opaque="false" readonly="true" size="12" subscript="false" superscript="false" underline="true" placeholder="false"/>
+<Font name="Dictionary Hyperlink" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[147,0,15]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="true" placeholder="false"/>
+<Font name="2D Math" background="[255,255,255]" bold="false" executable="true" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Bullet Item" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Maple Plot" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Annotation Text" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="List Item" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Dash Item" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="2D Input" background="[255,255,255]" bold="false" executable="true" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Error" background="[255,255,255]" bold="false" executable="false" family="Courier New" foreground="[255,0,255]" italic="false" opaque="false" readonly="true" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Title" background="[255,255,255]" bold="true" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="18" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Text" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Normal" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Caption Reference" background="[255,255,255]" bold="true" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Code" background="[255,255,255]" bold="false" executable="false" family="Courier New" foreground="[255,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Maple Input Placeholder" background="[255,255,255]" bold="true" executable="true" family="Courier New" foreground="[200,0,200]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="true"/>
+<Font name="Equation Label" background="[255,255,255]" bold="true" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Author" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Font name="Hyperlink" background="[255,255,255]" bold="false" executable="false" family="Times New Roman" foreground="[0,128,128]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="true" placeholder="false"/>
+<Font name="Caption Text" background="[255,255,255]" bold="true" executable="false" family="Times New Roman" foreground="[0,0,0]" italic="false" opaque="false" readonly="false" size="12" subscript="false" superscript="false" underline="false" placeholder="false"/>
+<Layout name="Heading 1" alignment="left" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="8" spacebelow="4" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Warning" alignment="left" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="0" spacebelow="0" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Heading 4" alignment="left" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="0" spacebelow="0" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Line Printed Output" alignment="left" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="0" spacebelow="0" linebreak="any" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Heading 2" alignment="left" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="8" spacebelow="2" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Maple Output" alignment="centred" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.3" spaceabove="0" spacebelow="0" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Heading 3" alignment="left" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="0" spacebelow="0" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Diagnostic" alignment="left" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="0" spacebelow="0" linebreak="any" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Ordered List 1" alignment="left" bullet="numeric" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="3" spacebelow="3" linebreak="space" pagebreak-before="false" initial="-1" bulletsuffix=""/>
+<Layout name="Text Output" alignment="left" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="0" spacebelow="0" linebreak="newline" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Ordered List 2" alignment="left" bullet="alphabetic" firstindent="0" leftmargin="36" rightmargin="0" linespacing="0.0" spaceabove="3" spacebelow="3" linebreak="space" pagebreak-before="false" initial="-1" bulletsuffix=""/>
+<Layout name="Ordered List 3" alignment="left" bullet="roman" firstindent="0" leftmargin="72" rightmargin="0" linespacing="0.0" spaceabove="3" spacebelow="3" linebreak="space" pagebreak-before="false" initial="-1" bulletsuffix=""/>
+<Layout name="Ordered List 4" alignment="left" bullet="ALPHABETIC" firstindent="0" leftmargin="108" rightmargin="0" linespacing="0.0" spaceabove="3" spacebelow="3" linebreak="space" pagebreak-before="false" initial="-1" bulletsuffix=""/>
+<Layout name="Ordered List 5" alignment="left" bullet="ROMAN" firstindent="0" leftmargin="144" rightmargin="0" linespacing="0.0" spaceabove="3" spacebelow="3" linebreak="space" pagebreak-before="false" initial="-1" bulletsuffix=""/>
+<Layout name="Annotation Title" alignment="centred" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="12" spacebelow="12" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="HyperlinkError" alignment="left" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="0" spacebelow="0" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="HyperlinkWarning" alignment="left" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="0" spacebelow="0" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Bullet Item" alignment="left" bullet="dot" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="3" spacebelow="3" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Maple Plot" alignment="centred" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="0" spacebelow="0" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="List Item" alignment="left" bullet="indent" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="3" spacebelow="3" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Dash Item" alignment="left" bullet="dash" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="3" spacebelow="3" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Error" alignment="left" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="0" spacebelow="0" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Title" alignment="centred" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="12" spacebelow="12" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Normal" alignment="left" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="0" spacebelow="0" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Layout name="Author" alignment="centred" bullet="none" firstindent="0" leftmargin="0" rightmargin="0" linespacing="0.0" spaceabove="8" spacebelow="8" linebreak="space" pagebreak-before="false" initial="0" bulletsuffix=""/>
+<Pencil-style name="Pencil 1" pen-color="[0,0,0]" pen-height="1.0" pen-width="1.0" pen-opacity="1.0"/>
+<Pencil-style name="Pencil 2" pen-color="[0,0,255]" pen-height="1.0" pen-width="1.0" pen-opacity="1.0"/>
+<Pencil-style name="Pencil 3" pen-color="[0,0,0]" pen-height="3.0" pen-width="3.0" pen-opacity="1.0"/>
+<Pencil-style name="Pencil 4" pen-color="[0,0,255]" pen-height="3.0" pen-width="3.0" pen-opacity="1.0"/>
+<Pencil-style name="Pencil 5" pen-color="[255,0,0]" pen-height="5.0" pen-width="5.0" pen-opacity="1.0"/>
+<Highlighter-style name="Highlighter 5" pen-color="[255,255,0]" pen-height="48.0" pen-width="48.0" pen-opacity="0.8"/>
+<Highlighter-style name="Highlighter 3" pen-color="[51,255,0]" pen-height="24.0" pen-width="24.0" pen-opacity="0.8"/>
+<Highlighter-style name="Highlighter 4" pen-color="[0,255,255]" pen-height="32.0" pen-width="32.0" pen-opacity="0.8"/>
+<Highlighter-style name="Highlighter 1" pen-color="[255,153,255]" pen-height="12.0" pen-width="8.0" pen-opacity="0.8"/>
+<Highlighter-style name="Highlighter 2" pen-color="[255,204,0]" pen-height="14.0" pen-width="14.0" pen-opacity="0.8"/>
+</Styles>
+<Startup-Code startupcode=""/>
+<Metadata-table>
+    <Metadata-category name="&lt;default&gt;"/>
+    <Metadata-tag id="0" category="&lt;default&gt;" name="Document Properties">
+        <Metadata-attribute name="Item List" value="true"/>
+        <Metadata-attribute name="Keywords" value="&lt;default&gt;"/>
+        <Metadata-attribute name="Author" value="&lt;default&gt;"/>
+        <Metadata-attribute name="Title" value="&lt;default&gt;"/>
+        <Metadata-attribute name="Subject" value="&lt;default&gt;"/>
+    </Metadata-tag>
+</Metadata-table>
+<Task-table>
+    <Task-category name="&lt;default&gt;"/>
+</Task-table>
+<Task/>
+<Group hide-output="false" labelreference="L1" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(LinearAlgebra):</Text-field>
+</Input>
+</Group>
+<Group hide-output="false" labelreference="L14" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(FileTools[Text]):</Text-field>
+</Input>
+</Group>
+<Group hide-output="false" labelreference="L15" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">with(StringTools):</Text-field>
+</Input>
+</Group>
+<Group hide-output="false" labelreference="L34" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"><Equation executable="true" style="2D Input" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYjLUkjbWlHRiQ2I1EhRic=</Equation></Text-field>
+</Input>
+</Group>
+<Group hide-output="false" labelreference="L35" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"># Add path to your files here (don't forget trailing slash)</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" hide-output="false" labelreference="L24" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">fileprefix := &quot;/home/maikel/Downloads/pyragascontrol/&quot;;</Text-field>
+</Input>
+<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYoLUkjbWlHRiQ2JVErZmlsZXByZWZpeEYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RKn4mIzg3ODg7fkYnL0YzUSdub3JtYWxGJy8lJmZlbmNlR1EmZmFsc2VGJy8lKnNlcGFyYXRvckdGPS8lKXN0cmV0Y2h5R0Y9LyUqc3ltbWV0cmljR0Y9LyUobGFyZ2VvcEdGPS8lLm1vdmFibGVsaW1pdHNHRj0vJSdhY2NlbnRHRj0vJSdsc3BhY2VHUSYwLjBlbUYnLyUncnNwYWNlR0ZMLUkjbXNHRiQ2I1FHL2hvbWUvbWFpa2VsL0Rvd25sb2Fkcy9weXJhZ2FzY29udHJvbC9GJy8lK2ZvcmVncm91bmRHUShbMCwwLDBdRicvJSlyZWFkb25seUdGPUY5">UUcvaG9tZS9tYWlrZWwvRG93bmxvYWRzL3B5cmFnYXNjb250cm9sLzYi</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L25" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#fileprefix := &quot;S:/2013 - 2014/Masterscriptie/DDEBIFTOOL_203/system/&quot;;</Text-field>
+</Input>
+</Group>
+<Group labelreference="L36" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"><Equation executable="true" style="2D Input" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYjLUkjbWlHRiQ2I1EhRic=</Equation></Text-field>
+</Input>
+</Group>
+<Group labelreference="L37" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"># Supply filenames for the right-hand side file, the classic derivative file and the multilinear form file</Text-field>
+</Input>
+</Group>
+<Group hide-output="false" labelreference="L75" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">rhsfile := Join([fileprefix,&quot;sys_rhs.m&quot;],&quot;&quot;):</Text-field>
+</Input>
+</Group>
+<Group hide-output="false" labelreference="L23" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">derifile := Join([fileprefix,&quot;sys_deri.m&quot;],&quot;&quot;):</Text-field>
+</Input>
+</Group>
+<Group hide-output="false" labelreference="L69" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">linformfile := Join([fileprefix,&quot;sys_mfderi.m&quot;],&quot;&quot;):</Text-field>
+</Input>
+</Group>
+<Group hide-output="false" labelreference="L86" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">tauderifile := Join([fileprefix,&quot;sys_dtau.m&quot;],&quot;&quot;):</Text-field>
+</Input>
+</Group>
+<Group hide-output="false" labelreference="L19" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"></Text-field>
+</Input>
+</Group>
+<Group hide-output="false" labelreference="L39" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"># n: dimension of system, r: number of delays (counting the zero delay), p: number of parameters (counting non-zero delays)</Text-field>
+</Input>
+</Group>
+<Group hide-output="false" labelreference="L40" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">n := 2: r := 2: p:=5:</Text-field>
+</Input>
+</Group>
+<Group hide-output="false" labelreference="L13" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">F := Array(1..n):
+tau := Array(1..(r-1)):</Text-field>
+</Input>
+</Group>
+<Group hide-output="false" labelreference="L70" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"><Equation executable="true" style="2D Input" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">JSFH</Equation></Text-field>
+</Input>
+</Group>
+<Group labelreference="L42" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"># Give system definition</Text-field>
+</Input>
+</Group>
+<Group labelreference="L78" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"></Text-field>
+</Input>
+</Group>
+<Group labelreference="L87" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"># sddemo
+# F[1] := 1/(par[1]+xx[2,1])*(1 - par[2]*xx[1,1]*xx[1,4]*xx[3,4] + par[3]*xx[1,2]*xx[2,3]);
+# F[2] := par[4]*xx[1,1]/(par[1]+xx[2,1]) + par[5]*tanh(xx[2,6])-1;
+# F[3] := par[6]*(xx[2,1] - xx[3,1]) - par[7]*(xx[1,7] - xx[2,5])*exp(-par[8]*xx[4,1]);
+# F[4] := xx[1,5]*exp(-par[1]*xx[4,1])- 0.1;
+# F[5] := 3*(xx[1,3] - xx[5,1]) - par[9];
+# tau[1] := par[10];
+# tau[2] := par[11];
+# tau[3] := 2 + par[5]*par[10]*xx[2,1]*xx[2,2];
+# tau[4] := 1 - 1/(1 + xx[1,1]*xx[2,3]);
+# tau[5] := xx[4,1];
+# tau[6] := xx[5,1];
+# p := 11:</Text-field>
+</Input>
+</Group>
+<Group labelreference="L51" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"># Neural mass:</Text-field>
+</Input>
+</Group>
+<Group labelreference="L3" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">F[1] := -xx[1,1] - par[1]*(tanh(par[2]*xx[1,2]-1)+tanh(1))*cosh(1)^2 + par[3]*(tanh(par[4]*xx[2,3]-1)+tanh(1))*cosh(1)^2;</Text-field>
+</Input>
+<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYoLUklbXN1YkdGJDYlLUkjbWlHRiQ2JVEiRkYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1GIzYmLUkjbW5HRiQ2JFEiMUYnL0Y2USdub3JtYWxGJy8lK2ZvcmVncm91bmRHUShbMCwwLDBdRicvJSlyZWFkb25seUdRJmZhbHNlRidGPi8lL3N1YnNjcmlwdHNoaWZ0R1EiMEYnLUkjbW9HRiQ2LVEjOj1GJ0Y+LyUmZmVuY2VHRkUvJSpzZXBhcmF0b3JHRkUvJSlzdHJldGNoeUdGRS8lKnN5bW1ldHJpY0dGRS8lKGxhcmdlb3BHRkUvJS5tb3ZhYmxlbGltaXRzR0ZFLyUnYWNjZW50R0ZFLyUnbHNwYWNlR1EsMC4yNzc3Nzc4ZW1GJy8lJ3JzcGFjZUdGZ24tRiM2KS1GSjYtUSomdW1pbnVzMDtGJ0Y+Rk1GT0ZRRlNGVUZXRlkvRmZuUSwwLjIyMjIyMjJlbUYnL0ZpbkZgby1GLDYlLUYvNiVRI3h4RidGMkY1LUYjNihGOi1GSjYtUSIsRidGPkZNL0ZQRjRGUUZTRlVGV0ZZL0ZmblEmMC4wZW1GJy9GaW5RLDAuMzMzMzMzM2VtRidGOkZARkNGPkZGLUZKNi1RKCZtaW51cztGJ0Y+Rk1GT0ZRRlNGVUZXRllGX29GYW8tRiM2KC1GLDYlLUYvNiVRJHBhckYnRjJGNUY4RkYtRko2LVExJkludmlzaWJsZVRpbWVzO0YnRj5GTUZPRlFGU0ZVRldGWUZdcC9GaW5GXnAtSShtZmVuY2VkR0YkNiQtRiM2Ji1GIzYoLUYvNiVRJXRhbmhGJy9GM0ZFRj4tRko2LVEwJkFwcGx5RnVuY3Rpb247RidGPkZNRk9GUUZTRlVGV0ZZRl1wRl5xLUZgcTYkLUYjNiYtRiM2Ji1GIzYmLUYsNiVGaHAtRiM2Ji1GOzYkUSIyRidGPkZARkNGPkZGRltxLUYsNiVGZG8tRiM2KEY6RmlvRmlyRkBGQ0Y+RkZGPkZhcEY6Rj5GQEZDRj5GPkZARkNGPi1GSjYtUSIrRidGPkZNRk9GUUZTRlVGV0ZZRl9vRmFvLUYjNihGZnFGanEtRmBxNiRGOEY+RkBGQ0Y+Rj5GPkZbcS1JJW1zdXBHRiQ2JS1GIzYoLUYvNiVRJWNvc2hGJ0ZpcUY+RmpxRmVzRkBGQ0Y+RmlyLyUxc3VwZXJzY3JpcHRzaGlmdEdGSEY+RmBzLUYjNigtRiw2JUZocC1GIzYmLUY7NiRRIjNGJ0Y+RkBGQ0Y+RkZGW3EtRmBxNiQtRiM2Ji1GIzYoRmZxRmpxLUZgcTYkLUYjNiYtRiM2Ji1GIzYmLUYsNiVGaHAtRiM2Ji1GOzYkUSI0RidGPkZARkNGPkZGRltxLUYsNiVGZG8tRiM2KEZpckZpb0ZndEZARkNGPkZGRj5GYXBGOkY+RkBGQ0Y+Rj5GQEZDRj5GYHNGY3NGPkY+RltxRmdzRj5GPkZARkNGPg==">LCgmSSN4eEc2IjYkIiIiRichIiIqKCZJJHBhckdGJTYjRidGJywmLUkldGFuaEc2JCUqcHJvdGVjdGVkR0koX3N5c2xpYkdGJTYjLCYqJiZGKzYjIiIjRicmRiQ2JEYnRjhGJ0YnRidGKEYnLUYvRixGJ0YnKS1JJWNvc2hHRjBGLEY4RidGKCooJkYrNiMiIiRGJywmLUYvNiMsJiomJkYrNiMiIiVGJyZGJDYkRjhGQkYnRidGJ0YoRidGO0YnRidGPEYnRic=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L20" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">F[2] := -xx[2,1] - par[1]*(tanh(par[2]*xx[2,2]-1)+tanh(1))*cosh(1)^2 + par[3]*(tanh(par[4]*xx[1,3]-1)+tanh(1))*cosh(1)^2;</Text-field>
+</Input>
+<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYoLUklbXN1YkdGJDYlLUkjbWlHRiQ2JVEiRkYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1GIzYmLUkjbW5HRiQ2JFEiMkYnL0Y2USdub3JtYWxGJy8lK2ZvcmVncm91bmRHUShbMCwwLDBdRicvJSlyZWFkb25seUdRJmZhbHNlRidGPi8lL3N1YnNjcmlwdHNoaWZ0R1EiMEYnLUkjbW9HRiQ2LVEjOj1GJ0Y+LyUmZmVuY2VHRkUvJSpzZXBhcmF0b3JHRkUvJSlzdHJldGNoeUdGRS8lKnN5bW1ldHJpY0dGRS8lKGxhcmdlb3BHRkUvJS5tb3ZhYmxlbGltaXRzR0ZFLyUnYWNjZW50R0ZFLyUnbHNwYWNlR1EsMC4yNzc3Nzc4ZW1GJy8lJ3JzcGFjZUdGZ24tRiM2KS1GSjYtUSomdW1pbnVzMDtGJ0Y+Rk1GT0ZRRlNGVUZXRlkvRmZuUSwwLjIyMjIyMjJlbUYnL0ZpbkZgby1GLDYlLUYvNiVRI3h4RidGMkY1LUYjNihGOi1GSjYtUSIsRidGPkZNL0ZQRjRGUUZTRlVGV0ZZL0ZmblEmMC4wZW1GJy9GaW5RLDAuMzMzMzMzM2VtRictRjs2JFEiMUYnRj5GQEZDRj5GRi1GSjYtUSgmbWludXM7RidGPkZNRk9GUUZTRlVGV0ZZRl9vRmFvLUYjNigtRiw2JS1GLzYlUSRwYXJGJ0YyRjUtRiM2JkZhcEZARkNGPkZGLUZKNi1RMSZJbnZpc2libGVUaW1lcztGJ0Y+Rk1GT0ZRRlNGVUZXRllGXXAvRmluRl5wLUkobWZlbmNlZEdGJDYkLUYjNiYtRiM2KC1GLzYlUSV0YW5oRicvRjNGRUY+LUZKNi1RMCZBcHBseUZ1bmN0aW9uO0YnRj5GTUZPRlFGU0ZVRldGWUZdcEZjcS1GZXE2JC1GIzYmLUYjNiYtRiM2Ji1GLDYlRltxRjhGRkZgcS1GLDYlRmRvLUYjNihGOkZpb0Y6RkBGQ0Y+RkZGPkZkcEZhcEY+RkBGQ0Y+Rj5GQEZDRj4tRko2LVEiK0YnRj5GTUZPRlFGU0ZVRldGWUZfb0Zhby1GIzYoRltyRl9yLUZlcTYkRl5xRj5GQEZDRj5GPkY+RmBxLUklbXN1cEdGJDYlLUYjNigtRi82JVElY29zaEYnRl5yRj5GX3JGZXNGQEZDRj5GOi8lMXN1cGVyc2NyaXB0c2hpZnRHRkhGPkZgcy1GIzYoLUYsNiVGW3EtRiM2Ji1GOzYkUSIzRidGPkZARkNGPkZGRmBxLUZlcTYkLUYjNiYtRiM2KEZbckZfci1GZXE2JC1GIzYmLUYjNiYtRiM2Ji1GLDYlRltxLUYjNiYtRjs2JFEiNEYnRj5GQEZDRj5GRkZgcS1GLDYlRmRvLUYjNihGYXBGaW9GZ3RGQEZDRj5GRkY+RmRwRmFwRj5GQEZDRj5GPkZARkNGPkZgc0Zjc0Y+Rj5GYHFGZ3NGPkY+RkBGQ0Y+">LCgmSSN4eEc2IjYkIiIjIiIiISIiKigmSSRwYXJHRiU2I0YoRigsJi1JJXRhbmhHNiQlKnByb3RlY3RlZEdJKF9zeXNsaWJHRiU2IywmKiYmRiw2I0YnRigmRiQ2JEYnRidGKEYoRihGKUYoLUYwRi1GKEYoKS1JJWNvc2hHRjFGLUYnRihGKSooJkYsNiMiIiRGKCwmLUYwNiMsJiomJkYsNiMiIiVGKCZGJDYkRihGQkYoRihGKEYpRihGO0YoRihGPEYoRig=</Equation></Text-field>
+</Output>
+</Group>
+<Group hide-output="false" labelreference="L71" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">r := 3: p := 8:</Text-field>
+</Input>
+</Group>
+<Group hide-input="false" hide-output="false" labelreference="L74" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"># Bi-Ruan with parameters:
+F[1] := par[1]*xx[1,2] - par[2]*xx[1,1] - par[3]*xx[2,1];
+F[2] := par[4]*xx[1,3] + par[5]*xx[1,1] + par[6]*xx[2,1];
+# r := 3: p := 8:</Text-field>
+</Input>
+<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYoLUklbXN1YkdGJDYlLUkjbWlHRiQ2JVEiRkYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1GIzYmLUkjbW5HRiQ2JFEiMUYnL0Y2USdub3JtYWxGJy8lK2ZvcmVncm91bmRHUShbMCwwLDBdRicvJSlyZWFkb25seUdRJmZhbHNlRidGPi8lL3N1YnNjcmlwdHNoaWZ0R1EiMEYnLUkjbW9HRiQ2LVEqfiYjODc4ODt+RidGPi8lJmZlbmNlR0ZFLyUqc2VwYXJhdG9yR0ZFLyUpc3RyZXRjaHlHRkUvJSpzeW1tZXRyaWNHRkUvJShsYXJnZW9wR0ZFLyUubW92YWJsZWxpbWl0c0dGRS8lJ2FjY2VudEdGRS8lJ2xzcGFjZUdRJjAuMGVtRicvJSdyc3BhY2VHRmduLUYjNigtRiM2Ji1GLDYlLUYvNiVRJHBhckYnRjJGNUY4RkYtRko2LVExJkludmlzaWJsZVRpbWVzO0YnRj5GTUZPRlFGU0ZVRldGWUZlbkZobi1GLDYlLUYvNiVRI3h4RidGMkY1LUYjNihGOi1GSjYtUSIsRidGPkZNL0ZQRjRGUUZTRlVGV0ZZRmVuL0ZpblEsMC4zMzMzMzMzZW1GJy1GOzYkUSIyRidGPkZARkNGPkZGRj4tRko2LVEoJm1pbnVzO0YnRj5GTUZPRlFGU0ZVRldGWS9GZm5RLDAuMjIyMjIyMmVtRicvRmluRmpwLUYjNiYtRiw2JUZgby1GIzYmRmNwRkBGQ0Y+RkZGY28tRiw2JUZoby1GIzYoRjpGXXBGOkZARkNGPkZGRj5GZnAtRiM2Ji1GLDYlRmBvLUYjNiYtRjs2JFEiM0YnRj5GQEZDRj5GRkZjby1GLDYlRmhvLUYjNihGY3BGXXBGOkZARkNGPkZGRj5GPkZARkNGPg==">LCgqJiZJJHBhckc2IjYjIiIiRigmSSN4eEdGJjYkRigiIiNGKEYoKiYmRiU2I0YsRigmRio2JEYoRihGKCEiIiomJkYlNiMiIiRGKCZGKjYkRixGKEYoRjI=</Equation></Text-field>
+</Output>
+<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYoLUklbXN1YkdGJDYlLUkjbWlHRiQ2JVEiRkYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1GIzYmLUkjbW5HRiQ2JFEiMkYnL0Y2USdub3JtYWxGJy8lK2ZvcmVncm91bmRHUShbMCwwLDBdRicvJSlyZWFkb25seUdRJmZhbHNlRidGPi8lL3N1YnNjcmlwdHNoaWZ0R1EiMEYnLUkjbW9HRiQ2LVEqfiYjODc4ODt+RidGPi8lJmZlbmNlR0ZFLyUqc2VwYXJhdG9yR0ZFLyUpc3RyZXRjaHlHRkUvJSpzeW1tZXRyaWNHRkUvJShsYXJnZW9wR0ZFLyUubW92YWJsZWxpbWl0c0dGRS8lJ2FjY2VudEdGRS8lJ2xzcGFjZUdRJjAuMGVtRicvJSdyc3BhY2VHRmduLUYjNigtRiM2Ji1GLDYlLUYvNiVRJHBhckYnRjJGNS1GIzYmLUY7NiRRIjRGJ0Y+RkBGQ0Y+RkYtRko2LVExJkludmlzaWJsZVRpbWVzO0YnRj5GTUZPRlFGU0ZVRldGWUZlbkZobi1GLDYlLUYvNiVRI3h4RidGMkY1LUYjNigtRjs2JFEiMUYnRj4tRko2LVEiLEYnRj5GTS9GUEY0RlFGU0ZVRldGWUZlbi9GaW5RLDAuMzMzMzMzM2VtRictRjs2JFEiM0YnRj5GQEZDRj5GRkY+LUZKNi1RIitGJ0Y+Rk1GT0ZRRlNGVUZXRlkvRmZuUSwwLjIyMjIyMjJlbUYnL0ZpbkZicS1GIzYmLUYsNiVGYG8tRiM2Ji1GOzYkUSI1RidGPkZARkNGPkZGRmhvLUYsNiVGXXAtRiM2KEZicEZlcEZicEZARkNGPkZGRj5GXnEtRiM2Ji1GLDYlRmBvLUYjNiYtRjs2JFEiNkYnRj5GQEZDRj5GRkZoby1GLDYlRl1wLUYjNihGOkZlcEZicEZARkNGPkZGRj5GPkZARkNGPg==">LCgqJiZJJHBhckc2IjYjIiIlIiIiJkkjeHhHRiY2JEYpIiIkRilGKSomJkYlNiMiIiZGKSZGKzYkRilGKUYpRikqJiZGJTYjIiInRikmRis2JCIiI0YpRilGKQ==</Equation></Text-field>
+</Output>
+</Group>
+<Group hide-output="false" labelreference="L73" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"># Bi-Ruan (d'Onofrio model):
+# F[1] := xx[1,1]*(nu(xx[1,2]) - phi(xx[1,1],xx[2,1]));
+# F[2] := beta(xx[1,3])*xx[2,1] - mu(xx[1,1])*xx[2,1] + q(xx[1,1]) + par[1];
+# nu := x -&gt; 1.636*(1-0.002*x);
+# phi := (x,y) -&gt; y;
+# beta := x -&gt; 1.131*x/(20.19+x);
+# q := x -&gt; 0.1181;
+# mu := x -&gt; 0.00311*x + 0.3743;
+# r := 3; p := 3;</Text-field>
+</Input>
+</Group>
+<Group labelreference="L76" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"># Bi-Ruan (d'Onofrio model with tau = rho)
+# F[1] := xx[1,1]*(nu(xx[1,2]) - phi(xx[1,1],xx[2,1]));
+# F[2] := beta(xx[1,2])*xx[2,1] - mu(xx[1,1])*xx[2,1] + par[2]*q(xx[1,1]) + par[1];
+# nu := x -&gt; 1.636*(1-0.002*x);
+# phi := (x,y) -&gt; y;
+# beta := x -&gt; 1.131*x/(20.19+x);
+# q := x -&gt; 0.1181;
+# mu := x -&gt; 0.00311*x + 0.3743;
+# r := 2; p := 3;</Text-field>
+</Input>
+</Group>
+<Group labelreference="L50" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"># Ikeda:</Text-field>
+</Input>
+</Group>
+<Group labelreference="L30" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"># F[1] := -Pi/2 + par[1]*xx[1,2]^2/2;</Text-field>
+</Input>
+</Group>
+<Group labelreference="L72" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"># r := 2: p := 2:</Text-field>
+</Input>
+</Group>
+<Group labelreference="L52" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"># Demo1:</Text-field>
+</Input>
+</Group>
+<Group labelreference="L31" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"># F[1] := -par[1]*xx[1,1] + par[2]*tanh(xx[1,4]) + par[3]*tanh(xx[2,3]):</Text-field>
+</Input>
+</Group>
+<Group labelreference="L32" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"># F[2] := -par[1]*xx[2,1] + par[2]*tanh(xx[2,4]) + par[4]*tanh(xx[1,2]):</Text-field>
+</Input>
+</Group>
+<Group labelreference="L77" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"># r := 3: p := 6:</Text-field>
+</Input>
+</Group>
+<Group labelreference="L53" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"># xxx:</Text-field>
+</Input>
+</Group>
+<Group labelreference="L44" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#F[1] := xx[2,1]:</Text-field>
+</Input>
+</Group>
+<Group labelreference="L45" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#F[2] := -(1+par[1])*xx[1,1] + 2*par[2]*xx[2,1] + par[1]*xx[1,2] + (3*par[1]/10)*((xx[1,1]-xx[1,2])^2 - (xx[1,1]-xx[1,2])^3):</Text-field>
+</Input>
+</Group>
+<Group labelreference="L49" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"># Li:</Text-field>
+</Input>
+</Group>
+<Group labelreference="L46" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#F[1] := par[1] - par[5]*xx[1,1] - par[2]*xx[1,1]*xx[2,1]:</Text-field>
+</Input>
+</Group>
+<Group labelreference="L47" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#F[2] := par[2]*xx[1,1]*xx[2,1] - par[6]*xx[2,1] - par[3]*xx[2,1]*xx[3,1]:</Text-field>
+</Input>
+</Group>
+<Group labelreference="L48" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#F[3] := par[4]*xx[2,2]*xx[3,2] - par[7]*xx[3,1]:</Text-field>
+</Input>
+</Group>
+<Group labelreference="L54" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#Li, Lin, dim:</Text-field>
+</Input>
+</Group>
+<Group labelreference="L55" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#F[1] := par[1]*xx[1,1]*(1-xx[1,1]/par[2]) - par[3]*xx[1,1]*xx[2,1];</Text-field>
+</Input>
+</Group>
+<Group labelreference="L56" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#F[2] := par[4]*par[3]*exp(-par[5]*par[7])*xx[1,2]*xx[2,2] - par[6]*xx[2,1];</Text-field>
+</Input>
+</Group>
+<Group labelreference="L57" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#Li, Lin, nondim:</Text-field>
+</Input>
+</Group>
+<Group labelreference="L58" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#F[1] := xx[1,1]*(1-xx[1,1]) - xx[1,1]*xx[2,1];</Text-field>
+</Input>
+</Group>
+<Group labelreference="L59" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#F[2] := par[1]*exp(-par[2]*par[4])*xx[1,2]*xx[2,2] - par[3]*xx[2,1];</Text-field>
+</Input>
+</Group>
+<Group labelreference="L60" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"># Stone &amp; Campbell:</Text-field>
+</Input>
+</Group>
+<Group labelreference="L61" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#F[1] := xx[2,1];</Text-field>
+</Input>
+</Group>
+<Group labelreference="L62" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">#F[2] := (-1-par[1]*par[2]*par[6])*xx[1,1] + (par[1]*par[3]-par[5])*xx[2,1] + par[1]*par[2]*par[6]*xx[1,2] + par[1]*par[3]*xx[2,1]^2 - par[1]*cos(par[6])*(xx[1,1]-xx[1,2])*(par[3]*xx[2,1] + par[4]*xx[2,1]^2);</Text-field>
+</Input>
+</Group>
+<Group labelreference="L95" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"># Stone &amp; Campbell:</Text-field>
+</Input>
+</Group>
+<Group labelreference="L97" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"><Equation executable="true" style="2D Input" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">JSFH</Equation></Text-field>
+</Input>
+</Group>
+<Group labelreference="L99" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"></Text-field>
+</Input>
+</Group>
+<Group hide-output="false" labelreference="L100" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"># Pyragascontrol:</Text-field>
+</Input>
+</Group>
+<Group hide-output="false" labelreference="L98" drawlabel="true" applyint="true" applyrational="true" applyexponent="false">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"><Equation executable="true" style="2D Input" input-equation="p := 5:" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYoLUkjbWlHRiQ2JVEicEYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RKiZjb2xvbmVxO0YnL0YzUSdub3JtYWxGJy8lJmZlbmNlR1EmZmFsc2VGJy8lKnNlcGFyYXRvckdGPS8lKXN0cmV0Y2h5R0Y9LyUqc3ltbWV0cmljR0Y9LyUobGFyZ2VvcEdGPS8lLm1vdmFibGVsaW1pdHNHRj0vJSdhY2NlbnRHRj0vJSdsc3BhY2VHUSwwLjI3Nzc3NzhlbUYnLyUncnNwYWNlR0ZMLUkjbW5HRiQ2JFEiNUYnRjktRjY2LVEiOkYnRjlGO0Y+RkBGQkZERkZGSEZKRk0vJStleGVjdXRhYmxlR0Y9Rjk=">QyQ+SSJwRzYiIiImISIi</Equation></Text-field>
+</Input>
+</Group>
+<Group hide-input="false" hide-output="false" labelreference="L94" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">F[1] := par[1]*xx[1,1]-xx[2,1]+(xx[1,1]^2+xx[2,1]^2)*(xx[1,1]-par[2]*xx[2,1])-par[3]*(cos(par[4])*(xx[1,1]-xx[1,2])-sin(par[4])*(xx[2,1]-xx[2,2]));</Text-field>
+</Input>
+<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYoLUklbXN1YkdGJDYlLUkjbWlHRiQ2JVEiRkYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1GIzYmLUkjbW5HRiQ2JFEiMUYnL0Y2USdub3JtYWxGJy8lK2ZvcmVncm91bmRHUShbMCwwLDBdRicvJSlyZWFkb25seUdRJmZhbHNlRidGPi8lL3N1YnNjcmlwdHNoaWZ0R1EiMEYnLUkjbW9HRiQ2LVEqfiYjODc4ODt+RidGPi8lJmZlbmNlR0ZFLyUqc2VwYXJhdG9yR0ZFLyUpc3RyZXRjaHlHRkUvJSpzeW1tZXRyaWNHRkUvJShsYXJnZW9wR0ZFLyUubW92YWJsZWxpbWl0c0dGRS8lJ2FjY2VudEdGRS8lJ2xzcGFjZUdRJjAuMGVtRicvJSdyc3BhY2VHRmduLUYjNiotRiM2Ji1GLDYlLUYvNiVRJHBhckYnRjJGNUY4RkYtRko2LVExJkludmlzaWJsZVRpbWVzO0YnRj5GTUZPRlFGU0ZVRldGWUZlbkZobi1GLDYlLUYvNiVRI3h4RidGMkY1LUYjNihGOi1GSjYtUSIsRidGPkZNL0ZQRjRGUUZTRlVGV0ZZRmVuL0ZpblEsMC4zMzMzMzMzZW1GJ0Y6RkBGQ0Y+RkZGPi1GSjYtUSgmbWludXM7RidGPkZNRk9GUUZTRlVGV0ZZL0ZmblEsMC4yMjIyMjIyZW1GJy9GaW5GZ3AtRiw2JUZoby1GIzYoLUY7NiRRIjJGJ0Y+Rl1wRjpGQEZDRj5GRi1GSjYtUSIrRidGPkZNRk9GUUZTRlVGV0ZZRmZwRmhwLUYjNiYtSShtZmVuY2VkR0YkNiQtRiM2Ji1GIzYkLUkobXN1YnN1cEdGJDYnRmhvRltwRl1xLyUxc3VwZXJzY3JpcHRzaGlmdEdGSEZGRj5GYHEtRiM2JC1GXXI2J0Zob0ZbcUZdcUZfckZGRj5GPkY+RmNvLUZmcTYkLUYjNictRko2LVEqJnVtaW51czA7RidGPkZNRk9GUUZTRlVGV0ZZRmZwRmhwLUYjNiYtRiw2JUZgby1GIzYmRl1xRkBGQ0Y+RkZGY29GaXBGPkZgcUZmb0Y+Rj5GPkZjcC1GIzYmLUYsNiVGYG8tRiM2Ji1GOzYkUSIzRidGPkZARkNGPkZGRmNvLUZmcTYkLUYjNiYtRiM2Ji1GIzYoLUYvNiVRJGNvc0YnL0YzRkVGPi1GSjYtUTAmQXBwbHlGdW5jdGlvbjtGJ0Y+Rk1GT0ZRRlNGVUZXRllGZW5GaG4tRmZxNiQtRiM2Ji1GLDYlRmBvLUYjNiYtRjs2JFEiNEYnRj5GQEZDRj5GRkZARkNGPkY+RkBGQ0Y+RmNvLUZmcTYkLUYjNiZGZm9GY3AtRiw2JUZoby1GIzYoRjpGXXBGXXFGQEZDRj5GRkY+Rj5GPkZjcC1GIzYmLUYjNigtRi82JVEkc2luRidGZnRGPkZndEZqdEZARkNGPkZjby1GZnE2JC1GIzYmRmlwRmNwLUYsNiVGaG8tRiM2KEZdcUZdcEZdcUZARkNGPkZGRj5GPkY+Rj5GPkY+Rj5GQEZDRj4=">LCoqJiZJJHBhckc2IjYjIiIiRigmSSN4eEdGJjYkRihGKEYoRigmRio2JCIiI0YoISIiKiYsJiokRilGLkYoKiRGLEYuRihGKCwmKiYmRiU2I0YuRihGLEYoRi9GKUYoRihGKComJkYlNiMiIiRGKCwmKiYtSSRjb3NHNiQlKnByb3RlY3RlZEdJKF9zeXNsaWJHRiY2IyZGJTYjIiIlRigsJkYpRigmRio2JEYoRi5GL0YoRigqJi1JJHNpbkdGQEZDRigsJkYsRigmRio2JEYuRi5GL0YoRi9GKEYv</Equation></Text-field>
+</Output>
+</Group>
+<Group hide-input="false" hide-output="false" labelreference="L96" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">F[2] := xx[1,1]+par[1]*xx[2,1]+(xx[1,1]^2+xx[2,1]^2)*(par[2]*xx[1,1]+xx[2,1])-par[3]*(sin(par[4])*(xx[1,1]-xx[1,2])+cos(par[4])*(xx[2,1]-xx[2,2]));</Text-field>
+</Input>
+<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYoLUklbXN1YkdGJDYlLUkjbWlHRiQ2JVEiRkYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1GIzYmLUkjbW5HRiQ2JFEiMkYnL0Y2USdub3JtYWxGJy8lK2ZvcmVncm91bmRHUShbMCwwLDBdRicvJSlyZWFkb25seUdRJmZhbHNlRidGPi8lL3N1YnNjcmlwdHNoaWZ0R1EiMEYnLUkjbW9HRiQ2LVEqfiYjODc4ODt+RidGPi8lJmZlbmNlR0ZFLyUqc2VwYXJhdG9yR0ZFLyUpc3RyZXRjaHlHRkUvJSpzeW1tZXRyaWNHRkUvJShsYXJnZW9wR0ZFLyUubW92YWJsZWxpbWl0c0dGRS8lJ2FjY2VudEdGRS8lJ2xzcGFjZUdRJjAuMGVtRicvJSdyc3BhY2VHRmduLUYjNiotRiw2JS1GLzYlUSN4eEYnRjJGNS1GIzYoLUY7NiRRIjFGJ0Y+LUZKNi1RIixGJ0Y+Rk0vRlBGNEZRRlNGVUZXRllGZW4vRmluUSwwLjMzMzMzMzNlbUYnRmNvRkBGQ0Y+RkYtRko2LVEiK0YnRj5GTUZPRlFGU0ZVRldGWS9GZm5RLDAuMjIyMjIyMmVtRicvRmluRmBwLUYjNiYtRiw2JS1GLzYlUSRwYXJGJ0YyRjUtRiM2JkZjb0ZARkNGPkZGLUZKNi1RMSZJbnZpc2libGVUaW1lcztGJ0Y+Rk1GT0ZRRlNGVUZXRllGZW5GaG4tRiw2JUZeby1GIzYoRjpGZm9GY29GQEZDRj5GRkY+RlxwLUYjNiYtSShtZmVuY2VkR0YkNiQtRiM2Ji1GIzYkLUkobXN1YnN1cEdGJDYnRl5vRmFvRjovJTFzdXBlcnNjcmlwdHNoaWZ0R0ZIRkZGPkZccC1GIzYkLUZccjYnRl5vRmBxRjpGXnJGRkY+Rj5GPkZbcS1GZXE2JC1GIzYmLUYjNiYtRiw2JUZmcEY4RkZGW3FGXG9GPkZccEZecUY+Rj5GPi1GSjYtUSgmbWludXM7RidGPkZNRk9GUUZTRlVGV0ZZRl9wRmFwLUYjNiYtRiw2JUZmcC1GIzYmLUY7NiRRIjNGJ0Y+RkBGQ0Y+RkZGW3EtRmVxNiQtRiM2Ji1GIzYmLUYjNigtRi82JVEkc2luRicvRjNGRUY+LUZKNi1RMCZBcHBseUZ1bmN0aW9uO0YnRj5GTUZPRlFGU0ZVRldGWUZlbkZobi1GZXE2JC1GIzYmLUYsNiVGZnAtRiM2Ji1GOzYkUSI0RidGPkZARkNGPkZGRkBGQ0Y+Rj5GQEZDRj5GW3EtRmVxNiQtRiM2JkZcb0Zccy1GLDYlRl5vLUYjNihGY29GZm9GOkZARkNGPkZGRj5GPkY+RlxwLUYjNiYtRiM2KC1GLzYlUSRjb3NGJ0ZjdEY+RmR0Rmd0RkBGQ0Y+RltxLUZlcTYkLUYjNiZGXnFGXHMtRiw2JUZeby1GIzYoRjpGZm9GOkZARkNGPkZGRj5GPkY+Rj5GPkY+Rj5GQEZDRj4=">LComSSN4eEc2IjYkIiIiRidGJyomJkkkcGFyR0YlNiNGJ0YnJkYkNiQiIiNGJ0YnRicqJiwmKiRGI0YuRicqJEYsRi5GJ0YnLCYqJiZGKjYjRi5GJ0YjRidGJ0YsRidGJ0YnKiYmRio2IyIiJEYnLCYqJi1JJHNpbkc2JCUqcHJvdGVjdGVkR0koX3N5c2xpYkdGJTYjJkYqNiMiIiVGJywmRiNGJyZGJDYkRidGLiEiIkYnRicqJi1JJGNvc0dGP0ZCRicsJkYsRicmRiQ2JEYuRi5GSUYnRidGJ0ZJ</Equation></Text-field>
+</Output>
+</Group>
+<Group hide-input="false" hide-output="false" labelreference="L4" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"></Text-field>
+</Input>
+</Group>
+<Group labelreference="L64" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"><Equation executable="true" style="2D Input" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYjLUkjbWlHRiQ2I1EhRic=</Equation></Text-field>
+</Input>
+</Group>
+<Group labelreference="L43" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"># When ready, execute all</Text-field>
+</Input>
+</Group>
+<Group labelreference="L68" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"># Generate multilinear form file</Text-field>
+</Input>
+</Group><CodeEditor-ExecGroup view="presentation" hide-output="false" labelreference="L17" display="code"><EC-CodeEditor id="CodeEditRegion0" visible="true" pixel-width="1684" pixel-height="2646" code-language="text/maple" autoexpand="true" wrapping="false" show-border="true" code-line-numbers="true">mtext := &quot;function y = sys_mfderi(xx,par,varargin)\134n\134n&quot;:
+mtext := Join([mtext,&quot;if nargin == 2\134n\134terror('SYS_MFDERI: no arguments.');\134n&quot;],&quot;&quot;):
+mtext := Join([mtext,&quot;elseif nargin &gt; 7\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;\134terror('SYS_MFDERI: too many arguments.');\134nend\134n\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;y = 0;\134n\134nnumarg = nargin - 2;\134n\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;switch numarg\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;\134tcase 1\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;\134t\134tu1 = varargin{1};\134n&quot;],&quot;&quot;):
+y := Array(1..n):
+for k1 from 1 to r do
+	for j1 from 1 to n do
+		for i from 1 to n do
+			y[i] := y[i] + diff(F[i], xx[j1,k1])*u1[j1,k1]:
+		end do:
+	end do:
+end do:
+mtext := Join([mtext, &quot;\134t\134ty = [&quot;],&quot;&quot;):
+for i from 1 to n do
+	deristring := convert(y[i],string):
+	deristring := SubstituteAll(deristring, &quot;[&quot;,&quot;(&quot;):
+	deristring := SubstituteAll(deristring, &quot;]&quot;,&quot;)&quot;):
+	mtext := Join([mtext, deristring],&quot;&quot;):
+	if i &lt; n then mtext := Join([mtext, &quot;;\134n\134t\134t\134t&quot;],&quot;&quot;): end if:
+end do:
+mtext := Join([mtext, &quot;];\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;\134tcase 2\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;\134t\134tu1 = varargin{1}; u2 = varargin{2};\134n&quot;],&quot;&quot;):
+y := Array(1..n):
+for k1 from 1 to r do
+	for k2 from 1 to r do
+		for j1 from 1 to n do
+			for j2 from 1 to n do
+				for i from 1 to n do
+					y[i] := y[i] + diff(F[i], xx[j1,k1], xx[j2,k2])*u1[j1,k1]*u2[j2,k2]:
+				end do:
+			end do:
+		end do:
+	end do:
+end do:
+mtext := Join([mtext, &quot;\134t\134ty = [&quot;],&quot;&quot;):
+for i from 1 to n do
+	deristring := convert(y[i],string):
+	deristring := SubstituteAll(deristring, &quot;[&quot;,&quot;(&quot;):
+	deristring := SubstituteAll(deristring, &quot;]&quot;,&quot;)&quot;):
+	mtext := Join([mtext, deristring],&quot;&quot;):
+	if i &lt; n then mtext := Join([mtext, &quot;;\134n\134t\134t\134t&quot;],&quot;&quot;): end if:
+end do:
+mtext := Join([mtext, &quot;];\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;\134tcase 3\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;\134t\134tu1 = varargin{1}; u2 = varargin{2}; u3 = varargin{3};\134n&quot;],&quot;&quot;):
+y := Array(1..n):
+for k1 from 1 to r do
+	for k2 from 1 to r do
+		for k3 from 1 to r do
+			for j1 from 1 to n do
+				for j2 from 1 to n do
+					for j3 from 1 to n do
+						for i from 1 to n do
+							y[i] := y[i] + diff(F[i], xx[j1,k1], xx[j2,k2], xx[j3,k3])*u1[j1,k1]*u2[j2,k2]*u3[j3,k3]:
+						end do:
+					end do:
+				end do:
+			end do:
+		end do:
+	end do:
+end do:
+mtext := Join([mtext, &quot;\134t\134ty = [&quot;],&quot;&quot;):
+for i from 1 to n do
+	deristring := convert(y[i],string):
+	deristring := SubstituteAll(deristring, &quot;[&quot;,&quot;(&quot;):
+	deristring := SubstituteAll(deristring, &quot;]&quot;,&quot;)&quot;):
+	mtext := Join([mtext, deristring],&quot;&quot;):
+	if i &lt; n then mtext := Join([mtext, &quot;;\134n\134t\134t\134t&quot;],&quot;&quot;): end if:
+end do:
+mtext := Join([mtext, &quot;];\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;\134tcase 4\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;\134t\134tu1 = varargin{1}; u2 = varargin{2}; u3 = varargin{3}; u4 = varargin{4};\134n&quot;],&quot;&quot;):
+y := Array(1..n):
+for k1 from 1 to r do
+	for k2 from 1 to r do
+		for k3 from 1 to r do
+			for k4 from 1 to r do
+				for j1 from 1 to n do
+					for j2 from 1 to n do
+						for j3 from 1 to n do
+							for j4 from 1 to n do
+								for i from 1 to n do
+									y[i] := y[i] + diff(F[i], xx[j1,k1], xx[j2,k2], xx[j3,k3], xx[j4,k4])*u1[j1,k1]*u2[j2,k2]*u3[j3,k3]*u4[j4,k4]:
+								end do:
+							end do:
+						end do:
+					end do:
+				end do:
+			end do:
+		end do:
+	end do:
+end do:
+mtext := Join([mtext, &quot;\134t\134ty = [&quot;],&quot;&quot;):
+for i from 1 to n do
+	deristring := convert(y[i],string):
+	deristring := SubstituteAll(deristring, &quot;[&quot;,&quot;(&quot;):
+	deristring := SubstituteAll(deristring, &quot;]&quot;,&quot;)&quot;):
+	mtext := Join([mtext, deristring],&quot;&quot;):
+	if i &lt; n then mtext := Join([mtext, &quot;;\134n\134t\134t\134t&quot;],&quot;&quot;): end if:
+end do:
+mtext := Join([mtext, &quot;];\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;\134tcase 5\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;\134t\134tu1 = varargin{1}; u2 = varargin{2}; u3 = varargin{3}; u4 = varargin{4}; u5 = varargin{5};\134n&quot;],&quot;&quot;):
+y := Array(1..n):
+for k1 from 1 to r do
+	for k2 from 1 to r do
+		for k3 from 1 to r do
+			for k4 from 1 to r do
+				for k5 from 1 to r do
+					for j1 from 1 to n do
+						for j2 from 1 to n do
+							for j3 from 1 to n do
+								for j4 from 1 to n do
+									for j5 from 1 to n do
+										for i from 1 to n do
+											y[i] := y[i] + diff(F[i], xx[j1,k1], xx[j2,k2], xx[j3,k3], xx[j4,k4], xx[j5,k5])*u1[j1,k1]*u2[j2,k2]*u3[j3,k3]*u4[j4,k4]*u5[j5,k5]:
+										end do:
+									end do:
+								end do:
+							end do:
+						end do:
+					end do:
+				end do:
+			end do:
+		end do:
+	end do:
+end do:
+mtext := Join([mtext, &quot;\134t\134ty = [&quot;],&quot;&quot;):
+for i from 1 to n do
+	deristring := convert(y[i],string):
+	deristring := SubstituteAll(deristring, &quot;[&quot;,&quot;(&quot;):
+	deristring := SubstituteAll(deristring, &quot;]&quot;,&quot;)&quot;):
+	mtext := Join([mtext, deristring],&quot;&quot;):
+	if i &lt; n then mtext := Join([mtext, &quot;;\134n\134t\134t\134t&quot;],&quot;&quot;): end if:
+end do:
+mtext := Join([mtext, &quot;];\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;end&quot;],&quot;&quot;):
+mtext := convert(mtext, string):
+fid := fopen(linformfile, WRITE):
+fprintf(fid, mtext):
+fclose(fid):
+</EC-CodeEditor></CodeEditor-ExecGroup>
+<Group labelreference="L67" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"># Generate standard derivative file</Text-field>
+</Input>
+</Group><CodeEditor-ExecGroup view="presentation" hide-output="false" labelreference="L66" display="code"><EC-CodeEditor id="CodeEditRegion1" visible="true" pixel-width="910" pixel-height="1692" code-language="text/maple" autoexpand="true" wrapping="false" show-border="true" code-line-numbers="true">mtext := &quot;function J = sys_deri(xx,par,nx,np,v)\134n\134n&quot;:
+mtext := Join([mtext,&quot;J = [];\134n\134n&quot;],&quot;&quot;):
+mtext := Join([mtext,&quot;if length(nx) == 1 &amp;&amp; isempty(np) &amp;&amp; isempty(v)\134n&quot;],&quot;&quot;):
+mtext := Join([mtext,&quot;\134tswitch nx\134n&quot;],&quot;&quot;):
+for nx from 0 to r-1 do
+	mtext := Join([mtext,&quot;\134tcase &quot;, convert(nx, string),&quot;\134n&quot;],&quot;&quot;):
+	mtext := Join([mtext,&quot;\134t\134tJ = [&quot;],&quot;&quot;):
+	for i from 1 to n do
+		for j from 1 to n do
+			deri := diff(F[i], xx[j,nx+1]):
+			deristring := convert(deri, string):
+			deristring := SubstituteAll(deristring, &quot;[&quot;,&quot;(&quot;):
+			deristring := SubstituteAll(deristring, &quot;]&quot;,&quot;)&quot;):
+			mtext := Join([mtext,deristring],&quot;&quot;):
+			if j &lt; n then mtext := Join([mtext, &quot;, &quot;],&quot;&quot;): end if:
+		end do:
+		if i &lt; n then mtext := Join([mtext, &quot;; &quot;],&quot;&quot;): end if:
+	end do:
+	mtext := Join([mtext, &quot;];\134n&quot;],&quot;&quot;):
+end do:
+mtext := Join([mtext, &quot;\134tend\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;elseif isempty(nx) &amp;&amp; length(np) == 1 &amp;&amp; isempty(v)\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;\134tswitch np\134n&quot;],&quot;&quot;):
+for np from 1 to p do
+	mtext := Join([mtext, &quot;\134tcase &quot;, convert(np, string), &quot;\134n&quot;],&quot;&quot;):
+	mtext := Join([mtext,&quot;\134t\134tJ = [&quot;],&quot;&quot;):
+	for i from 1 to n do
+		deri := diff(F[i], par[np]):
+		deristring := convert(deri, string):
+		deristring := SubstituteAll(deristring, &quot;[&quot;,&quot;(&quot;):
+		deristring := SubstituteAll(deristring, &quot;]&quot;,&quot;)&quot;):
+		mtext := Join([mtext,deristring],&quot;&quot;):
+		if i &lt; n then mtext := Join([mtext, &quot;; &quot;],&quot;&quot;): end if:
+	end do:
+	mtext := Join([mtext, &quot;];\134n&quot;],&quot;&quot;):
+end do:
+mtext := Join([mtext, &quot;\134tend\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;elseif length(nx) == 1 &amp;&amp; length(np) == 1 &amp;&amp; isempty(v)\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;\134tswitch nx\134n&quot;],&quot;&quot;):
+for nx from 0 to r-1 do
+	mtext := Join([mtext, &quot;\134tcase &quot;, convert(nx, string), &quot;\134n&quot;],&quot;&quot;):
+	mtext := Join([mtext, &quot;\134t\134tswitch np\134n&quot;],&quot;&quot;):
+	for np from 1 to p do
+		mtext := Join([mtext, &quot;\134t\134tcase &quot;, convert(np, string), &quot;\134n&quot;],&quot;&quot;):
+		mtext := Join([mtext, &quot;\134t\134t\134tJ = [&quot;],&quot;&quot;):
+		for i from 1 to n do
+			for j from 1 to n do
+				deri := diff(F[i], par[np], xx[j,nx+1]):
+				deristring := convert(deri, string):
+				deristring := SubstituteAll(deristring, &quot;[&quot;,&quot;(&quot;):
+				deristring := SubstituteAll(deristring, &quot;]&quot;,&quot;)&quot;):
+				mtext := Join([mtext,deristring],&quot;&quot;):
+				if j &lt; n then mtext := Join([mtext, &quot;, &quot;],&quot;&quot;): end if:
+			end do:
+			if i &lt; n then mtext := Join([mtext, &quot;; &quot;],&quot;&quot;): end if:
+		end do:
+		mtext := Join([mtext, &quot;];\134n&quot;],&quot;&quot;):
+	end do:
+	mtext := Join([mtext, &quot;\134t\134tend\134n&quot;],&quot;&quot;):
+end do:
+mtext := Join([mtext, &quot;\134tend\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;elseif length(nx) == 2 &amp;&amp; isempty(np) &amp;&amp; ~isempty(v)\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;\134tnx1 = nx(1); nx2 = nx(2);\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;\134tswitch nx1\134n&quot;],&quot;&quot;):
+for nx1 from 0 to r-1 do
+	mtext := Join([mtext, &quot;\134tcase &quot;, convert(nx1, string), &quot;\134n&quot;],&quot;&quot;):
+	mtext := Join([mtext, &quot;\134t\134tswitch nx2\134n&quot;],&quot;&quot;):
+	for nx2 from 0 to r-1 do
+		mtext := Join([mtext, &quot;\134t\134tcase &quot;, convert(nx2, string), &quot;\134n&quot;],&quot;&quot;):
+		mtext := Join([mtext, &quot;\134t\134t\134tJ = [&quot;],&quot;&quot;):
+		for i from 1 to n do
+			for j from 1 to n do
+				deri1 := add(diff(F[i],xx[s,nx1+1])*v[s],s=1..n):
+				deri := diff(deri1, xx[j,nx2+1]):
+				deristring := convert(deri, string):
+				deristring := SubstituteAll(deristring, &quot;[&quot;,&quot;(&quot;):
+				deristring := SubstituteAll(deristring, &quot;]&quot;,&quot;)&quot;):
+				mtext := Join([mtext,deristring],&quot;&quot;):
+				if j &lt; n then mtext := Join([mtext, &quot;, &quot;],&quot;&quot;): end if:
+			end do:
+			if i &lt; n then mtext := Join([mtext, &quot;; &quot;],&quot;&quot;): end if:
+		end do:
+		mtext := Join([mtext, &quot;];\134n&quot;], &quot;&quot;):
+	end do:
+	mtext := Join([mtext, &quot;\134t\134tend\134n&quot;],&quot;&quot;):
+end do:
+mtext := Join([mtext, &quot;\134tend\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;end\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;if isempty(J)\134n\134tdisplay([nx np size(v)]);\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;\134terror('SYS_DERI: requested derivative could not be computed!');\134nend&quot;],&quot;&quot;):
+fid := fopen(derifile, WRITE):
+fprintf(fid, mtext):
+fclose(fid):
+</EC-CodeEditor></CodeEditor-ExecGroup>
+<Group labelreference="L8" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"># Generate rhs file:</Text-field>
+</Input>
+</Group>
+<Group labelreference="L16" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"></Text-field>
+</Input>
+</Group><CodeEditor-ExecGroup view="presentation" hide-output="false" labelreference="L5" display="code"><EC-CodeEditor id="CodeEditRegion2" visible="true" pixel-width="900" pixel-height="272" code-language="text/maple" autoexpand="true" wrapping="false" show-border="true" code-line-numbers="true">mtext := &quot;function f = sys_rhs(xx,par)\134n\134n&quot;:
+for i from 1 to n do
+	mtext := Join([mtext,&quot;f(&quot;, convert(i,string), &quot;,1) = &quot;],&quot;&quot;):
+	fstring := convert(F[i], string):
+	fstring := SubstituteAll(fstring, &quot;[&quot;,&quot;(&quot;):
+	fstring := SubstituteAll(fstring, &quot;]&quot;,&quot;)&quot;):
+	mtext := Join([mtext,fstring],&quot;&quot;):
+	mtext := Join([mtext,&quot;;\134n&quot;],&quot;&quot;):
+end do:
+
+mtext := Join([mtext, &quot;end\134n&quot;],&quot;&quot;):
+fid := fopen(rhsfile, WRITE):
+fprintf(fid, mtext):
+fclose(fid):
+</EC-CodeEditor></CodeEditor-ExecGroup>
+<Group labelreference="L18" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"></Text-field>
+</Input>
+</Group>
+<Group labelreference="L83" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"># Generate dtau file:</Text-field>
+</Input>
+</Group>
+<Group labelreference="L85" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"></Text-field>
+</Input>
+</Group><CodeEditor-ExecGroup view="presentation" labelreference="L84" display="code"><EC-CodeEditor id="CodeEditRegion3" visible="true" pixel-width="910" pixel-height="1908" code-language="text/maple" autoexpand="true" wrapping="false" show-border="true" code-line-numbers="true">if true then
+mtext := &quot;function dtau = sys_dtau(delay_nr,xx,par,nx,np)\134n\134n&quot;:
+mtext := Join([mtext,&quot;dtau = [];\134n\134n&quot;],&quot;&quot;):
+mtext := Join([mtext,&quot;if length(nx) == 1 &amp;&amp; isempty(np)\134n&quot;],&quot;&quot;):
+mtext := Join([mtext,&quot;\134tswitch nx\134n&quot;],&quot;&quot;):
+for nx from 0 to r-1 do
+	mtext := Join([mtext,&quot;\134tcase &quot;, convert(nx, string),&quot;\134n&quot;],&quot;&quot;):
+	mtext := Join([mtext,&quot;\134t\134tswitch delay_nr\134n&quot;],&quot;&quot;):
+	for dnr from 1 to r-1 do
+		mtext := Join([mtext,&quot;\134t\134tcase &quot;, convert(dnr, string),&quot;\134n&quot;],&quot;&quot;):
+		mtext := Join([mtext,&quot;\134t\134t\134tdtau = [&quot;],&quot;&quot;):
+		for j from 1 to n do
+			deri := diff(tau[dnr], xx[j,nx+1]):
+			deristring := convert(deri, string):
+			deristring := SubstituteAll(deristring, &quot;[&quot;,&quot;(&quot;):
+			deristring := SubstituteAll(deristring, &quot;]&quot;,&quot;)&quot;):
+			mtext := Join([mtext,deristring],&quot;&quot;):
+			if j &lt; n then mtext := Join([mtext, &quot;, &quot;],&quot;&quot;): end if:
+		end do:
+		mtext := Join([mtext, &quot;];\134n&quot;],&quot;&quot;):
+	end do:
+	mtext := Join([mtext, &quot;\134t\134tend\134n&quot;],&quot;&quot;):
+end do:
+mtext := Join([mtext, &quot;\134tend\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;elseif isempty(nx) &amp;&amp; length(np) == 1\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;\134tswitch np\134n&quot;],&quot;&quot;):
+for np from 1 to p do
+	mtext := Join([mtext, &quot;\134tcase &quot;, convert(np, string), &quot;\134n&quot;],&quot;&quot;):
+	mtext := Join([mtext, &quot;\134t\134tswitch delay_nr\134n&quot;],&quot;&quot;):
+	for dnr from 1 to r-1 do
+		mtext := Join([mtext, &quot;\134t\134tcase &quot;, convert(dnr, string), &quot;\134n&quot;],&quot;&quot;):
+		mtext := Join([mtext,&quot;\134t\134t\134tdtau = &quot;],&quot;&quot;):
+		deri := diff(tau[dnr], par[np]):
+		deristring := convert(deri, string):
+		deristring := SubstituteAll(deristring, &quot;[&quot;,&quot;(&quot;):
+		deristring := SubstituteAll(deristring, &quot;]&quot;,&quot;)&quot;):
+		mtext := Join([mtext,deristring],&quot;&quot;):
+		mtext := Join([mtext, &quot;;\134n&quot;],&quot;&quot;):
+	end do:
+	mtext := Join([mtext, &quot;\134t\134tend\134n&quot;],&quot;&quot;):
+end do:
+mtext := Join([mtext, &quot;\134tend\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;elseif length(nx) == 1 &amp;&amp; length(np) == 1\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;\134tswitch nx\134n&quot;],&quot;&quot;):
+for nx from 0 to r-1 do
+	mtext := Join([mtext, &quot;\134tcase &quot;, convert(nx, string), &quot;\134n&quot;],&quot;&quot;):
+	mtext := Join([mtext, &quot;\134t\134tswitch np\134n&quot;],&quot;&quot;):
+	for np from 1 to p do
+		mtext := Join([mtext, &quot;\134t\134tcase &quot;, convert(np, string), &quot;\134n&quot;],&quot;&quot;):
+		mtext := Join([mtext, &quot;\134t\134t\134tswitch delay_nr\134n&quot;],&quot;&quot;):
+		for dnr from 1 to r-1 do
+			mtext := Join([mtext, &quot;\134t\134t\134tcase &quot;, convert(dnr, string), &quot;\134n&quot;],&quot;&quot;):
+			mtext := Join([mtext, &quot;\134t\134t\134t\134tdtau = [&quot;],&quot;&quot;):
+			for j from 1 to n do
+				deri := diff(tau[dnr], par[np], xx[j,nx+1]):
+				deristring := convert(deri, string):
+				deristring := SubstituteAll(deristring, &quot;[&quot;,&quot;(&quot;):
+				deristring := SubstituteAll(deristring, &quot;]&quot;,&quot;)&quot;):
+				mtext := Join([mtext,deristring],&quot;&quot;):
+				if j &lt; n then mtext := Join([mtext, &quot;, &quot;],&quot;&quot;): end if:
+			end do:
+			mtext := Join([mtext, &quot;];\134n&quot;],&quot;&quot;):
+		end do:
+		mtext := Join([mtext, &quot;\134t\134t\134tend\134n&quot;],&quot;&quot;):
+	end do:
+	mtext := Join([mtext, &quot;\134t\134tend\134n&quot;],&quot;&quot;):
+end do:
+mtext := Join([mtext, &quot;\134tend\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;elseif length(nx) == 2 &amp;&amp; isempty(np)\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;\134tnx1 = nx(1); nx2 = nx(2);\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;\134tswitch nx1\134n&quot;],&quot;&quot;):
+for nx1 from 0 to r-1 do
+	mtext := Join([mtext, &quot;\134tcase &quot;, convert(nx1, string), &quot;\134n&quot;],&quot;&quot;):
+	mtext := Join([mtext, &quot;\134t\134tswitch nx2\134n&quot;],&quot;&quot;):
+	for nx2 from 0 to r-1 do
+		mtext := Join([mtext, &quot;\134t\134tcase &quot;, convert(nx2, string), &quot;\134n&quot;],&quot;&quot;):
+		mtext := Join([mtext, &quot;\134t\134t\134tswitch delay_nr\134n&quot;],&quot;&quot;):
+		for dnr from 1 to r-1 do
+			mtext := Join([mtext, &quot;\134t\134t\134tcase &quot;, convert(dnr, string), &quot;\134n&quot;],&quot;&quot;):
+			mtext := Join([mtext, &quot;\134t\134t\134t\134tdtau = [&quot;],&quot;&quot;):
+			for i from 1 to n do
+				for j from 1 to n do
+					deri := diff(tau[dnr], xx[i,nx1+1], xx[j,nx2+1]):
+					deristring := convert(deri, string):
+					deristring := SubstituteAll(deristring, &quot;[&quot;,&quot;(&quot;):
+					deristring := SubstituteAll(deristring, &quot;]&quot;,&quot;)&quot;):
+					mtext := Join([mtext,deristring],&quot;&quot;):
+					if j &lt; n then mtext := Join([mtext, &quot;, &quot;],&quot;&quot;): end if:
+				end do:
+				if i &lt; n then mtext := Join([mtext, &quot;; &quot;],&quot;&quot;): end if:
+			end do:
+			mtext := Join([mtext, &quot;];\134n&quot;], &quot;&quot;):
+		end do:
+		mtext := Join([mtext, &quot;\134t\134t\134tend\134n&quot;],&quot;&quot;):
+	end do:
+	mtext := Join([mtext, &quot;\134t\134tend\134n&quot;],&quot;&quot;):
+end do:
+mtext := Join([mtext, &quot;\134tend\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;end\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;if isempty(dtau)\134n\134tdisplay([delay_nr nx np]);\134n&quot;],&quot;&quot;):
+mtext := Join([mtext, &quot;\134terror('SYS_DTAU: requested derivative could not be computed!');\134nend&quot;],&quot;&quot;):
+fid := fopen(tauderifile, WRITE):
+fprintf(fid, mtext):
+fclose(fid):
+end if:
+</EC-CodeEditor>
+<Input><Text-field prompt="&gt; " style="Maple Input" spaceabove="0" linebreak="space" rightmargin="0" linespacing="0.0" initial="0" firstindent="0" leftmargin="0" bulletsuffix="" alignment="left" bullet="none" spacebelow="0" pagebreak-before="false"></Text-field>
+</Input>
+<Input><Text-field prompt="&gt; " style="Maple Input" spaceabove="0" linebreak="space" rightmargin="0" linespacing="0.0" initial="0" firstindent="0" leftmargin="0" bulletsuffix="" alignment="left" bullet="none" spacebelow="0" pagebreak-before="false"></Text-field>
+</Input>
+<Input><Text-field prompt="&gt; " style="Maple Input" spaceabove="0" linebreak="space" rightmargin="0" linespacing="0.0" initial="0" firstindent="0" leftmargin="0" bulletsuffix="" alignment="left" bullet="none" spacebelow="0" pagebreak-before="false"></Text-field>
+</Input>
+<Input><Text-field prompt="&gt; " style="Maple Input" spaceabove="0" linebreak="space" rightmargin="0" linespacing="0.0" initial="0" firstindent="0" leftmargin="0" bulletsuffix="" alignment="left" bullet="none" spacebelow="0" pagebreak-before="false"></Text-field>
+</Input>
+<Input><Text-field prompt="&gt; " style="Maple Input" spaceabove="0" linebreak="space" rightmargin="0" linespacing="0.0" initial="0" firstindent="0" leftmargin="0" bulletsuffix="" alignment="left" bullet="none" spacebelow="0" pagebreak-before="false"></Text-field>
+</Input></CodeEditor-ExecGroup>
+<Group labelreference="L33" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"><Equation executable="true" style="2D Input" input-equation="" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYlLUkjbWlHRiQ2I1EhRicvJStleGVjdXRhYmxlR1EmZmFsc2VGJy8lLG1hdGh2YXJpYW50R1Enbm9ybWFsRic=">JSFH</Equation></Text-field>
+</Input>
+</Group>
+<Group labelreference="L88" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal">tauderifile;</Text-field>
+</Input>
+<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUkjbXNHNiMvSSttb2R1bGVuYW1lRzYiSSxUeXBlc2V0dGluZ0dJKF9zeXNsaWJHRic2I1FGL2hvbWUvamFuc2llL3RtcC9tYXBsZV9kZGUvc3lzX2R0YXUubUYn">UUYvaG9tZS9qYW5zaWUvdG1wL21hcGxlX2RkZS9zeXNfZHRhdS5tNiI=</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L89" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"></Text-field>
+</Input>
+<Output><Text-field style="2D Output" layout="Maple Output"><Equation executable="false" style="2D Output" display="LUklbXJvd0c2Iy9JK21vZHVsZW5hbWVHNiJJLFR5cGVzZXR0aW5nR0koX3N5c2xpYkdGJzYoLUkjbWlHRiQ2JVElYXRhbkYnLyUnaXRhbGljR1EldHJ1ZUYnLyUsbWF0aHZhcmlhbnRHUSdpdGFsaWNGJy1JI21vR0YkNi1RMCZBcHBseUZ1bmN0aW9uO0YnL0YzUSdub3JtYWxGJy8lJmZlbmNlR1EmZmFsc2VGJy8lKnNlcGFyYXRvckdGPS8lKXN0cmV0Y2h5R0Y9LyUqc3ltbWV0cmljR0Y9LyUobGFyZ2VvcEdGPS8lLm1vdmFibGVsaW1pdHNHRj0vJSdhY2NlbnRHRj0vJSdsc3BhY2VHUSYwLjBlbUYnLyUncnNwYWNlR0ZMLUkobWZlbmNlZEdGJDYkLUYjNiYtSSNtbkdGJDYkUSIxRidGOS8lK2ZvcmVncm91bmRHUShbMCwwLDBdRicvJSlyZWFkb25seUdGPUY5RjlGWEZlbkY5">LUklYXRhbkc2IjYjIiIi</Equation></Text-field>
+</Output>
+</Group>
+<Group labelreference="L90" drawlabel="true">
+<Input><Text-field prompt="&gt; " style="Maple Input" layout="Normal"></Text-field>
+</Input>
+</Group>
+</Worksheet>

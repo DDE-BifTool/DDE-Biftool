@@ -1,0 +1,199 @@
+\documentclass[11pt]{scrartcl}
+\usepackage{helvet,mathpazo,eulervm}
+\usepackage{microtype}
+\usepackage{color,amsmath,stmaryrd}
+\usepackage{textcomp,upquote}
+\usepackage[writefile]{listings}
+%% settings and abbreviations for code snippets
+\definecolor{var}{rgb}{0,0.28,0.28}
+\definecolor{keyword}{rgb}{0,0,1}
+\definecolor{comment}{rgb}{0,0.5,0}
+\definecolor{string}{rgb}{0.6,0,0.5}
+\definecolor{errmsg}{rgb}{1,0,0}
+\lstset{language=Matlab,%
+  basicstyle={\ttfamily},%
+  commentstyle=\color{comment},%
+  stringstyle=\color{string},%
+  keywordstyle=\color{keyword},%
+  identifierstyle=\color{var},%
+  showstringspaces=false,%
+  numberbychapter=false,%
+  upquote=true,%
+  firstnumber=auto,%
+  captionpos=b,%
+  morekeywords={ones,factorial,inf,why,numel,mod,false,%
+    true,warning,continue,@,switch,case,sortrows},%
+  deletekeywords={beta,gamma,line,angle,type,plot,mesh}%
+}
+\newcommand{\mlvar}[1]{\lstinline[keywordstyle=\color{var}]!#1!}
+\newcommand{\blist}[1]{\mbox{\lstinline!#1!}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\renewcommand{\vec}{\blist{v}}
+\newcommand{\diag}{\mbox{\mlvar{diag}}}
+\renewcommand{\mod}{\operatorname{mod}}
+%\newcommand{\llb}{\left[\!\!\left[}
+%\newcommand{\rrb}{\right]\!\!\right]}
+\newcommand{\llb}{\left\llbracket}
+\newcommand{\rrb}{\right\rrbracket}
+
+\newcommand{\id}{I}
+\newcommand{\xbp}{x_\mathrm{bp}}
+\begin{document}
+\section*{Description of Jacobian and residual implementation for
+  periodic orbits in DDEs}
+Consider the DDE
+\begin{equation}
+  \label{eq:dde}
+  \dot x(t)=f(\llb x(t-\tau_1),\ldots,x(t-\tau_{n_d})\rrb,p)\mbox{,}
+\end{equation}
+where $\tau_1=0$ by convention. We use the double square brackets
+$\llb\,\rrb$ here to indicate horizontal concatenation, as done by
+Dankowicz \& Schilder \cite{HS13}. An index indicates concatenation
+along another dimension than $2$: thus, $\llb x, y\rrb_k$ would be
+concatenation along dimension $k$ (\blist{cat(k,x,y)} in matlab). A
+periodic solution, rescaled to $[0,1]$ satisfies the zero problem, a
+\emph{functional differential equation} (FDE),
+\begin{equation}
+  \label{eq:fde}
+  0=\dot x(t)-Tf\left(\llb x\left(
+      \left.\left[t-\frac{\tau_1}{T}\right]\right\vert_{\mod{[0,1]}}\right),\ldots,
+    x\left(\left.\left[t-\frac{\tau_{n_d}}{T}\right]\right\vert_{\mod{[0,1]}}\right)\rrb,p\right)\mbox{.}
+\end{equation}
+The notation $\theta\mod[0,1]$ refers to the value $\theta-j$ such
+that $j$ is an integer and $\theta-j\in[0,1)$. This modulo operation
+will be implicitly applied to all shifted time arguments from now
+without explicitly expressing it in the notation. 
+
+The function $f:\R^{n\times n_d}\times \R^{n_p}\mapsto \R^n$ is
+assumed to be smooth. We call its derivative with respect to the $j$th
+(of $n_d$) columns in its first argument $\partial_jf$. The derivative
+of $f$ with respect to its parameter, we call $\partial_pf$. The
+linearization of \eqref{eq:fde} with respect to $x$, $T$, $p$ and
+$\tau_k$ is (using $\hat x$, $\hat T$, $\hat p$ and $\hat \tau_k$ as
+the linear deviation arguments)
+\begin{equation}
+  \label{eq:linfde}
+  0=\Dot{\hat x}(t)-\sum_{j=1}^{n_d}TA_j(t)\hat x
+  \left(t-\frac{\tau_j}{T}\right)- \sum_{j=1}^{n_d}A_j(t)
+  x'\left(t-\frac{\tau_j}{T}\right) \left[\frac{\tau_j}{T}\hat T-\hat
+    \tau_j\right] -b(t)\hat p-f(t)\hat T\mbox{,}
+\end{equation}
+where
+\begin{align*}
+  A_j(t)&=\partial_jf\left(\llb x\left(t-\frac{\tau_1}{T}\right),\ldots,x\left(t-\frac{\tau_{n_d}}{T}\right)\rrb,p\right)\\
+  b(t)&=\partial_pf\left(\llb x\left(t-\frac{\tau_1}{T}\right),\ldots,x\left(t-\frac{\tau_{n_d}}{T}\right)\rrb,p\right)\\
+  f(t)&=f\left(\llb x\left(t-\frac{\tau_1}{T}\right),\ldots,x\left(t-\frac{\tau_{n_d}}{T}\right)\rrb,p\right)
+\end{align*}
+(note again the convention of arguments $\mod[0,1]$ applies everywhere). 
+\subsection*{Discretized FDE and discretization of its linearization}
+\begin{table}[ht]\centering
+  \begin{tabular}[t]{lc@{\qquad}cl}\hline\noalign{\smallskip}
+    field     & content    &   constant & role    \\\hline \noalign{\smallskip}
+    \blist{'kind'}      & \blist{'psol'}   &
+    $n$ & system dimension\\[0.5ex]
+    \blist{'parameter'} & $\R^{1\times p}$ & $p$ & number of parameters\\[0.5ex]
+    \blist{'mesh'}      & $[0,1]^{1\times (Ld+1)}$ 
+    & $L$ & number of collocation intervals\\[0.5ex]
+    \blist{'degree'}    & $\N_0$        &
+    $d$ & degree of collocation polynomial\\[0.5ex]
+    \blist{'profile'}   & $\R^{n\times (Ld+1)}$ \\[0.5ex]
+    \blist{'period'}    & $\R^+_0$         \\[0.5ex]
+    \blist{'stability'} & empty or struct  \\\hline
+  \end{tabular}
+  \caption{Field names and corresponding content for the 
+    periodic orbit structure.}\label{tab:psol}
+\end{table}
+Consider a (fixed) mesh of base points $0= t_1\leq\ldots
+t_{Ld+1}=1$ on $[0,1]$ (\blist{psol.mesh} in Table~\ref{tab:psol}), on
+which a solution $x$ is given as an array \blist{profile(1:n,1:L*d+1)}
+(role of integer constants is also listed in
+Table~\ref{tab:psol}). Data structures for periodic orbits of type
+\blist{'psol'} have the form show in table~\ref{tab:psol}. The
+differential equation is enforced on a set of collocation points
+$0<c_1<\ldots <c_{Ld}<1$. 
+
+Consider the matrix $W(\theta)$ that maps the values
+$x(t_i)_{i=1}^{Ld+1}$ of a continuous piecewise collocation polynomial
+$x:[0,1]\mapsto \R$ on the base points onto the values
+$x(c_k-\theta)_{k=1}^{Ld}$ (or $\ell$th derivatives
+$x^{(\ell)}(c_k-\theta)$, respectively) at the collocation points
+minus some off-set $\theta$.
+\begin{align*}
+  W^{(\ell)}(\theta)\in\R^{(Ld+1)\times Ld}: x(t_i)_{i=1}^{Ld+1}\mapsto 
+  x^{(\ell)}(c_k-\theta)_{k=1}^{Ld}
+\end{align*}
+(again with the $\mod[0,1]$ convention). For the discretization we
+need the corresponding expanded matrices
+\begin{align*}
+  W^{(\ell)}_j&:=W^{(\ell)}(\tau_j/T)\otimes\id_n \mbox{\quad for
+    $j=1\ldots,n_d$} && \mbox{($\cdot\otimes \id_n$ means
+    \blist{kron(}$\cdot$\blist{,eye(n)}).}
+\end{align*}
+With the help of these linear operations, the (also linear)
+transformation of an array to a vector (notation similar to Dankowicz
+\& Schilder \cite{HS13})
+\begin{align*}
+  \vec_{m_1,\ldots,m_q}&:\R^{n_1\times \ldots \times n_k}\mapsto 
+  \R^{m_1\times\ldots\times m_q\times (n_1\ldots n_k)/(m_1\ldots m_q)}&&
+  \mbox{($\vec_{m_1,\ldots,m_q} x=x\blist{(}m_1,\ldots,m_q\blist{,:)}$)}
+\end{align*}
+(and $\vec=\vec_{n_1\ldots n_k}$, $\vec x=x\blist{(:)}$) we can
+formulate the discretized zero problem: it is a system of the $nLd$
+equations
+\begin{equation}
+  \label{eq:disc:fde}
+  0=[\vec W'_1\vec]x-T\vec f\left(\vec_{n,n_d}\llb\phantom{\big|}\!\![\vec_nW_1\vec] x,\ldots [\vec_nW_{n_d}\vec]x\rrb_1,1_{1,Ld}\otimes p\right)
+\end{equation}
+(this notation assumes that $f$ is vectorized). In the first argument
+of $f$ each entry $[\vec_nW_jv]x$ has shape $n\times Ld$ such that the
+bracket $\llb\cdot\rrb_1$ has shape $ (n n_d)\times Ld$ and
+$\vec_{n,n_d}\llb\cdot\rrb_1$ has shape $n\times n_d\times
+Ld$. Equation~\eqref{eq:disc:fde} consists of $nLd$ equations for
+$n(Ld+1)$ variables in $x$, and possibly $T$, $p$, $\tau$.
+
+The linearizations with respect to various components are (\diag\, is
+the matlab \blist{blkdiag} operator as in \cite{HS13})
+\begin{align}
+  \label{eq:disc:Jx}
+  J_{\hat x}&=W'_1-\sum_{j=1}^{n_d}T\bar A_jW_j&&\in\R^{nLd\times n(Ld+1)}&&\mbox{ where}\\
+  \bar A_j&=\diag\left[\vec_{n,n}\partial_jf(X,P)\right]
+  &&\in\R^{nLd\times nLd}&&\mbox{ and}\nonumber\\
+  X &= \vec_{n,n_d}\llb\vec_nW_1\vec] x,\ldots,[\vec_nW_{n_d}\vec]
+  x\rrb_1 &&
+  \in\R^{n\times n_d\times Ld} \nonumber\\
+  P&=1_{1,Ld}\otimes p&& \in\R^{n_p\times Ld}\mbox{,}\nonumber\\[1ex]
+  \label{eq:disc:Jp}
+  J_{\hat p}&=-T\vec_{(nLd)}\left[
+    \partial_pf\left(X,P\right)\right]
+  &&\in\R^{nLd\times n_p}\\
+  \label{eq:disc:Jtau}
+  J_{\hat \tau_k}&=\frac{1}{T}\bar A_kW'_k\vec x\mbox{\quad for $k\in{2,\ldots,n_d}$,}&&\in \R^{nLd\times 1}
+  \\
+  \label{eq:disc:JT}
+  J_{\hat T}&=-\bar f-\sum_{j=1}^{n_d}\frac{\tau_j}{T}\bar A_jW'_j\vec x
+  &&\in \R^{nLd\times 1}&&\mbox{ where}\\
+  \bar f&=\vec f(X,P) &&\in\R^{nLd}\mbox{,}\nonumber
+\end{align}
+and we assume that $\partial_jf$, $\partial_pf$ and $f$ are
+vectorized. The matrices $J$ all have the same row dimension, and can
+thus be horizontally concatenated. For example, in DDE-Biftool
+$J=\llb J_{\hat x},J_{\hat T},J_{\hat p}\rrb$ is the order since the variable
+in the continuation is $y=\llb\vec x,T,p\rrb_1$.
+
+\paragraph{Remarks} As \eqref{eq:disc:Jx}--\eqref{eq:disc:JT} shows,
+even though the $W$ matrices are functions of $\tau_k$ and $T$ we do
+\emph{not} differentiate them eith respect to their arguments when
+computing the linearization. Rather the infinite-dimensional problem
+is linearized and then discretized. This is what the original
+DDE-Biftool implementation did.  A good reason is that a
+differentiation of $W(\theta)$ with respect to $\theta$ will always be
+discontinuous at the collocation interval boundaries: it will suddenly
+depend on other variables. However, the derivative of the
+discretization of the linearization with repect to $\tau$ or $T$ may
+be continuous if the piecewise polynomial is sufficiently regular.
+
+ \bibliographystyle{plain} \bibliography{cont}
+
+
+\end{document}

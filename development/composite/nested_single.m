@@ -1,0 +1,23 @@
+clear
+addpath('../../ddebiftool/',...
+    '../../ddebiftool_extra_nmfm/',...
+    '../../ddebiftool_extra_rotsym/',...
+    '../../ddebiftool_utilities/',....
+    '../../ddebiftool_extra_symbolic/');
+%%
+fsym=set_symfuncs('sym_nested');
+f=set_funcs('sys_rhs',@(xx,p)-xx(1,2,:),...
+    'sys_tau',@(it,xx,p)p+xx(1,1,:),...
+    'sys_ntau',@()1,'x_vectorized',true);
+eqbr=SetupStst(fsym,'x',0.1,'parameter',0.1,...
+    'contpar',1,'max_step',[0,0.4]);
+eqbr=br_contn(fsym,eqbr,100);
+tic;
+[eqsbr,~,inds]=LocateSpecialPoints(fsym,eqbr);
+t=toc
+tic;
+[eqnbr,~,indn]=LocateSpecialPoints(f,eqbr);
+t=toc
+%%
+l1n=arrayfun(@(x)x.nmfm.L1,eqnbr.point(indn));
+l1s=arrayfun(@(x)x.nmfm.L1,eqsbr.point(inds));

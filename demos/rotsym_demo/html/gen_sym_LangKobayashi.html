@@ -1,0 +1,158 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>DDE-BIFTOOL Demo for continuation of local bifurcations with rotational symmetry</title><meta name="generator" content="MATLAB 9.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-07-01"><meta name="DC.source" content="gen_sym_LangKobayashi.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>DDE-BIFTOOL Demo for continuation of local bifurcations with rotational symmetry</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Create a right-hand side from symbolic expressions</a></li><li><a href="#2">Set number of delays and create parameter names as strings</a></li><li><a href="#3">Create symbols for parameters, states and delayed states</a></li><li><a href="#4">Differentiate and generate code, exporting it to sym_LangKobayashi</a></li></ul></div><h2 id="1">Create a right-hand side from symbolic expressions</h2><p>
+$Id: gen_sym_LangKobayashi.html 354 2019-06-30 23:15:16Z jansieber $
+</p><p>This file demonstrates how one can use the symbolic toolbox to automatically create the right-hand side and its first directional derivatives using the symbolic toolbox, using the routines in <tt>ddebiftool_extra_symbolic</tt>. The example is the Lang-Kobayashi equation.</p><pre class="codeinput">clear
+base=[pwd(),<span class="string">'/../../'</span>];
+addpath([base,<span class="string">'ddebiftool'</span>],[base,<span class="string">'ddebiftool_extra_symbolic'</span>]);
+<span class="keyword">if</span> dde_isoctave()
+    pkg <span class="string">load</span> <span class="string">symbolic</span>
+<span class="keyword">end</span>
+</pre><h2 id="2">Set number of delays and create parameter names as strings</h2><pre class="codeinput">parnames={<span class="keyword">...</span>
+    <span class="string">'pump'</span>,<span class="keyword">...</span><span class="comment">    % injection current</span>
+    <span class="string">'eta'</span>,<span class="keyword">...</span><span class="comment">     % feedback strength</span>
+    <span class="string">'phi'</span>,<span class="keyword">...</span><span class="comment">     % feedback phase</span>
+    <span class="string">'tau'</span>,<span class="keyword">...</span><span class="comment">     %  delay</span>
+    <span class="string">'alpha'</span>,<span class="keyword">...</span><span class="comment">   % alpha factor</span>
+    <span class="string">'epsilon'</span>};     <span class="comment">% rotation velocity</span>
+</pre><h2 id="3">Create symbols for parameters, states and delayed states</h2><p>The array <tt>par</tt> is the array of symbols in the same order as parnames. Due to the following two lines we may, for example, use either tau or par(1) to refer to the delay.</p><pre class="codeinput">syms(parnames{:});       <span class="comment">% create symbols for parameters</span>
+par=cell2sym(parnames);  <span class="comment">% now tau is par(1) etc</span>
+<span class="keyword">for</span> i=1:length(parnames)
+    assume(par(i),<span class="string">'real'</span>);
+<span class="keyword">end</span>
+syms <span class="string">Er</span> <span class="string">Ei</span> <span class="string">Ertau</span> <span class="string">Eitau</span> <span class="string">n</span> <span class="string">ntau</span> <span class="string">real</span> <span class="comment">% create symbols for E(t) E(t-tau), n(t)</span>
+E=Er+1i*Ei;
+Etau=Ertau+1i*Eitau;
+dE_dt=(1+1i*alpha)*n*E+eta*exp(1i*phi)*Etau;
+dn_dt=epsilon*(pump-n-(2*n+1)*conj(E)*E);
+dEr_dt=real(dE_dt);
+dEi_dt=imag(dE_dt);
+dn_dt=simplify(dn_dt);
+</pre><h2 id="4">Differentiate and generate code, exporting it to sym_LangKobayashi</h2><pre class="codeinput">[fstr,derivs]=dde_sym2funcs(<span class="keyword">...</span>
+    [dEr_dt;dEi_dt;dn_dt],<span class="keyword">...</span><span class="comment"> % n x 1 array of derivative symbolic expressions</span>
+    [Er,Ertau; Ei,Eitau; n,ntau],<span class="keyword">...</span><span class="comment"> % n x (ntau+1) array of symbols for states (current &amp; delayed)</span>
+    par,<span class="keyword">...</span><span class="comment">            % 1 x np (or np x 1) array of symbols used for parameters</span>
+    <span class="string">'filename'</span>,<span class="string">'sym_LangKobayashi'</span>,<span class="keyword">...</span><span class="comment"> % optional argument specifying output file</span>
+    <span class="string">'directional_derivative'</span>,true,<span class="keyword">...</span>
+    <span class="string">'maxorder'</span>,2);
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% DDE-BIFTOOL Demo for continuation of local bifurcations with rotational symmetry
+%% Create a right-hand side from symbolic expressions
+%
+% <html>
+% $Id: gen_sym_LangKobayashi.html 354 2019-06-30 23:15:16Z jansieber $
+% </html>
+%
+% This file demonstrates how one can use the symbolic toolbox to
+% automatically create the right-hand side and its first directional
+% derivatives using the symbolic toolbox, using the routines in
+% |ddebiftool_extra_symbolic|. The example is the Lang-Kobayashi equation.
+clear
+base=[pwd(),'/../../'];
+addpath([base,'ddebiftool'],[base,'ddebiftool_extra_symbolic']);
+if dde_isoctave()
+    pkg load symbolic
+end
+%% Set number of delays and create parameter names as strings
+parnames={...
+    'pump',...    % injection current
+    'eta',...     % feedback strength
+    'phi',...     % feedback phase
+    'tau',...     %  delay
+    'alpha',...   % alpha factor
+    'epsilon'};     % rotation velocity
+%% Create symbols for parameters, states and delayed states
+% The array |par| is the array of symbols in the same order as parnames.
+% Due to the following two lines we may, for example, use either tau or
+% par(1) to refer to the delay.
+syms(parnames{:});       % create symbols for parameters
+par=cell2sym(parnames);  % now tau is par(1) etc
+for i=1:length(parnames)
+    assume(par(i),'real');
+end
+syms Er Ei Ertau Eitau n ntau real % create symbols for E(t) E(t-tau), n(t)
+E=Er+1i*Ei;
+Etau=Ertau+1i*Eitau;
+dE_dt=(1+1i*alpha)*n*E+eta*exp(1i*phi)*Etau;
+dn_dt=epsilon*(pump-n-(2*n+1)*conj(E)*E);
+dEr_dt=real(dE_dt);
+dEi_dt=imag(dE_dt);
+dn_dt=simplify(dn_dt);
+%% Differentiate and generate code, exporting it to sym_LangKobayashi
+[fstr,derivs]=dde_sym2funcs(...
+    [dEr_dt;dEi_dt;dn_dt],... % n x 1 array of derivative symbolic expressions
+    [Er,Ertau; Ei,Eitau; n,ntau],... % n x (ntau+1) array of symbols for states (current & delayed)
+    par,...            % 1 x np (or np x 1) array of symbols used for parameters
+    'filename','sym_LangKobayashi',... % optional argument specifying output file
+    'directional_derivative',true,...
+    'maxorder',2);
+
+##### SOURCE END #####
+--></body></html>

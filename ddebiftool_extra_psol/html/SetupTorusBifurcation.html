@@ -1,0 +1,213 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>SetupTorusBifurcation - Initialize continuation of torus or period doubling bifurcations</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-04-01"><meta name="DC.source" content="SetupTorusBifurcation.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+
+  </style></head><body><div class="content"><h1>SetupTorusBifurcation - Initialize continuation of torus or period doubling bifurcations</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Inputs</a></li><li><a href="#3">Outputs</a></li><li><a href="#4">process options</a></li><li><a href="#5">initialize branch of torus bifurcations (trbranch) and pass on optional args</a></li><li><a href="#6">set up numbering and values of additional parameters</a></li><li><a href="#7">set up functions of extended system</a></li><li><a href="#8">constant delays</a></li><li><a href="#10">state dependent delay</a></li><li><a href="#12">required amendments of structures for extended system</a></li><li><a href="#13">create initial guess for correction</a></li></ul></div><pre class="codeinput"><span class="keyword">function</span> [trfuncs,trbranch,suc]=SetupTorusBifurcation(funcs,branch,ind,varargin)
+</pre><h2>Inputs<a name="2"></a></h2><div><ul><li><tt>funcs</tt>: functions used for DDE</li><li><tt>branch</tt>: branch of psols along which bifurcation was discovered</li></ul></div><p>optional inputs</p><div><ul><li><tt>contpar</tt> (integer default <tt>[]</tt>):  set of continuation parameters (if []   then free parameters of input branch are used)</li><li><tt>sys_deri</tt> (default <tt>1e-4</tt>): used for finite differencing when approximating   jacobian of rhs, will be replaced by funcs.sys_deri if funcs.sys_deri is   provided by user</li><li><tt>correc</tt> (logical, default true): apply <tt>p_correc</tt> to first points on    torus branch</li><li><tt>dir</tt> (integer, default <tt>[]</tt>): which parameter to vary initially along    torus branch (trbranch has only single point if <tt>dir</tt> is empty)</li><li><tt>step</tt> (real, default <tt>1e-3</tt>): size of initial step if <tt>dir</tt> is non-empty</li><li><tt>hjac</tt> (default <tt>1e-4</tt>) deviation for numerical derivatives if needed</li></ul></div><p>all other named arguments are passed on to trbranch.method.continuation, trbranch.method.point and trbranch.parameter</p><h2>Outputs<a name="3"></a></h2><div><ul><li><tt>pfuncs</tt>: functions used for extended DDE</li><li><tt>trbranch</tt>: bifurcation branch with first point (or two points)</li><li><tt>suc</tt>: flag whether corection was successful</li></ul></div><p>
+$Id: SetupTorusBifurcation.html 20 2014-04-11 19:27:33Z jan.sieber $
+</p><h2>process options<a name="4"></a></h2><pre class="codeinput">default={<span class="string">'contpar'</span>,[],<span class="string">'sys_deri'</span>,1e-4,<span class="string">'correc'</span>,true,<span class="string">'dir'</span>,[],<span class="string">'step'</span>,1e-3,<span class="keyword">...</span>
+    <span class="string">'hjac'</span>,1e-4,<span class="string">'nremove'</span>,1};
+[options,pass_on]=dde_set_options(default,varargin,<span class="string">'pass_on'</span>);
+<span class="keyword">if</span> isfield(funcs,<span class="string">'sys_deri_provided'</span>) &amp;&amp; funcs.sys_deri_provided
+    options.sys_deri=funcs.sys_deri;
+<span class="keyword">end</span>
+<span class="keyword">if</span> funcs.tp_del &amp;&amp; isfield(funcs,<span class="string">'sys_dtau_provided'</span>) &amp;&amp; funcs.sys_dtau_provided
+    options.sys_dtau=funcs.sys_dtau;
+<span class="keyword">end</span>
+branch.point=branch.point(ind);
+</pre><h2>initialize branch of torus bifurcations (trbranch) and pass on optional args<a name="5"></a></h2><pre class="codeinput">trbranch=replace_branch_pars(branch,options.contpar,pass_on);
+</pre><h2>set up numbering and values of additional parameters<a name="6"></a></h2><pre class="codeinput">point=trbranch.point;
+<span class="keyword">if</span> isfield(point,<span class="string">'stability'</span>)
+    point=rmfield(point,<span class="string">'stability'</span>);
+<span class="keyword">end</span>
+dim=size(point.profile,1);    <span class="comment">% dimension of original problem</span>
+npar=length(point.parameter); <span class="comment">% number of original system parameters</span>
+omega_ind=npar+1;             <span class="comment">% location of add. parameter omega</span>
+period_ind=npar+2;            <span class="comment">% location of add. parameter (equal to period)</span>
+</pre><h2>set up functions of extended system<a name="7"></a></h2><pre class="codeinput">trfuncs=funcs;
+trfuncs.get_comp=@(p,component)extract_from_tr(p,component);
+<span class="keyword">if</span> ~funcs.tp_del
+</pre><h2>constant delays<a name="8"></a></h2><pre class="codeinput">    tau_ind=funcs.sys_tau();
+    trfuncs.sys_rhs=@(x,p)sys_rhs_TorusBif(x,p(1:npar),<span class="keyword">...</span>
+        p(omega_ind),p(period_ind),[0,p(tau_ind)],<span class="keyword">...</span>
+        funcs.sys_rhs,dim,options.sys_deri);
+    trfuncs.sys_deri=@(x,p,nx,np,v)<span class="keyword">...</span>
+        sys_deri_TorusBif(x,p,nx,np,v,options.hjac,omega_ind,period_ind,dim,<span class="keyword">...</span>
+        funcs,struct(<span class="string">'sys_rhs'</span>,trfuncs.sys_rhs));
+</pre><pre class="codeinput"><span class="keyword">else</span>
+</pre><h2>state dependent delay<a name="10"></a></h2><pre class="codeinput">    n_orig_tau=funcs.sys_ntau();  <span class="comment">% number of state-dependent delays</span>
+    <span class="comment">% additional delays needed for extended system:</span>
+    xtau_ind=tauSD_ext_ind(n_orig_tau);
+    trfuncs.sys_rhs=@(x,p)sys_rhs_SD_TorusBif(x,p(1:npar),<span class="keyword">...</span>
+        p(omega_ind),p(period_ind),<span class="keyword">...</span>
+        funcs.sys_rhs,funcs.sys_tau,options.sys_deri,options.sys_dtau,dim,xtau_ind);
+    trfuncs.sys_ntau=@()n_orig_tau*(n_orig_tau+1);
+    trfuncs.sys_deri=@(x,p,nx,np,v)<span class="keyword">...</span>
+        df_deriv(struct(<span class="string">'sys_rhs'</span>,trfuncs.sys_rhs),x,p,nx,np,v,options.hjac);
+    trfuncs.sys_deri_provided=false;
+    trfuncs.sys_tau=@(itau,x,p)sys_tau_SD_PObif(itau,x,p(1:npar),funcs.sys_tau,dim,xtau_ind);
+    trfuncs.sys_dtau=@(itau,x,p,nx,np)sys_dtau_SD_PObif(itau,x,p,nx,np,funcs.sys_dtau,<span class="keyword">...</span>
+        dim,xtau_ind);
+</pre><pre class="codeinput"><span class="keyword">end</span>
+trfuncs.sys_cond=@(p)sys_cond_TorusBif(p,funcs.sys_cond,dim,period_ind,<span class="keyword">...</span>
+    trfuncs.get_comp);
+</pre><h2>required amendments of structures for extended system<a name="12"></a></h2><pre class="codeinput">trbranch.parameter.free=[trbranch.parameter.free,omega_ind,period_ind];
+trbranch.method.point.extra_condition=1;
+</pre><h2>create initial guess for correction<a name="13"></a></h2><pre class="codeinput">trini0=TorusInit(funcs,point,branch.method,options.nremove);
+[trbranch,suc]=correct_ini(trfuncs,trbranch,trini0,<span class="keyword">...</span>
+    options.dir,options.step,options.correc);
+</pre><pre class="codeinput"><span class="keyword">end</span>
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.14<br></p></div><!--
+##### SOURCE BEGIN #####
+%% SetupTorusBifurcation - Initialize continuation of torus or period doubling bifurcations
+%%
+function [trfuncs,trbranch,suc]=SetupTorusBifurcation(funcs,branch,ind,varargin)
+%% Inputs
+%
+% * |funcs|: functions used for DDE
+% * |branch|: branch of psols along which bifurcation was discovered
+%
+% optional inputs
+%
+% * |contpar| (integer default |[]|):  set of continuation parameters (if []
+%   then free parameters of input branch are used)
+% * |sys_deri| (default |1e-4|): used for finite differencing when approximating
+%   jacobian of rhs, will be replaced by funcs.sys_deri if funcs.sys_deri is
+%   provided by user
+% * |correc| (logical, default true): apply |p_correc| to first points on
+%    torus branch
+% * |dir| (integer, default |[]|): which parameter to vary initially along
+%    torus branch (trbranch has only single point if |dir| is empty)
+% * |step| (real, default |1e-3|): size of initial step if |dir| is non-empty
+% * |hjac| (default |1e-4|) deviation for numerical derivatives if needed
+%
+% all other named arguments are passed on to trbranch.method.continuation,
+% trbranch.method.point and trbranch.parameter
+%% Outputs
+%
+% * |pfuncs|: functions used for extended DDE
+% * |trbranch|: bifurcation branch with first point (or two points)
+% * |suc|: flag whether corection was successful
+%
+%
+% <html>
+% $Id: SetupTorusBifurcation.html 20 2014-04-11 19:27:33Z jan.sieber $
+% </html>
+%
+%% process options
+default={'contpar',[],'sys_deri',1e-4,'correc',true,'dir',[],'step',1e-3,...
+    'hjac',1e-4,'nremove',1};
+[options,pass_on]=dde_set_options(default,varargin,'pass_on');
+if isfield(funcs,'sys_deri_provided') && funcs.sys_deri_provided
+    options.sys_deri=funcs.sys_deri;
+end
+if funcs.tp_del && isfield(funcs,'sys_dtau_provided') && funcs.sys_dtau_provided
+    options.sys_dtau=funcs.sys_dtau;
+end
+branch.point=branch.point(ind);
+%% initialize branch of torus bifurcations (trbranch) and pass on optional args
+trbranch=replace_branch_pars(branch,options.contpar,pass_on);
+%% set up numbering and values of additional parameters
+point=trbranch.point;
+if isfield(point,'stability')
+    point=rmfield(point,'stability');
+end
+dim=size(point.profile,1);    % dimension of original problem
+npar=length(point.parameter); % number of original system parameters
+omega_ind=npar+1;             % location of add. parameter omega
+period_ind=npar+2;            % location of add. parameter (equal to period)
+%% set up functions of extended system
+trfuncs=funcs;
+trfuncs.get_comp=@(p,component)extract_from_tr(p,component);
+if ~funcs.tp_del 
+    %% constant delays
+    tau_ind=funcs.sys_tau();
+    trfuncs.sys_rhs=@(x,p)sys_rhs_TorusBif(x,p(1:npar),...
+        p(omega_ind),p(period_ind),[0,p(tau_ind)],...
+        funcs.sys_rhs,dim,options.sys_deri);
+    trfuncs.sys_deri=@(x,p,nx,np,v)...
+        sys_deri_TorusBif(x,p,nx,np,v,options.hjac,omega_ind,period_ind,dim,...
+        funcs,struct('sys_rhs',trfuncs.sys_rhs));
+else
+    %% state dependent delay
+    n_orig_tau=funcs.sys_ntau();  % number of state-dependent delays
+    % additional delays needed for extended system:
+    xtau_ind=tauSD_ext_ind(n_orig_tau);
+    trfuncs.sys_rhs=@(x,p)sys_rhs_SD_TorusBif(x,p(1:npar),...
+        p(omega_ind),p(period_ind),...
+        funcs.sys_rhs,funcs.sys_tau,options.sys_deri,options.sys_dtau,dim,xtau_ind);
+    trfuncs.sys_ntau=@()n_orig_tau*(n_orig_tau+1);
+    trfuncs.sys_deri=@(x,p,nx,np,v)...
+        df_deriv(struct('sys_rhs',trfuncs.sys_rhs),x,p,nx,np,v,options.hjac);
+    trfuncs.sys_deri_provided=false;
+    trfuncs.sys_tau=@(itau,x,p)sys_tau_SD_PObif(itau,x,p(1:npar),funcs.sys_tau,dim,xtau_ind);
+    trfuncs.sys_dtau=@(itau,x,p,nx,np)sys_dtau_SD_PObif(itau,x,p,nx,np,funcs.sys_dtau,...
+        dim,xtau_ind);
+end
+trfuncs.sys_cond=@(p)sys_cond_TorusBif(p,funcs.sys_cond,dim,period_ind,...
+    trfuncs.get_comp);
+%% required amendments of structures for extended system
+trbranch.parameter.free=[trbranch.parameter.free,omega_ind,period_ind];
+trbranch.method.point.extra_condition=1;
+%% create initial guess for correction
+trini0=TorusInit(funcs,point,branch.method,options.nremove);
+[trbranch,suc]=correct_ini(trfuncs,trbranch,trini0,...
+    options.dir,options.step,options.correc);
+end
+
+##### SOURCE END #####
+--></body></html>

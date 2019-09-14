@@ -1,0 +1,164 @@
+\documentclass[11pt]{scrartcl}
+\pdfoutput=1
+\usepackage[scaled=0.9]{helvet}
+\usepackage[scaled=0.9]{beramono}
+\usepackage{amsmath,graphicx,upquote}
+\usepackage{gensymb,paralist}
+%\usepackage{mathpazo}
+%\usepackage{eulervm}
+%\usepackage[notref,notcite]{showkeys}
+\usepackage[charter]{mathdesign}
+\usepackage{color,listings,calc,url}
+\typearea{11}
+\usepackage[pdftex,colorlinks]{hyperref}
+\definecolor{darkblue}{cmyk}{1,0,0,0.8}
+\definecolor{darkred}{cmyk}{0,1,0,0.7}
+\hypersetup{anchorcolor=black,
+  citecolor=darkblue, filecolor=darkblue,
+  menucolor=darkblue,pagecolor=darkblue,urlcolor=darkblue,linkcolor=darkblue}
+%\renewcommand{\floor}{\operatorname{floor}}
+\newcommand{\mt}[1]{\mathrm{#1}}
+\newcommand{\xeq}{x_\mathrm{eq}}
+\newcommand{\id}{\mt{I}}
+\newcommand{\matlab}{\texttt{Matlab}}
+\renewcommand{\i}{\mt{i}}
+\renewcommand{\d}{\mathop{}\!\mathrm{d}}
+\renewcommand{\epsilon}{\varepsilon}
+\newcommand{\sign}{\operatorname{sign}}
+\newcommand{\atant}{\blist{atan2}}
+\providecommand{\e}{\mt{e}}
+\newcommand{\re}{\mt{Re}}
+\newcommand{\im}{\mt{Im}}
+\newcommand{\nbc}{n_\mt{bc}}
+\newcommand{\gbc}{g_\mt{bc}}
+\newcommand{\gic}{g_\mt{ic}}
+\newcommand{\nic}{n_\mt{ic}}
+\newcommand{\R}{\mathbb{R}}
+\usepackage{microtype}
+
+\definecolor{var}{rgb}{0,0.25,0.25}
+\definecolor{comment}{rgb}{0,0.5,0}
+\definecolor{kw}{rgb}{0,0,0.5}
+\definecolor{str}{rgb}{0.5,0,0}
+\newcommand{\mlvar}[1]{\lstinline[keywordstyle=\color{var}]!#1!}
+\newcommand{\blist}[1]{\mbox{\lstinline!#1!}}
+\newlength{\tabw}
+\lstset{language=Matlab,%
+  basicstyle={\ttfamily},%
+  commentstyle=\color{comment},%
+  stringstyle=\color{str},%
+  keywordstyle=\color{kw},%
+  identifierstyle=\color{var},%
+  upquote=true,%
+  deletekeywords={beta,gamma}%
+}
+
+\title{Additional Implementation details for the
+  \blist{ddebiftool_extra_nmfm} extension} \author{Jan Sieber}\date{}
+\begin{document}
+\maketitle
+\tableofcontents
+\begin{abstract}
+  \noindent
+  \textbf{\textsf{Abstract}}\quad This document explains changes to
+  the original \blist{ddebiftool_extra_nmfm} extension to enable the
+  computation of normal forms for codimension-one and -two
+  bifurcations in delay-differential equations with state-dependent
+  delays.
+\end{abstract}
+
+
+\section{Background}
+\label{sec:background}
+The theses by Janssens, Wage and Bosschaert
+\cite{Janssens:Thesis,W14,MMB15} give background information on the
+general approach to computation of normal forms in delay-differential
+equations (DDEs) of the form
+\begin{equation}
+  \label{eq:dde}
+  \dot x(t)=f(x_t)\mbox{,\quad where $f:C([-\tau,0];\R^n)\mapsto\R^n$ 
+    and $x_t(\theta)=x(t+\theta)$.}
+\end{equation}
+They develop a framework that permits them to transfer the methodology
+developed for Ordinary Differential Equations (ODEs) by Kuznetsov \&
+Govaerts, described, for example in \cite{Kuznetsov:Elements:2004,G00}
+and implemented in MatCont \cite{DGK03}. Their framework is intended
+for the case where $f$ is smooth as a map with arguments in
+$C([-\tau,0];\R^n)$. This case is referred to as the \emph{constant delay
+case}.
+
+One ingredient to the computation of normal forms are $k$th-order
+derivatives of $f$ in an equilibrium $x_*$
+($x_*(\theta)=\operatorname{const}=\xeq$ and $f(x_*)=0$) with respect to
+$k$ deviations $v_1$,\ldots,$v_k\in C([-\tau,0];\R^n)$, which are
+$k$-linear maps in their arguments $v_j$ ($j=1,\ldots,k$) mapping into
+$\R^n$, written as
+\begin{equation}\label{eq:hod}
+  \partial^kf(x_*)[v_1,\ldots,v_k]\mbox{.}
+\end{equation}
+In normal form computations, the deviations $v_j$ are all combinations
+of eigenfunctions and generalized eigenfunctions of the linear
+functional $\partial^1f(x_*)$ such that a deviation $v$ has the form
+\begin{displaymath}
+  v(\theta)=\sum_{\ell=1}^{m}q_{\ell}\theta^{p_{\ell}}\exp(\lambda_{\ell}\theta)\mbox{.}
+\end{displaymath}
+The coefficients $q_\ell$ are in $\R^n$, the powers $p_\ell$ are
+non-negative integers and the numbers $\lambda_\ell$ are
+complex. Deviations of this type are smooth such that $k$th-order
+derivatives of the form \eqref{eq:hod} can also be computed for
+functional satisfying only a milder regularity assumption. We use the
+abbreviation $C^j$ for $C^j([-\tau,0];R^n)$, the space of $j$ times
+continuously differentiable functions on $[-\tau,0]$ with values in
+$\R^n$.
+
+\paragraph{Mild smoothness} We call $f:C^0\mapsto\R^n$ mildly
+differentiable $k$ times if $f$ is continuously differentiable $k$
+times as a functional from $:C^k$ into $\R^n$, and if the following
+extension condition holds: the map $\partial^jf(x)[v_1,\ldots,v_j]$
+can be extended continuously to $C^j\times [C^{j-1}]^j$.
+
+This means that the $j$th derivative of $f$ in $x$ may depend on all
+derivatives of $x$ up to order $j$, but it may only depend on
+derivatives of $v_1$, \ldots, $v_j$ up to order $j-1$.
+\paragraph{Example}
+Consider the functional $f(x)=p-x(-x(0))$, which would be the
+right-hand side of the DDE with state-dependent delay $\dot
+x(t)=p-x(t-x(t))$. The derivatives of $f$ in an arbitrary
+$x\in C^j$ in a single direction $v\in C^j$ are:
+\begin{equation}
+\begin{aligned}
+\partial^1f(x)v&=-x'(-x(0))v(0)-v(-x(0))\\
+\partial^2f(x)[v,v]&=-x''(-x(0))v(0)^2+2v'(-x(0))v(0)\\
+\partial^3f(x)[v,v,v]&=-x'''(-x(0))v(0)^3-3v''(-x(0))v(0)^2\\
+\ldots\\
+\partial^jf(x)[v]^j&=-x^{(j)}(-x(0))v(0)^j+(-1)^jjv^{(j-1)}(-x(0))v(0)^{j-1}\mbox{.}
+\end{aligned}\label{eq:example:expansion}
+\end{equation}
+This simple example illustrates that $\partial^jf$ depends on
+derivatives up to order $j$ of $x$ but only on derivatives up to order
+$j-1$ of the deviation. This is true in general also for mixed
+derivatives and, more generally, for functionals describing the
+right-hand side of a DDE with state-dependent delay as implemented in
+DDE-Biftool. The assumption on mild smoothness ensures that the
+nonlinear problems encountered in continuation of families of periodic
+solutions have solutions depending smoothly on parameters \cite{S12}.
+
+Since the normal form analysis is performed only near equilibria, the
+expansion of the right-hand side simplifies (all derivatives of $x$ in
+\eqref{eq:example:expansion} are zero and $x$ equals $\xeq$ everywhere):
+\begin{equation}
+\begin{aligned}
+\partial^1f(x)v&=-v(-\xeq)\\
+\partial^2f(x)[v,v]&=2v'(-\xeq)v(0)\\
+\partial^3f(x)[v,v,v]&=-3v''(-\xeq)v(0)^2\\
+\ldots\\
+\partial^jf(x)[v]^j&=(-1)^jjv^{(j-1)}(-\xeq)v(0)^{j-1}\mbox{.}
+\end{aligned}\label{eq:example:equilibrium}
+\end{equation}
+
+\paragraph{Multi-linear forms applied to function segments}
+The normal form computations require
+\bibliographystyle{unsrt} \bibliography{nmfm}
+
+
+\end{document}

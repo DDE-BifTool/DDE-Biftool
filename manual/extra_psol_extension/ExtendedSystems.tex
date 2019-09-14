@@ -1,0 +1,534 @@
+\documentclass[11pt]{scrartcl}
+\pdfoutput=1
+\usepackage[scaled=0.9]{helvet}
+\usepackage[scaled=0.9]{beramono}
+\usepackage{amsmath,graphicx,upquote}
+\usepackage{gensymb,paralist}
+%\usepackage{mathpazo}
+%\usepackage{eulervm}
+%\usepackage[notref,notcite]{showkeys}
+\usepackage[charter]{mathdesign}
+\usepackage{color,listings,calc,url}
+\typearea{11}
+\usepackage[pdftex,colorlinks]{hyperref}
+\definecolor{darkblue}{cmyk}{1,0,0,0.8}
+\definecolor{darkred}{cmyk}{0,1,0,0.7}
+\hypersetup{anchorcolor=black,
+  citecolor=darkblue, filecolor=darkblue,
+  menucolor=darkblue,pagecolor=darkblue,urlcolor=darkblue,linkcolor=darkblue}
+%\renewcommand{\floor}{\operatorname{floor}}
+\newcommand{\mt}[1]{\mathrm{#1}}
+\newcommand{\id}{\mt{I}}
+\newcommand{\matlab}{\texttt{Matlab}}
+\renewcommand{\i}{\mt{i}}
+\renewcommand{\d}{\mathop{}\!\mathrm{d}}
+\renewcommand{\epsilon}{\varepsilon}
+\newcommand{\sign}{\operatorname{sign}}
+\newcommand{\atant}{\blist{atan2}}
+\providecommand{\e}{\mt{e}}
+\newcommand{\re}{\mt{Re}}
+\newcommand{\im}{\mt{Im}}
+\newcommand{\nbc}{n_\mt{bc}}
+\newcommand{\gbc}{g_\mt{bc}}
+\newcommand{\gic}{g_\mt{ic}}
+\newcommand{\nic}{n_\mt{ic}}
+\newcommand{\R}{\mathbb{R}}
+\usepackage{microtype}
+
+\definecolor{var}{rgb}{0,0.25,0.25}
+\definecolor{comment}{rgb}{0,0.5,0}
+\definecolor{kw}{rgb}{0,0,0.5}
+\definecolor{str}{rgb}{0.5,0,0}
+\newcommand{\mlvar}[1]{\lstinline[keywordstyle=\color{var}]!#1!}
+\newcommand{\blist}[1]{\mbox{\lstinline!#1!}}
+\newlength{\tabw}
+\lstset{language=Matlab,%
+  basicstyle={\ttfamily},%
+  commentstyle=\color{comment},%
+  stringstyle=\color{str},%
+  keywordstyle=\color{kw},%
+  identifierstyle=\color{var},%
+  upquote=true,%
+  deletekeywords={beta,gamma}%
+}
+
+\title{Extended systems for 
+  Delay-differential equations as 
+  implemented in the extensions to  DDE BifTool}
+\author{Jan Sieber}\date{}
+\begin{document}
+\maketitle
+\tableofcontents
+\begin{abstract}
+  \noindent
+  \textbf{\textsf{Abstract}}\quad This document lists the extended
+  systems defining bifurcations of periodic orbits in delay
+  differential equations (DDEs) with finitely many point delays. The
+  delays are permitted to be system parameters or dependent on the
+  state at arbitrary points in the history. All systems are
+  boundary-value problems with periodic boundary conditions.
+
+  The proposed systems have been implemented as extensions to
+  DDE-BifTool, a numerical bifurcation analysis package for DDEs for
+  Matlab or Octave. The document contains also practical details of
+  the implementation, pointing to relevant routines.
+\end{abstract}
+
+
+\section{Background}
+\label{sec:background}
+The references \cite{MDO09,G00,D07,DCFKSW98} give background
+information on the defining systems for bifurcations of periodic
+orbits in ODEs.  The systems defining the periodic-orbit bifurcations
+for constant or state-dependent delay can be written as periodic
+boundary-value problems (BVPs) of DDEs that can be tracked using the
+\blist{'psol'} routines of
+DDE-BifTool\footnote{\url{http://twr.cs.kuleuven.be/research/software/delay/ddebiftool.shtml}}. The
+theory for bifurcations of periodic orbits in DDEs with constant delay
+is covered in textbooks \cite{S89,HL93,DGLW95}. Details of the
+algorithms and theory behind DDE-BifTool are discussed in
+\cite{ELS01,ELR02,SER02,RS07,VLR08}. The review \cite{RS07} also
+refers to
+\texttt{knut}\footnote{\url{http://gitorious.org/knut/pages/Home}}, an
+alternative C++ package with a stand-alone user interface. The review
+\cite{HKWW06} lists difficulties and open problems occuring with DDEs
+with state-dependent delays. However, periodic BVPs can be reduced to
+smooth finite-dimensional systems of algebraic equations
+\cite{S12}. This means that the general bifurcation theory for DDEs
+with state-dependent delay works as expected as far as the Hopf
+bifurcation, regular branches of periodic orbits, the period doubling
+bifurcation and Arnol'd tongues branching off at resonant points at a
+torus bifurcation are concerned.
+
+In the following all DDEs are assumed to have periodic boundary
+conditions on the interval $[0,1]$.
+
+\section{Folds of periodic orbits --- constant delays}
+\label{sec:ext:fold}
+In DDE-BifTool the system defining a periodic orbit is the periodic
+DDE with $n_\tau$ delays
+\begin{align}
+  \label{eq:po:dde}
+  \dot x(t)&=T\cdot f\left(x(t),x(t-\tau_j/T)_{j=1}^{n_\tau},p\right)\mbox{,}\\
+  \label{eq:po:phas}
+  0&=\int_0^1\dot x_\mathrm{ref}(t)^Tx(t)\d t
+\end{align}
+where the unknowns are $x\in C_p^n:=C_\mathrm{per}([0,1];R^n)$ (space
+of periodic functions on $[0,1]$) and $T$. The criterion for a fold is
+that this system has a simple singularity, that is, its linearization
+has a simple nullvector $(v,\beta)\in C_p^n\times\R$. This nullverctor
+satisfies the linear system of equations:
+\begin{align}
+  \label{eq:fold:dde}
+  \dot v(t)=&T\cdot
+  \left[\partial_1f(t)v(t)+\sum_{k=1}^{n_\tau}\partial_{k+1}f(t)v(t-\tau_k/T)\right]+\\
+  \label{eq:fold:beta}
+  &\beta\cdot\left[f(t)+
+    \sum_{k=1}^{n_\tau}\partial_{k+1}f(t)\dot x(t-\tau_k/T)\frac{\tau_k}{T}\right]\mbox{,}\\
+  \label{eq:fold:phas0}
+  0&=\int_0^1\dot x_\mathrm{ref}(t)^Tv(t)\d t
+\end{align}
+Note that the factor in front of $\beta$ (in brackets) in
+\eqref{eq:fold:beta} is the derivative of the original DDE
+\eqref{eq:po:dde} with respect to $T$. In \eqref{eq:fold:dde} and
+\eqref{eq:fold:beta} the terms $f(t)$ and $\partial_kf(t)$ stand for
+\begin{align}\label{eq:ftdef}
+  f(t)&=f\left(x(t),x(t-\tau_j/T)_{j=1}^{n_\tau},p\right)\mbox{,}&
+  \partial_kf(t)&=\partial_kf\left(x(t),x(t-\tau_j/T)_{j=1}^{n_\tau},p\right)\mbox{,}
+\end{align}
+respectively.
+
+\paragraph{Practical considerations}
+The phase condition \eqref{eq:po:phas} is hard-coded inside
+DDE-BifTool. It cannot be replicated using user-defined system
+conditions (\blist{funcs.sys_cond}) because DDE-BifTool passes only
+the current point to \blist{sys_cond}. Thus, we have to replace $\dot
+x_\mathrm{ref}(t)^T$ in \eqref{eq:fold:phas0} with $\dot
+x(t)^T$:
+\begin{equation}
+  \label{eq:fold:phas}
+  0=\int_0^1\dot x(t)^Tv(t)\d t\mbox{.}
+\end{equation}
+
+
+Furthermore, DDE-BifTool does not give the user access to the
+derivatives of the solution in past points (needed in
+\eqref{eq:fold:beta}). Thus, one has to replace $\dot x(t-\tau_k/T)$ by
+\begin{equation}
+  \label{eq:fpastfold}
+  \dot x(t-\tau_k/T)=f\left(x(t-\tau_k/T),
+    x(t-(\tau_k+\tau_j)/T)_{j=1}^{n_\tau},p\right)\mbox{,}
+\end{equation}
+such that the extended system has delays consisting of all sums of
+original delays. If we define $\tau_0=0$, then the
+$(n_\tau+1)n_\tau/2$ different delays
+\begin{displaymath}
+  \tau_{j,k}=\tau_j+\tau_k\mbox{\quad ($k\geq j\geq0$),}
+\end{displaymath}
+show up in the extended system ($\tau_{0,0}=0$, so doesn't count).
+
+\paragraph{Extended system}
+\begin{table}[ht]
+  \centering
+  \begin{tabular}[t]{l@{\qquad}l}\hline\noalign{\medskip}
+    \textbf{Position} in \blist{parameter} & \textbf{parameter}
+    \\\noalign{\medskip}
+    \blist{1:npar} & user system parameters\\
+    \blist{npar+1} & $\beta$\\
+    \blist{npar+2} & parameter enforced to be equal to period\\
+    \blist{npar+2+((j-1)*ntau+(k-j)+1} & $\tau_j+\tau_k$ ($j=1,\ldots,n_\tau$, $k=j,\ldots,n_\tau$)\\\noalign{\medskip}\hline
+  \end{tabular}
+  \caption{Parameters of extended system for fold 
+    (\blist{ntau=length(sys_tau())}$=n_\tau$)}
+  \label{tab:foldpars}
+\end{table}
+The function variables (stored in \blist{point.profile}) are $(x,v)\in
+C_p^{2n}=C_p^n\times C_p^n$. Inside \blist{pfuncs.sys_rhs} they are
+accessed as \blist{x=xx(1:n,:)} and \blist{v=xx(n+1:end,:)}. The
+system parameters of the extended system, assuming that the
+user-defined system has \blist{npar} parameters, are given in
+Table~\ref{tab:foldpars}.  The DDE defined by \blist{sys_rhs(xx,par)}
+consists of (using the convention $\tau_{0}=0$ and
+$\tau_{j,k}=\tau_j+\tau_k$ and implemented in \blist{sys_rhs_POfold})
+\begin{align}
+    \label{eq:po:impdde}
+  \dot x(t)&= f\left(x(t-\tau_j)_{j=0}^{n_\tau},p\right)\mbox{,}\\
+    \label{eq:fold:impdde}
+    \dot v(t)&=\frac{\beta}{T}f(t)+\partial_1f(t)v(t)+\sum_{k=1}^{n_\tau}
+    \partial_{k+1}f(t)\left[v(t-\tau_k)+\frac{\beta\tau_k}{T}f(t-\tau_k)\right]\mbox{, where}\\
+    \nonumber
+    f(t-\tau_k)&=f\left(x(t-\tau_{k,j})_{j=0}^{n_\tau},p\right)
+\end{align}
+The parameters in its argument \blist{par} are ordered as in
+Table~\ref{tab:foldpars}. The columns of \blist{xx} have the ordering
+\blist{xx(:,j*ntau+(k-j)+1)}$=x(t-\tau_{j,k})=x(t-\tau_j-\tau_k)$
+($j=0,\ldots,n_\tau$, $k=j,\ldots,n_\tau$).
+
+The additional $3+n_\tau(n_\tau+1)/2$ system conditions implemented in
+\blist{sys_cond_POfold} are:
+\begin{align}
+  \label{eq:foldvtv1}
+  0&=\int_0^1 v(t)^Tv(t)\d t+\beta^2-1\\
+  0&=\int_0^1 \dot x(t)^Tv(t)\d t \label{eq:fold:phas1}\\
+  0&=\blist{point.parameter(npar+2)-point.period} \label{eq:fold:tcopy}\\
+  0&=\tau_{j,k}-\tau_j-\tau_k \mbox{\quad $j=1,\ldots,n_{\tau}$,
+    $k=j,\ldots,n_{\tau}$}\label{eq:fold:taurel}
+\end{align}
+Incorporating a copy of the period as a parameter (and constraining it
+by \eqref{eq:fold:tcopy}) is necessary because \blist{sys_rhs} does
+not have direct access to the period of the orbit. An auxiliary
+routine \blist{p_dot} is included in the folder
+\texttt{ddebiftool} to compute scalar products between
+\blist{'psol'} structures of the type \eqref{eq:fold:phas1} (not
+directly called by the user but may be useful in other problems).
+
+\paragraph{Initialization}
+The Jacobian $J$ of the linearization of
+\eqref{eq:po:dde}--\eqref{eq:po:phas} in a point \blist{x} can be
+obtained with the DDE-BifTool routine \blist{psol_jac} (calling it
+without free parameters: \blist{free_par=[]}).  If $J=USV^T$ is the
+singular-value decomposition of $J$ then \blist{V(:,end)} is the
+approximate nullvector of $J$. This column vector only has to be
+reshaped and rescaled to achieve \eqref{eq:foldvtv1}:
+\begin{lstlisting}
+  v.profile=reshape(V(1:end-1,end),size(x.profile));
+  v.parameter=V(end,end);
+  vnorm=sqrt(p_dot(v,v,'free_par_ind',1));
+  beta=v.parameter/vnorm;
+  v.profile=v.profile/vnorm;
+\end{lstlisting}
+Then \blist{v.profile} is the approximation for $v(t)$ and
+\blist{v.parameter} is the approximation for $\beta$.
+
+\section{Period doublings and torus bifurcations --- constant
+  delays}
+\label{sec:ext:tr}
+The extended system has the function components $x$, $u$ and $v$ (all
+in $C_p^n$) and the additional parameters $\omega$ (angle of critical
+Floquet multipiers) and $T_\mathrm{copy}$ (equal to the period of the
+orbit). The linearized system is written in Floquet exponent
+form. This means that, if $\exp(\i \omega\pi)$ is the Floquet multiplier
+and $z$ the corresponding eigenfunction (satisfying
+$z(1)=z(0)\exp(\i\omega\pi)$), then
+\begin{displaymath}
+  u(t)+\i v(t)=\exp(-\i\omega\pi t/T)\,z(t)
+\end{displaymath}
+such that $u$ and $v$ are periodic (and real). The linearized system
+in Floquet exponent form (as implemented in \blist{sys_rhs_TorusBif}) is
+\begin{align}
+  \label{eq:tr:u}
+  \dot u(t) &=\phantom{-}\frac{\pi\omega}{T}v(t)+
+  \sum_{j=0}^{n_\tau}\partial_{j+1}f(t)\left[\phantom{-}\cos(\pi\omega\tau_j/T)u(t-\tau_j)+
+  \sin(\pi\omega\tau_j/T)v(t-\tau_j)\right]\\
+  \label{eq:tr:v}
+  \dot v(t) &=-\frac{\pi\omega}{T}u(t)+
+  \sum_{j=0}^{n_\tau}\partial_{j+1}f(t)\left[-\sin(\pi\omega\tau_j/T)u(t-\tau_j)+
+  \cos(\pi\omega\tau_j/T)v(t-\tau_j)\right]\mbox{.}
+\end{align}
+Again, we used the convention $\tau_0=0$ and $\partial_kf(t)$ as
+defined in \eqref{eq:ftdef}.  The additional system conditions (in
+\blist{sys_cond_TorusBif}) are
+\begin{align}
+  0&=\int_0^1 u(t)^Tu(t)+v(t)^Tv(t)\d t-1\label{eq:vtvutu:norm}\\
+  0&=\int_0^1 u(t)^Tv(t)\d t\label{eq:vtu:orth}\\
+  0&=\blist{point.parameter(npar+2)-point.period} \label{eq:tr:tcopy}
+\end{align}
+where \blist{npar} is the number of parameters defined by the user.
+
+\paragraph{Initialization}
+The auxiliary routine \blist{mult_crit} extracts the critical Floquet
+multiplier $\mu$ and the corresponding eigenfunction $z(t)$ for the
+approximate bifurcation point \blist{x}. Then the periodic Floquet
+mode $y(t)$ is obtained as
+\begin{displaymath}
+y(t)=y_r(t)+\i y_i(t)=\exp(-\log(\mu)t)\,z(t)\mbox{,}
+\end{displaymath}
+where $t\in[0,1]$ is already rescaled, and
+$\omega=\blist{atan2(imag(mu),real(mu))}/\pi$. Finally, one has to
+rescale $y$ to make it of unit length, and make its real and imaginary
+part orthogonal. Define
+% r=1/sqrt(utu+vtv);
+% gamma=atan2(2*utv,vtv-utu)/2;
+% qr=r*(upoint.profile*cos(gamma)-vpoint.profile*sin(gamma));
+% qi=r*(upoint.profile*sin(gamma)+vpoint.profile*cos(gamma));
+\begin{align*}
+  r&=\sqrt{\langle y_r,y_r\rangle+\langle
+    y_i,y_i\rangle}\mbox{,\quad and }\\
+  \gamma&=\frac{1}{2}\blist{atan2}\,(2\langle
+  y_r,y_i\rangle,\langle
+  y_r,y_r\rangle-\langle y_i,y_i\rangle)\mbox{,\quad then}\\
+  u(t)&=[y_r(t)\cos\gamma-y_i\sin\gamma]/r\mbox{,}\\
+  v(t)&=[y_r(t)\sin\gamma+y_i\cos\gamma]/r
+\end{align*}
+satisfy $\langle u,v\rangle=0$ and $\langle u,u\rangle+\langle
+v,v\rangle=1$, giving the profiles of $u$ and $v$, needed for the
+extended system.
+
+\section{Systems with state-dependent delays}
+\label{sec:sd-dde}
+For state-dependent delays, the system defining a periodic orbit is
+the periodic DDE 
+\begin{align}
+  \label{eq:po:sddde}
+  \dot x(t)&=T\cdot f\left(x_0,\ldots,x_{n_\tau},p\right)\mbox{,\quad where}\\
+  x_k&=x(t-\tau_k(x_0,\ldots,x_{k-1},p)/T)\mbox{\quad ($\tau_0=0$,
+    $k=0,\ldots,n_\tau$),}
+  \label{eq:po:sdxk}
+\end{align}
+augmented with the phase condition \eqref{eq:po:phas} to define the
+period $T$. In \eqref{eq:po:sdxk} the delays are functions
+$\tau_k:\R^{n\times k}\times\R^{n_p}\mapsto\R$.
+\subsection{The general variational problem}
+\label{sec:vp}
+ The variational problem of
+\eqref{eq:po:sddde}---\eqref{eq:po:sdxk} with respect to $x$,
+linearized in $(x(\cdot),T,p)$ is (using $(v(\cdot),\beta,q)$ as the
+linearized deviations):
+\begin{align}\allowdisplaybreaks
+  \dot v(t)=&\beta
+  f(t)+T\partial_{p}f(t)q+
+  T\sum_{k=0}^{n_\tau}\partial_{x,k}f(t)[V_k+B_k+Q_k]\label{eq:vp}
+  \mbox{,\qquad where}\\
+  V_0=&v(t)\mbox{,}\qquad
+  B_0=0\mbox{\quad ($\in\R^n)$,}\qquad
+  Q_0=0\mbox{\quad ($\in\R^n)$,}\\
+  V_k=&v(t-\tau_k(t)/T)-\frac{\dot
+    x(t-\tau_k(t)/T)}{T}\sum_{j=0}^{k-1}\partial_{x,j}
+  \tau_k(t)V_j\mbox{,\quad($k=1\ldots n_\tau$)}\\
+  B_k=&\frac{\dot x(t-\tau_k(t)/T)}{T}\left[\frac{\tau_k(t)}{T}\beta-
+    \sum_{j=0}^{k-1}\partial_{x,j} \tau_k(t)B_j\right]\mbox{,\quad($k=1\ldots n_\tau$)}\\
+  Q_k=&\frac{\dot x(t-\tau_k(t)/T)}{T}\left[-\partial_p\tau_k(t)q-
+    \sum_{j=0}^{k-1}\partial_{x,j}
+    \tau_k(t)Q_j\right]\mbox{\quad($k=1\ldots
+    n_\tau$).}\label{eq:vp:qk}
+\end{align}
+System~\eqref{eq:vp}---\eqref{eq:vp:qk} uses the notations (for
+$k=0,\ldots,n_\tau$)
+\begin{align}
+    f(t)&=f\left(x_0,\ldots,x_{n_\tau},p\right)\mbox{,}&
+    \tau_k(t)&=\tau_k\left(x_0,\ldots,x_{n_\tau},p\right)\mbox{,}\nonumber\\
+    \partial_{x,k}f(t)&=\frac{\partial}{\partial
+      x_k}f\left(x_0,\ldots,x_{n_\tau},p\right)\mbox{,}&
+    \partial_{x,k}\tau_k(t)&=\frac{\partial}{\partial
+      x_k}\tau_k\left(x_0,\ldots,x_{n_\tau},p\right)\mbox{,}\label{eq:vp:ft}\\
+    \partial_pf(t)&=\frac{\partial}{\partial
+      p}f\left(x_0,\ldots,x_{n_\tau},p\right)\mbox{,}&
+    \partial_p\tau_k(t)&=\frac{\partial}{\partial
+      p}\tau_k\left(x_0,\ldots,x_{n_\tau},p\right)\mbox{.}\nonumber
+\end{align}
+The vectors $V_k\in\R^n$, $B_k\in\R^n$ and $Q_k\in\R^n$ are the
+partial derivatives of $x_k$ w.r.t.\ $x(\cdot)$, $T$ and $p$
+respectively.
+
+The variational problem (and, hence, the extended systems for periodic
+orbit bifurcations) require the time derivatives of $x$ at times
+$t-\tau_k(t)/T$. DDE-BifTool does not give the user-defined functions
+access to past states of the time derivatives such that they have to
+be determined via the right-hand side $f$.  We define the matrix
+$\tau_{j,k}$ of delays iteratively ($j=0,\ldots,n_\tau$,
+$k=0,\ldots,n_\tau$):
+\begin{align}
+  \label{eq:tau0jdef}
+  \tau_{0,k}&=\tau_{k,0}=\tau_k(t)&&\mbox{for $k=0,\ldots,n_\tau$ as
+     in
+    \eqref{eq:vp:ft}}\\
+  \tau_{j,k}&=\tau_{j,0}+\tau_k\left(x\left(t-\frac{\tau_{j,0}}{T}\right),
+      \ldots,x\left(t-\frac{\tau_{j,k-1}}{T}\right),p\right)&&\mbox{for
+        $k,j=1,\ldots,n_\tau$.}
+\end{align}
+Then we can define
+\begin{equation}
+  \label{eq:ftkdef}
+  f_k(t)=f(x(t-\tau_{k,0}/T),\ldots,x(t-\tau_{k,n_\tau}/T),p)
+\end{equation}
+and replace $\dot x(t-\tau_k(t)/T)/T$ by $f_k(t)$ in
+\eqref{eq:vp}---\eqref{eq:vp:qk} ($f_0(t)$ equals $f(t)$ in \eqref{eq:vp:ft}).
+
+\paragraph{Practical considerations} Continuation of periodic orbit
+bifurcations computes the delays $\tau_{j,k}$ and calls the right-hand
+side $f$ at $(x(t-\tau_{k,0}),\ldots,x(t-\tau_{k,n_\tau}))$. The
+function \mlvar{tauSD_ext_ind} creates an array \mlvar{xtau_ind} which
+sorts the delays as follows: $\tau_{0,k}=\tau_{k,0}=\blist{tau(k)}$
+for $1\leq k\leq n_\tau$,
+$\tau_{j,k}=\blist{tau((j-1)*ntau+ntau+1+k)}$ for $j\geq1$ and
+$k=1,\ldots,n_\tau$. Inside the array \mlvar{xx}, which is the first
+argument of \blist{sys_rhs} and \blist{sys_tau},
+$(x(t-\tau_{k,0}),\ldots,x(t-\tau_{k,n_\tau}))$ can be found as
+\blist{xx(:,xtau_ind(k+1,:))}
+
+
+
+\section{Fold of periodic orbits --- state-dependent delays}
+\label{sec:sd:pofold}
+The function \mlvar{sys_rhs_SD_POfold} extends the user-defined
+nonlinear problem with the variational problem
+\eqref{eq:vp}---\eqref{eq:vp:qk} restricted to $q=0$. As a
+user-defined function it assumes that its argument $x(\cdot)$ has
+period $T$ (thus, all delays and derivatives are re-scaled by
+$T$). Repeating all definitions, \mlvar{sys_rhs_SD_POfold}
+implements the following system:
+\begin{equation}\label{eq:sd:pofold}
+  \begin{aligned}
+    \dot x(t)&=f\left(x_0,\ldots,x_{n_\tau},p\right)\mbox{,}\\
+    \dot v(t)=&\frac{\beta}{T}f(t)+
+    \sum_{k=0}^{n_\tau}\partial_{x,k}f(t)[V_k+B_k]
+    \mbox{,\qquad where}\\
+    V_0=&v(t)\mbox{,}\quad B_0=0\mbox{\quad ($\in\R^n)$,}\\
+    V_k=&v(t-\tau_k(t))-f_k(t)\sum_{j=0}^{k-1}\partial_{x,j}
+    \tau_k(t)V_j\mbox{,\quad($k=1\ldots n_\tau$)}\\
+    B_k=&f_k(t)\left[\frac{\tau_k(t)}{T}\beta-
+      \sum_{j=0}^{k-1}\partial_{x,j}
+      \tau_k(t)B_j\right]\mbox{,\quad($k=1\ldots n_\tau$).}
+  \end{aligned}
+\end{equation}
+System~\eqref{eq:sd:pofold} uses the notations
+\begin{equation}\label{eq:sd:abbrevs}
+  \begin{aligned}
+    x_k&=x(t-\tau_k(x_0,\ldots,x_{k-1},p))&&\mbox{\quad ($\tau_0=0$),
+       $k=0,\ldots,n_\tau$,}\\
+    f(t)&=f\left(x_0,\ldots,x_{n_\tau},p\right)\mbox{,}&&\\
+    \tau_k(t)&=\tau_k\left(x_0,\ldots,x_{n_\tau},p\right)&&\mbox{\quad for $k=0,\ldots,n_\tau$,}\\
+    \partial_{x,k}f(t)&=\frac{\partial}{\partial
+      x_k}f\left(x_0,\ldots,x_{n_\tau},p\right)
+    &&\mbox{\quad for $k=0,\ldots,n_\tau$,}\\
+    \partial_{x,k}\tau_k(t)&=\frac{\partial}{\partial
+      x_k}\tau_k\left(x_0,\ldots,x_{n_\tau},p\right)
+    &&\mbox{\quad for $k=0,\ldots,n_\tau$,}\\
+    f_k(t)&=f(x(t-\tau_{k,0}),\ldots,x(t-\tau_{k,n_\tau}),p)
+    &&\mbox{\quad for $k=0,\ldots,n_\tau$,}\\
+    \tau_{0,k}&=\tau_{k,0}=\tau_k(t)&&\mbox{\quad for $k=0,\ldots,n_\tau$,}\\
+    \tau_{j,k}&=\tau_{j,0}+\tau_k(x(t-\tau_{j,0}),
+    \ldots,x(t-\tau_{j,k-1}),p)&&\mbox{\quad for
+      $k,j=1,\ldots,n_\tau$.}
+  \end{aligned}
+\end{equation}
+The rows of the argument \mlvar{xx} for \mlvar{sys_rhs_SD_POfold}
+consist of $x(\cdot)$ and $v(\cdot)$. The parameter array is extended
+by $\beta$ and $T_\mt{copy}$ (a copy of the period $T$, the relation
+$T=T_\mt{copy}$ is enforced in \mlvar{sys_cond_POfold}). The two
+differential equations in \eqref{eq:sd:pofold} are augmented with the
+phase condition built into DDE-BifTool, and additional system
+conditions. The additional $3+n_\tau(n_\tau+1)/2$ system conditions
+implemented in \blist{sys_cond_POfold} are identical to the extra
+conditions of the constant-delay case
+\eqref{eq:foldvtv1}--\eqref{eq:fold:tcopy}:
+\begin{align}
+  \label{eq:sdfoldvtv1}
+  0&=\int_0^1 v(t)^Tv(t)\d t+\beta^2-1\\
+  0&=\int_0^1 \dot x(t)^Tv(t)\d t \label{eq:sdfold:phas1}\\
+  0&=\blist{point.parameter(npar+2)-point.period}\mbox{.} 
+  \label{eq:sdfold:tcopy}
+\end{align}
+As the additional delays are not parameters, condition
+\eqref{eq:fold:taurel} is not present (controlled by the parameter
+\mlvar{relations} of \blist{sys_cond_POfold} being empty).
+
+\section{Period doublings and torus bifurcations --- state-dependent
+  delays}
+\label{sec:sd:tr}
+The function \mlvar{sys_rhs_SD_TorusBif} extends the user-defined
+nonlinear problem with a coupled pair of variational problems
+\eqref{eq:vp}---\eqref{eq:vp:qk} restricted to $q=0$ and
+$\beta=0$. The approach is identical to the extended system for
+constant delays outlined in Section~\ref{sec:ext:tr}. However, it
+includes the derivatives of the time-delays. The extended system for
+torus bifurcations computes a pair of two functions $u(t)$ and $v(t)$
+($u(t)+\i v(t)$ is the critical complex Floquet mode). Consequently,
+the extended system for torus bifurcations with state-dependent delays
+requires a pair of sequences $U_k$ and $V_k$ (instead of $V_k$ and
+$B_k$ for the fold of periodic orbits). The full extended system for
+torus bifurcations and period doublings is:
+\begin{equation}
+  \label{eq:sd:torus}
+  \begin{aligned}
+    \dot x(t)&=f\left(x_0,\ldots,x_{n_\tau},p\right)\mbox{,}\\
+        \dot u(t)&= \frac{\pi\omega}{T}v(t)+
+        \sum_{k=0}^{n_\tau}\partial_{x,k}f(t)U_k\mbox{,}\\
+        \dot v(t)&= -\frac{\pi\omega}{T}u(t)+
+        \sum_{k=0}^{n_\tau}\partial_{x,k}f(t)V_k\mbox{,\qquad where}\\
+        U_0&=u(t)\mbox{,}\quad V_0=v(t)
+        \mbox{,\quad and for $k=1\ldots,n_\tau$}\\
+    %     \begin{bmatrix}
+    %       U_k\\V_k
+    %     \end{bmatrix}&=
+    %     \begin{bmatrix}
+    %     \cos\left(\frac{\pi\omega\tau_k(t)}{T}\right)\mbox{,}&
+    %     \sin\left(\frac{\pi\omega\tau_k(t)}{T}\right)\\
+    %     -\sin\left(\frac{\pi\omega\tau_k(t)}{T}\right)\mbox{,}&
+    %     \cos\left(\frac{\pi\omega\tau_k(t)}{T}\right)
+    %     \end{bmatrix}
+    %     \begin{bmatrix}
+    %       u(t-\tau_k(t))\\
+    %       v(t-\tau_k(t))
+    %     \end{bmatrix}-
+    %     \begin{bmatrix}
+    %       f_k(t)\sum_{j=0}^{k-1}\partial_{x,j}
+    % \tau_k(t)U_j\\
+    %       f_k(t)\sum_{j=0}^{k-1}\partial_{x,j}
+    % \tau_k(t)V_j
+    %     \end{bmatrix}
+    %     -f_k(t)\sum_{j=0}^{k-1}\partial_{x,j}
+    % \tau_k(t)
+    % \begin{bmatrix}
+    %   U_j\\V_j      
+    % \end{bmatrix}\mbox{.}
+        U_k&=\phantom{-}
+        \cos\left(\frac{\pi\omega\tau_k(t)}{T}\right)u(t-\tau_k(t))
+        +\sin\left(\frac{\pi\omega\tau_k(t)}{T}\right)v(t-\tau_k(t))
+        -f_k(t)\sum_{j=0}^{k-1}\partial_{x,j}
+    \tau_k(t)U_j\mbox{,}\\
+        V_k&=-\sin\left(\frac{\pi\omega\tau_k(t)}{T}\right)u(t-\tau_k(t))+
+        \cos\left(\frac{\pi\omega\tau_k(t)}{T}\right)v(t-\tau_k(t))
+        -f_k(t)\sum_{j=0}^{k-1}\partial_{x,j}
+    \tau_k(t)V_j\mbox{.}
+  \end{aligned}
+\end{equation}
+System\eqref{eq:sd:torus} uses the same set \eqref{eq:sd:abbrevs} of
+notations as the system for the fold of periodic orbits.  The
+additional conditions and the initialization are identical to the constant-delay case in Section~\ref{sec:ext:tr}.
+
+\bibliographystyle{unsrt} \bibliography{delay}
+\appendix
+
+
+\end{document}

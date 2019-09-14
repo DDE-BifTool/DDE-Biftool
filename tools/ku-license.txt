@@ -1,0 +1,24 @@
+Copyright (c) |year|, K.U. Leuven, Department of Computer Science
+
+1. The package DDE-BIFTOOL can be used only for the purpose of internal
+research excluding any commercial use of the package DDE-BIFTOOL as such
+or as a part of a software product.
+
+2. K.U.Leuven, Department of Computer Science shall for all
+purposes be considered the owner of DDE-BIFTOOL and of all copyright,
+trade secret, patent or other intellectual property rights therein.
+
+3. The package DDE-BIFTOOL is provided on an "as is" basis and
+for the purposes described in paragraph 1 only. In no circumstances
+can K.U. Leuven be held liable for any deficiency, fault
+or other mishappening with regard to the use or performance of
+the package DDE-BIFTOOL.
+
+4. All scientific publications, for which the package DDE-BIFTOOL
+has been used, shall mention usage of the package DDE-BIFTOOL,
+and shall refer to the following publication:
+
+K. Engelborghs, T. Luzyanina, G. Samaey. DDE-BIFTOOL v. 2.00 user
+manual: a Matlab package for bifurcation analysis of delay
+differential equations. Technical Report TW-330, Department of
+Computer Science, K.U.Leuven, Leuven, Belgium, 2001.

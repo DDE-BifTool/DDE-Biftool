@@ -1,0 +1,39 @@
+clear
+addpath('../../ddebiftool/',...
+    '../../ddebiftool_extra_nmfm/',...
+    '../../ddebiftool_extra_rotsym/',...
+    '../../ddebiftool_utilities/',....
+    '../../ddebiftool_extra_symbolic/');
+fsym=set_symfuncs('sym_nested');
+f=set_funcs('sys_rhs',@(xx,p)-xx(1,2,:),...
+    'sys_tau',@(it,xx,p)p+xx(1,1,:),...
+    'sys_ntau',@()1,'x_vectorized',true);
+eqbr=SetupStst(fsym,'x',0.1,'parameter',0.1,...
+    'contpar',1,'max_step',[0,0.4]);
+eqbr=br_contn(fsym,eqbr,100);
+[eqbr,~,ind]=LocateSpecialPoints(fsym,eqbr);
+%%
+for i=1:length(ind)
+    psol{i}=SetupPsol(fsym,eqbr,ind(i));
+    psol{i}=br_contn(fsym,psol{i},30);
+end
+%%
+figure(2);clf;ax2=gca;hold(ax2,'on')
+[lg,ax2]=Plot2dBranch(eqbr,'ax',ax2,'funcs',fsym,'stability',0.8);
+for i=1:length(ind)
+    [lg,ax2]=Plot2dBranch(psol{i},'ax',ax2,'funcs',fsym,'oldlegend',lg,'stability',0.8);
+end
+legend(ax2,lg{1},lg{2},'location','southeast');
+set(ax2,'fontweight','bold');
+xlabel('p');
+ylabel('max x');
+%%
+fs=set_symfuncs('sym_nested');
+eqsbr=SetupStst(fs,'x',pi/2,'parameter',pi/2,'contpar',1);
+hopfs=SetupHopf(fs,eqsbr,1);
+l1s=HopfLyapunovCoefficients(fs,hopfs);
+psols=SetupPsol(fs,eqsbr,1);
+figure(1);clf;ax1=gca;
+psols=br_contn(fs,psols,30,'plotaxis',ax1);
+%%
+save('nested_single_results.mat')

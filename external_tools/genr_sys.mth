@@ -1,0 +1,374 @@
+(* 
+	Title: gener_sys, a file generator for DDE-BIFTOOL
+	-----
+	
+	Version: 01/07/00, v0.99 (beta)
+	-------  03/07/00, v0.99.01: Bug correction: Upper case characters in 
+					the header comments were displayed in
+					lower case.
+	         27/07/00, v0.99.02: Double assignation of the last item of 
+					matrices removed.
+		 28/09/00, v1.00.01: Simplify is now applied after the 
+					derivative operator
+
+					
+	Author: Didier Pieroux, dpieroux@ulb.ac.be
+	------  Theoretical Nonlinear Optics, CP 231
+	        Physics Department, Universite Libre de Bruxelles
+	        Bvd du Triomphe, B-1050 Brussels, Belgium
+
+   
+	Summary
+	-------
+	
+	gener_sys generates the three Matlab files sys_rhs.m, sys_deri.m and 
+	sys_tau.m needed by DDE-BIFTOOL.  The input of the code generation 
+	consists in the Mathematica definition of the DDEs.
+	
+
+	Copyright
+	---------
+	
+	You can use this package, copy it and distribute it.  It is free and 
+	no one is allowed to make profit with it or a modified (extended or 
+	not) version of it.  If you modify this package, don't distribute it 
+	without indicating clearly in the header of this file the 
+	modification(s) you have made.  You should also contact me in order 
+	to incorporate your modification in the official release.
+	
+	
+	Warranty
+	--------
+	
+	You use this package at your own risk. I or the ULB warrant nothing.  
+	While this package has been successfully used on a number of DDEs, I 
+	can't warrant the exactness of the code generated for every specific 
+	DDE system.  It is the responsibility of the end-user to check the 
+	validity of the result.
+	
+	
+	About DDE-BIFTOOL
+	----------------
+	
+	DDE-BIFTOOL is a Matlab package that has been developed by 
+	K. Engelborghs (Computer Science Department, K.U.Leuven, 
+	Celestijnenlaan 200A, B-3001 Leuven, Belgium) for the numerical 
+	bifurcation analysis of systems of delay differential equations with 
+	fixed discrete delays (see 
+	www.cs.kuleuven.ac.be/~koen/delay/ddebiftool.shtml).
+
+
+*)
+
+BeginPackage["DdeBifTool`"]
+
+DdeBifTool::usage = "DdeBifTool[rhs, indepVar, depVar, param, delays] generates the files sys_rhs.m, sys_deri.m and sys_tau.m needed by DDEBIFTOOL.  The parameters are the r.h.s. of the DDEs, the independent variable, the dependent variables (given in the order corresponding to that of the r.h.s.), the parameters and the delays, respectively.  But for indepVar, all parameters are lists. For the illustrative example of the DDEBIFTOOL manual (section 4), the call is:\n
+\!\(DdeBifTool[{\[Beta]\ Tanh[x\_1[t - \[Tau]\_s]] +
+        a\_12\ Tanh[x\_2[t - \[Tau]\_2]] - \[Kappa]\ x\_1[t],
+      a\_21\ Tanh[x\_1[t - \[Tau]\_1]] + \[Beta]\ Tanh[
+            x\_2[t - \[Tau]\_s]] - \[Kappa]\ x\_2[t]},
+    t, {x\_1, x\_2}, {\[Kappa], \[Beta], a\_12,
+      a\_21}, {\[Tau]\_1, \[Tau]\_2, \[Tau]\_s}]\)"
+
+DdeBifToolRhs::usage = "DdeBifToolRhs[rhs, indepVar, depVar, param, delays] generates the file sys_rhs.m needed by DDEBIFTOOL.  The parameters are the r.h.s. of the DDEs, the independent variable, the dependent variables (given in the order corresponding to that of the r.h.s.), the parameters and the delays, respectively.  But for indepVar, all parameters are lists. For the illustrative example of the DDEBIFTOOL manual (section 4), the call is:\n
+\!\(DdeBifToolRhs[{\[Beta]\ Tanh[x\_1[t - \[Tau]\_s]] +
+        a\_12\ Tanh[x\_2[t - \[Tau]\_2]] - \[Kappa]\ x\_1[t],
+      a\_21\ Tanh[x\_1[t - \[Tau]\_1]] + \[Beta]\ Tanh[
+            x\_2[t - \[Tau]\_s]] - \[Kappa]\ x\_2[t]},
+    t, {x\_1, x\_2}, {\[Kappa], \[Beta], a\_12,
+      a\_21}, {\[Tau]\_1, \[Tau]\_2, \[Tau]\_s}]\)"
+
+DdeBifToolTau::usage = "DdeBifToolTau[rhs, indepVar, depVar, param, delays] generates the file sys_tau.m needed by DDEBIFTOOL.  The parameters are the r.h.s. of the DDEs, the independent variable, the dependent variables (given in the order corresponding to that of the r.h.s.), the parameters and the delays, respectively.  But for indepVar, all parameters are lists. For the illustrative example of the DDEBIFTOOL manual (section 4), the call is:\n
+\!\(DdeBifToolTau[{\[Beta]\ Tanh[x\_1[t - \[Tau]\_s]] +
+        a\_12\ Tanh[x\_2[t - \[Tau]\_2]] - \[Kappa]\ x\_1[t],
+      a\_21\ Tanh[x\_1[t - \[Tau]\_1]] + \[Beta]\ Tanh[
+            x\_2[t - \[Tau]\_s]] - \[Kappa]\ x\_2[t]},
+    t, {x\_1, x\_2}, {\[Kappa], \[Beta], a\_12,
+      a\_21}, {\[Tau]\_1, \[Tau]\_2, \[Tau]\_s}]\)"
+
+DdeBifToolDeri::usage = "DdeBifToolDeri[rhs, indepVar, depVar, param, delays] generates the file sys_deri.m needed by DDEBIFTOOL.  The parameters are the r.h.s. of the DDEs, the independent variable, the dependant variables (given in the order corresponding to that of the r.h.s.), the parameters and the delays, respectively.  But for indepVar, all parameters are lists. For the illustrative example of the DDEBIFTOOL manual (section 4), the call is:\n
+\!\(DdeBifToolDeri[{\[Beta]\ Tanh[x\_1[t - \[Tau]\_s]] +
+        a\_12\ Tanh[x\_2[t - \[Tau]\_2]] - \[Kappa]\ x\_1[t],
+      a\_21\ Tanh[x\_1[t - \[Tau]\_1]] + \[Beta]\ Tanh[
+            x\_2[t - \[Tau]\_s]] - \[Kappa]\ x\_2[t]},
+    t, {x\_1, x\_2}, {\[Kappa], \[Beta], a\_12,
+      a\_21}, {\[Tau]\_1, \[Tau]\_2, \[Tau]\_s}]\)"
+
+
+(* ************************************************************************* *)
+
+Begin["`Private`"]
+
+DdeBifTool[rhseq_, t_, var_, param_, delays_]  := Module[{},
+	DdeBifToolRhs[rhseq, t, var, param, delays];
+	DdeBifToolDeri[rhseq, t, var, param, delays];
+	DdeBifToolTau[rhseq, t, var, param, delays];
+];
+
+
+(* ************************************************************************* *)
+
+DdeBifToolRhs[rhseq_, t_, var_, param_, delays_] := Module[{x, i, j, rhs, temp},
+
+	(* Replace the delays by an index *)
+
+	subs = {x_[t] -> x[0]};
+	Do[subs = List[subs, {x_[t-delays[[i]]] -> x[i]}], {i, 1, Length[delays]}];
+	subs = Flatten[subs];
+	rhs = rhseq /. subs;
+
+
+	(* Replace the user variables by the Matlab variables *)
+
+	parameters = Flatten[List[param, delays]];
+	subs = {};
+	Do[subs = List[subs, var[[i]][j] -> xx[i, 1 + j]], {j, 0, Length[delays]}, {i, 1, Length[var]}];
+	Do[subs = List[subs, parameters[[i]] -> par[i]], {i, 1, Length[parameters]}];
+	subs = Flatten[subs];
+
+
+	(* Header *)
+
+	ddebiffile = OpenWrite["sys_rhs.m"];
+	write["function f=sys_rhs(xx, par)"];
+	write[""];
+	header[var, parameters];
+
+
+	(* RHS *)
+
+	Do[write["f(" <> ToString[i] <> ",1)=" <> ToString[FortranForm[Part[rhs, i] /. subs]]<>";"], {i, 1, Length[rhs]}];
+
+	write[""];
+	write["return;"];
+	Close[ddebiffile];
+];
+
+
+(* ************************************************************************* *)
+
+DdeBifToolTau[rhseq_, t_, var_, param_, delays_] := Module[{x, i, j, temp},
+	(* Replace the delays by an index *)
+
+	subs = {x_[t] -> x[0]};
+	Do[subs = List[subs, {x_[t-delays[[i]]] -> x[i]}], {i, 1, Length[delays]}];
+	subs = Flatten[subs];
+	rhs = rhseq /. subs;
+
+
+	(* Replace the user variables by the Matlab variables *)
+
+	parameters = Flatten[List[param, delays]];
+	subs = {};
+	Do[subs = List[subs, var[[i]][j] -> xx[i, 1 + j]], {j, 0, Length[delays]}, {i, 1, Length[var]}];
+	Do[subs = List[subs, parameters[[i]] -> par[i]], {i, 1, Length[parameters]}];
+	subs = Flatten[subs];
+
+
+	(* Header *)
+
+	ddebiffile = OpenWrite["sys_tau.m"];
+	write["function tau=sys_tau()"];
+	write[""];
+	header[var, parameters];
+
+
+	(* Tau *)
+
+	temp="";
+	Do[temp = temp <> " " <> ToString[i], {i, Length[param]+1, Length[param]+Length[delays]}];
+
+	write["tau=[" <> StringTake[temp, {2,-1}] <> "];"];
+	
+	write[""];
+	write["return;"];
+	Close[ddebiffile];
+];
+
+
+(* ************************************************************************* *)
+
+DdeBifToolDeri[rhseq_, t_, var_, param_, delays_] := Module[{x, i, j, subs, rhs, cmd, cmd2, str, jac, vec, temp},
+
+	(* Replace the delays by an index *)
+
+	subs = {x_[t] -> x[0]};
+	Do[subs = List[subs, {x_[t - delays[[i]]] -> x[i]}], {i, 1, Length[delays]}];
+	subs = Flatten[subs];
+	rhs = rhseq /. subs;
+
+
+	(* Replace the user variables by the Matlab variables *)
+
+	parameters = Flatten[List[param, delays]];
+	subs = {};
+	Do[subs = List[subs, var[[i]][j] -> xx[i, 1 + j]], {j, 0, Length[delays]}, {i, 1, Length[var]}];
+	Do[subs = List[subs, parameters[[i]] -> par[i]], {i, 1, Length[parameters]}];
+	subs = Flatten[subs];
+
+
+	(* Header *)
+
+	ddebiffile = OpenWrite["sys_deri.m"];
+	write["function mat=sys_deri(xx, par, nx, np, v)"];
+	write[""];
+	header[var, parameters];
+
+	write["mat=[];"];
+	write[""];
+
+
+	(* 1st order derivatives wrt variables *)
+
+	write["if length(nx)==1 & length(np)==0 & isempty(v)"];
+	cmd = "\tif";
+	Do[
+		write[cmd <> " nx==" <> ToString[nx]];
+
+		Do[
+			temp = Simplify[D[Part[rhs, i], Part[var, j][nx]]];
+
+			If[(temp =!= 0) || (i==Length[var] && j==Length[rhs]),
+				write["\t\tmat(" <> ToString[i] <> "," <> ToString[j] <> ")=" <> ToString[FortranForm[temp /. subs]] <> ";"]],
+			
+			{j, 1, Length[var]},{i, 1, Length[rhs]}
+		];
+
+		cmd = "\telseif",
+		{nx, 0, Length[delays]}
+	];
+	write["\tend;"];
+
+
+	(* 1st order derivatives wrt parameters *)
+
+	write["elseif length(nx)==0 & length(np)==1 & isempty(v)"];
+	cmd = "\tif";
+	Do[
+		write[cmd <> " np==" <> ToString[np]];
+
+		Do[
+			temp = Simplify[D[Part[rhs, i], Part[parameters, np]]];
+
+			If[(temp =!= 0) || (i==Length[rhs]),
+				write["\t\tmat(" <> ToString[i] <> "," <> ToString[1] <> ")=" <> ToString[FortranForm[temp /. subs]] <> ";"]],
+			{i, 1,Length[rhs]}
+		];
+
+		cmd = "\telseif",
+		{np, 1, Length[parameters]}
+	];
+	write["\tend;"];
+
+
+	(* 2nd order derivatives wrt variables and parameters *)
+
+	write["elseif length(nx)==1 & length(np)==1 & isempty(v)"];
+	cmd = "\tif";
+	Do[
+		write[cmd <> " nx==" <> ToString[nx]];
+		cmd2 = "\t\tif";
+		Do[
+			write[cmd2 <> " np==" <> ToString[np]];
+
+			Do[
+				temp = Simplify[D[Part[rhs, i], Part[var, j][nx], Part[parameters, np]]];
+				If[(temp =!= 0) || (j==Length[var] && i==Length[rhs]),
+					write["\t\t\tmat(" <> ToString[i] <> "," <> ToString[j] <> ")=" <> ToString[FortranForm[temp /. subs]] <> ";"]], 
+				{j, 1, Length[var]}, {i, 1, Length[rhs]}
+			];
+
+			cmd2 = "\t\telseif",
+			{np, 1, Length[parameters]}
+		];
+
+		write["\t\tend;"];
+		cmd = "\telseif",
+		{nx, 0, Length[delays]}
+	];
+
+	write["\tend;"];
+
+
+	(* 2nd order derivatives wrt variables *)
+
+	write["elseif length(nx)==2 & length(np)==0 & ~isempty(v)"];
+	cmd = "\tif";
+	Do[
+		write[cmd <> " nx(1)==" <> ToString[nx1]];
+		cmd2 = "\t\tif";
+		jac = Table[0, {Length[rhs]}, {Length[var]}];
+		vec = Array[v, {Length[var]}];
+		Do[
+			Part[jac, i, j] = Simplify[D[Part[rhs, i], Part[var, j][nx1]]],
+			{j, 1,Length[var]}, {i, 1, Length[rhs]}
+		];
+
+		vec = jac.vec;
+		Do[
+			write[cmd2 <> " nx(2)==" <> ToString[nx2]];
+
+			Do[
+				temp = Simplify[D[Part[vec, i], Part[var, j][nx2]]];
+
+				If[temp =!= 0 || (j==Length[var] && i==Length[vec]),
+					write["\t\t\tmat(" <> ToString[i] <> "," <> ToString[j] <> ")=" <>
+					ToString[FortranForm[temp /. subs]] <> ";"]],
+				{j, 1, Length[var]}, {i, 1, Length[vec]}
+			];
+
+			cmd2 = "\t\telseif";,
+			{nx2, 0, Length[delays]}
+		];
+
+		write["\t\tend;"];
+		cmd = "\telseif";,
+		{nx1, 0, Length[delays]}
+	];
+	write["\tend;"];
+
+
+	(* Finalization *)
+
+	write["end;"];
+	write[""];
+	write["if isempty(mat)"];
+	write["\terr=[nx np size(v)];"];
+	write["\terror('SYS_DERI: requested derivative could not be computed!');"];
+	write["end;"];
+	write[""];
+	write["return;"];
+	Close[ddebiffile];
+	];
+
+(* ************************************************************************* *)
+(* Generate the comment in the file header.*)
+
+header[var_, parameters_] := Module[{temp, i},
+	temp = "";
+	Do[temp = temp <> " " <> ToString[Part[var, i]], {i, 1, Length[var]}];
+	write2["% xx: " <> StringReplace[ToString[temp, CharacterEncoding -> "ASCII"], {"[" -> "", "]" -> ""}]];
+	temp= "";
+	Do[temp = temp <> " " <> ToString[Part[parameters, i]], {i, 1, Length[parameters]}];
+	write2["% par:" <> StringReplace[ToString[temp, CharacterEncoding -> "ASCII"], {"[" -> "", "]" -> ""}]];
+	write[""];
+];
+
+(* ************************************************************************* *)
+(* Write strings to the file. Before that, final conversions are made. *)
+
+	write[x_] := WriteString[ddebiffile, StringReplace[ToLowerCase[x], { "ddebiftoolxprivatex" -> "", "ddebiftool`private`" -> "", "**" -> "^", FromCharacterCode[{10, 32}] -> "_"}] <> "\n"];
+
+	write2[x_] := WriteString[ddebiffile, StringReplace[x, { "ddebiftoolxprivatex" -> "", "ddebiftool`private`" -> "", "**" -> "^", FromCharacterCode[{10, 32}] -> "_"}] <> "\n"];
+
+(* ************************************************************************* *)
+
+
+(* Protect exported symbols. *)
+
+SetAttributes[{DdeBifTool, DdeBifToolRhs, DdeBifToolDeri} , {Protected, ReadProtected}];
+
+End[]
+
+EndPackage[]
+

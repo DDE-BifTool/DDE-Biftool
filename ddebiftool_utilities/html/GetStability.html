@@ -1,0 +1,281 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Number of unstable eigenvalues/Floquet multipliers along branch</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-03-23"><meta name="DC.source" content="GetStability.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+
+  </style></head><body><div class="content"><h1>Number of unstable eigenvalues/Floquet multipliers along branch</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Inputs</a></li><li><a href="#3">Outputs</a></li><li><a href="#4">process options</a></li><li><a href="#5">check if stability has been computed already &amp; compute if necessary</a></li><li><a href="#6">Count nmber of unstable eigenvalues</a></li></ul></div><pre class="codeinput"><span class="keyword">function</span> [nunst,dom,triv_defect,points]=GetStability(branch,varargin)
+</pre><h2>Inputs<a name="2"></a></h2><div><ul><li><tt>branch</tt>: branch along which number of unstable eigenvalues/Floquet multipliers is determined</li></ul></div><pre>Important name-value pair inputs</pre><div><ul><li><tt>'exclude_trivial'</tt> (logical): exclude trivial eigenvalues (what they are                            depends on the type of points)</li><li><tt>'locate_trivial'</tt> (function): e.g. @(p)[1;-1] for removing 1 and -1                            for period doubling orbits (overwrites standard location)</li><li><tt>'funcs'</tt>:   set of functions for computing branch, needed if stability information is not yet present and needs to be calculated</li><li><tt>'method'</tt>: which method is used for comutation (if not present, a standard method is generated with <tt>df_mthod</tt>)</li><li><tt>'recompute'</tt> (default <tt>false</tt>):  force recomputation of stability even if it is present.</li></ul></div><h2>Outputs<a name="3"></a></h2><div><ul><li><tt>nunst</tt> (vector of integers): number of unstable eigenvalues</li><li><tt>dom</tt> (vector of real/complex): dominant eigenvalue (closest unstable to                       bifurcation if exists, otherwise, closest stable)</li><li><tt>triv_defect</tt> (vector of real): distance of eigenvalue approximating                               trivial eigenvalue from its true value</li><li><tt>points</tt> (struct array): array of points (same as in input branch but with stability info if not present on input)</li></ul></div><p>$Id: GetStability.html 20 2014-04-11 19:27:33Z jan.sieber $</p><h2>process options<a name="4"></a></h2><pre class="codeinput">defaults={<span class="string">'exclude_trivial'</span>,false,<span class="string">'locate_trivial'</span>,[],<span class="string">'funcs'</span>,[],<span class="string">'critical'</span>,false,<span class="keyword">...</span>
+    <span class="string">'points'</span>,[],<span class="string">'method'</span>,[],<span class="string">'recompute'</span>,false};
+options=dde_set_options(defaults,varargin);
+</pre><h2>check if stability has been computed already &amp; compute if necessary<a name="5"></a></h2><pre class="codeinput"><span class="keyword">if</span> isfield(branch,<span class="string">'point'</span>)
+    points=branch.point;
+    <span class="keyword">if</span> ~isempty(options.points) <span class="comment">% select only some points if desired</span>
+        points=branch.point(options.points);
+    <span class="keyword">end</span>
+<span class="keyword">else</span>
+    points=branch;
+<span class="keyword">end</span>
+<span class="keyword">if</span> isfield(branch,<span class="string">'method'</span>) &amp;&amp; isfield(branch.method,<span class="string">'stability'</span>)
+    mth=branch.method;
+<span class="keyword">elseif</span> ~isempty(options.method)
+    mth=options.method;
+<span class="keyword">else</span>
+    mth=df_mthod(options.funcs,points(1).kind);
+<span class="keyword">end</span>
+<span class="keyword">for</span> i=1:length(points)
+    <span class="keyword">if</span> options.recompute || ~isfield(points(i),<span class="string">'stability'</span>) ||<span class="keyword">...</span>
+            isempty(points(i).stability)
+        stab=p_stabil(options.funcs,points(i),mth.stability);
+        points(i).stability=stab;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><h2>Count nmber of unstable eigenvalues<a name="6"></a></h2><p>(removing trivial ones as indicated by <tt>locate_trivial</tt> input or standard theory)</p><pre class="codeinput">np=length(points);
+nunst=NaN(np,1);
+dom=nunst;
+triv_defect=zeros(np,1);
+<span class="keyword">switch</span> points(1).kind
+    <span class="keyword">case</span> <span class="string">'psol'</span>
+        getev=@(p)p.stability.mu;
+        stab=@(x)log(abs(x)+eps);
+        triv=@(p)1;
+    <span class="keyword">case</span> <span class="string">'stst'</span>
+        getev=@(p)p.stability.l0;
+        stab=@(x)real(x);
+        triv=@(p)[];
+    <span class="keyword">case</span> <span class="string">'fold'</span>
+        getev=@(p)p.stability.l0;
+        stab=@(x)real(x);
+        triv=@(p)0;
+    <span class="keyword">case</span> <span class="string">'hopf'</span>
+        getev=@(p)p.stability.l0;
+        stab=@(x)real(x);
+        triv=@(p)[1i*p.omega;-1i*p.omega];
+    <span class="keyword">otherwise</span>
+        error(<span class="string">'GetStability:type not implemented'</span>);
+<span class="keyword">end</span>
+<span class="keyword">if</span> ~isempty(options.locate_trivial)
+    <span class="comment">% overwrite location of trivial eigenvalues</span>
+    triv=options.locate_trivial;
+<span class="keyword">end</span>
+<span class="keyword">for</span> i=1:np
+    p=points(i);
+    excl=triv(p);
+    ev=getev(p);
+    <span class="keyword">if</span> options.exclude_trivial
+        <span class="keyword">for</span> k=1:length(excl)
+            [dist,ind]=min(abs(ev-excl(k)));
+            ev(ind)=[];
+            <span class="keyword">if</span> ~isempty(dist)
+                triv_defect(i)=max(dist,triv_defect(i));
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    unstsel=stab(ev)&gt;=0;
+    nunstloc=sum(unstsel);
+    <span class="keyword">if</span> isempty(nunstloc)
+        nunst(i)=0;
+    <span class="keyword">else</span>
+        nunst(i)=nunstloc;
+    <span class="keyword">end</span>
+    <span class="keyword">if</span> nunst(i)&gt;0 &amp;&amp; ~options.critical
+        [dum,ind]=min(stab(ev(unstsel))); <span class="comment">%#ok&lt;ASGLU&gt;</span>
+        dom(i)=ev(ind);
+        <span class="keyword">if</span> imag(ev(ind))&lt;0
+            dom(i)=conj(dom(i));
+        <span class="keyword">end</span>
+    <span class="keyword">else</span>
+        [dum,ind]=min(abs(stab(ev)));
+        <span class="keyword">if</span> ~isempty(dum)
+            dom(i)=ev(ind);
+            <span class="keyword">if</span> imag(ev(ind))&lt;0
+                dom(i)=conj(dom(i));
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><pre class="codeinput"><span class="keyword">end</span>
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.14<br></p></div><!--
+##### SOURCE BEGIN #####
+%% Number of unstable eigenvalues/Floquet multipliers along branch
+%%
+function [nunst,dom,triv_defect,points]=GetStability(branch,varargin)
+%% Inputs
+%
+% * |branch|: branch along which number of unstable eigenvalues/Floquet
+% multipliers is determined
+%
+%  Important name-value pair inputs
+% 
+% * |'exclude_trivial'| (logical): exclude trivial eigenvalues (what they are
+%                            depends on the type of points)
+% * |'locate_trivial'| (function): e.g. @(p)[1;-1] for removing 1 and -1
+%                            for period doubling orbits (overwrites standard location)
+% * |'funcs'|:   set of functions for computing branch, needed if stability 
+% information is not yet present and needs to be calculated
+% * |'method'|: which method is used for comutation (if not present, a
+% standard method is generated with |df_mthod|)
+% * |'recompute'| (default |false|):  force recomputation of stability even
+% if it is present.
+%
+%% Outputs
+% * |nunst| (vector of integers): number of unstable eigenvalues
+% * |dom| (vector of real/complex): dominant eigenvalue (closest unstable to
+%                       bifurcation if exists, otherwise, closest stable)
+% * |triv_defect| (vector of real): distance of eigenvalue approximating
+%                               trivial eigenvalue from its true value
+% * |points| (struct array): array of points (same as in input branch but
+% with stability info if not present on input)
+%
+% $Id: GetStability.html 20 2014-04-11 19:27:33Z jan.sieber $
+%
+%% process options
+defaults={'exclude_trivial',false,'locate_trivial',[],'funcs',[],'critical',false,...
+    'points',[],'method',[],'recompute',false};
+options=dde_set_options(defaults,varargin);
+%% check if stability has been computed already & compute if necessary
+if isfield(branch,'point')
+    points=branch.point;
+    if ~isempty(options.points) % select only some points if desired
+        points=branch.point(options.points);
+    end
+else
+    points=branch;
+end
+if isfield(branch,'method') && isfield(branch.method,'stability')
+    mth=branch.method;
+elseif ~isempty(options.method)
+    mth=options.method;
+else
+    mth=df_mthod(options.funcs,points(1).kind);
+end
+for i=1:length(points)
+    if options.recompute || ~isfield(points(i),'stability') ||...
+            isempty(points(i).stability)
+        stab=p_stabil(options.funcs,points(i),mth.stability);
+        points(i).stability=stab;
+    end
+end
+%% Count nmber of unstable eigenvalues
+% (removing trivial ones as indicated by |locate_trivial| input or standard
+% theory)
+np=length(points);
+nunst=NaN(np,1);
+dom=nunst;
+triv_defect=zeros(np,1);
+switch points(1).kind
+    case 'psol'
+        getev=@(p)p.stability.mu;
+        stab=@(x)log(abs(x)+eps);
+        triv=@(p)1;
+    case 'stst'
+        getev=@(p)p.stability.l0;
+        stab=@(x)real(x);
+        triv=@(p)[];
+    case 'fold'
+        getev=@(p)p.stability.l0;
+        stab=@(x)real(x);
+        triv=@(p)0;
+    case 'hopf'
+        getev=@(p)p.stability.l0;
+        stab=@(x)real(x);
+        triv=@(p)[1i*p.omega;-1i*p.omega];
+    otherwise
+        error('GetStability:type not implemented');
+end
+if ~isempty(options.locate_trivial)
+    % overwrite location of trivial eigenvalues
+    triv=options.locate_trivial;
+end
+for i=1:np
+    p=points(i);
+    excl=triv(p);
+    ev=getev(p);
+    if options.exclude_trivial
+        for k=1:length(excl)
+            [dist,ind]=min(abs(ev-excl(k)));
+            ev(ind)=[];
+            if ~isempty(dist)
+                triv_defect(i)=max(dist,triv_defect(i));
+            end
+        end
+    end
+    unstsel=stab(ev)>=0;
+    nunstloc=sum(unstsel);
+    if isempty(nunstloc)
+        nunst(i)=0;
+    else
+        nunst(i)=nunstloc;
+    end
+    if nunst(i)>0 && ~options.critical
+        [dum,ind]=min(stab(ev(unstsel))); %#ok<ASGLU>
+        dom(i)=ev(ind);
+        if imag(ev(ind))<0
+            dom(i)=conj(dom(i));
+        end
+    else
+        [dum,ind]=min(abs(stab(ev)));
+        if ~isempty(dum)
+            dom(i)=ev(ind);
+            if imag(ev(ind))<0
+                dom(i)=conj(dom(i));
+            end
+        end
+    end
+end
+end
+
+##### SOURCE END #####
+--></body></html>

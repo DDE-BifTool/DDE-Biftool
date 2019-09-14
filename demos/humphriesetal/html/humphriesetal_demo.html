@@ -1,0 +1,206 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Demo for state-dependent delays --- example from Humpries etal (DCDS-A 2012)</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-03-14"><meta name="DC.source" content="humphriesetal_demo.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Demo for state-dependent delays --- example from Humpries etal (DCDS-A 2012)</h1><!--introduction--><p>
+$Id: humphriesetal_demo.html 179 2017-03-15 16:16:30Z jansieber $
+</p><p>Humphries et al ( A. R. Humphries,  O. A. DeMasi, F. M. G. Magpantay,  F. Upham (2012), <i>Dynamics of a delay differential equation with multiple state-dependent delays</i>, Discrete and Continuous Dynamical Systems 32(8) pp. 2701-2727 <a href="http://dx.doi.org/10.3934/dcds.2012.32.2701">http://dx.doi.org/10.3934/dcds.2012.32.2701</a>)</p><p>consider a scalar DDE with two state-dependent delays:</p><p><img src="humphriesetal_demo_eq14619054472110723989.png" alt="$$x'(t)=-\gamma x(t)-\kappa_1 x(t-a_1-c x(t))-\kappa_2 x(t-a_2-c x(t))\mbox{.}$$"></p><p>The system exhibits double Hopf bifurcations, folds of periodic orbits and torus bifurcations, which can be computed and demonstrated using DDE-Biftool.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Add path to DDE-Biftool</a></li><li><a href="#2">Function definitions (right-hand side and delays)</a></li><li><a href="#3">Order of the parameters:</a></li><li><a href="#4">Options for defining the problem</a></li><li><a href="#5">(Alternative 1) Minimal - Right-hand side and delays</a></li><li><a href="#6">(Alternative 2) traditional provision of first- and 2nd-order derivatives</a></li><li><a href="#7">(Alternative 3) provide directional derivatives of rhs and tau</a></li><li><a href="#8">(Alternative 5) create all derivatives with symbolic toolbox</a></li><li><a href="#9">(Alternative 1a/2a/3a/4a) Maple for high-order nested derivatives</a></li><li><a href="#10">First step: continuation of equilibria and their bifurcations and normal forms</a></li></ul></div><h2>Add path to DDE-Biftool<a name="1"></a></h2><pre class="codeinput">clear
+close <span class="string">all</span>
+addpath(<span class="string">'../../ddebiftool/'</span>,<span class="keyword">...</span>
+    <span class="string">'../../ddebiftool_extra_psol/'</span>,<span class="keyword">...</span>
+    <span class="string">'../../ddebiftool_extra_nmfm/'</span>,<span class="keyword">...</span>
+    <span class="string">'../../ddebiftool_utilities/'</span>);
+</pre><h2>Function definitions (right-hand side and delays)<a name="2"></a></h2><p>Define the right-hand side and the state-dependent delays. We also provide their derivatives (in separate functions) to speed up execution.</p><h2>Order of the parameters:<a name="3"></a></h2><p><tt>p(1:2)=kappa1:2, p(3:4)=a1:2, p(5)=gamma, p(6)=c</tt></p><pre class="codeinput">parnames={<span class="string">'kappa1'</span>,<span class="string">'kappa2'</span>,<span class="string">'a1'</span>,<span class="string">'a2'</span>,<span class="string">'gamma'</span>,<span class="string">'c'</span>};
+cind=[parnames;num2cell(1:length(parnames))];
+ind=struct(cind{:});
+</pre><h2>Options for defining the problem<a name="4"></a></h2><p>below are several ways in which one can define the problem. One can choose one of them by setting <tt>funcs=...</tt> at the end.</p><h2>(Alternative 1) Minimal - Right-hand side and delays<a name="5"></a></h2><p>All derivatives are approximated by finite differences</p><pre class="codeinput">ntaus=2;
+rhs=@(x,p)-p(ind.gamma)*x(1,1,:)-p(ind.kappa1)*x(1,2,:)-p(ind.kappa2)*x(1,3,:);
+sys_ntau=@()ntaus;
+tau=@(nr,x,p)p(ind.a1-1+nr)+p(ind.c)*x(1,1,:);
+fnum=set_funcs(<span class="string">'sys_rhs'</span>,rhs,<span class="string">'sys_ntau'</span>,sys_ntau,<span class="string">'sys_tau'</span>,tau,<span class="string">'x_vectorized'</span>,true);
+</pre><h2>(Alternative 2) traditional provision of first- and 2nd-order derivatives<a name="6"></a></h2><p>This is sufficient for all standard bifurcation analysis. Normal form computations require nested higher-order derivatives.</p><pre class="codeinput">drhs=@(x,p,nx,np,v)sys_deri_humphries_etal(rhs,x,p,nx,np,v);
+dtau=@(nr,x,p,nx,np)sys_dtau_humphries_etal(tau,nr,x,p,nx,np);
+ftraditional=set_funcs(<span class="string">'sys_rhs'</span>,rhs,<span class="string">'sys_ntau'</span>,sys_ntau,<span class="string">'sys_tau'</span>,tau,<span class="keyword">...</span>
+    <span class="string">'sys_deri'</span>,drhs,<span class="string">'sys_dtau'</span>,dtau,<span class="string">'x_vectorized'</span>,true);
+</pre><h2>(Alternative 3) provide directional derivatives of rhs and tau<a name="7"></a></h2><p>Only 1st- and 2nd-order is needed (not used for normal form computations).</p><pre class="codeinput">rhs_dir{1}=@(x,p,dx,dp)<span class="keyword">...</span>
+    -dp(ind.gamma)*x(1,1,:)-p(ind.gamma)*dx(1,1,:)<span class="keyword">...</span>
+    -dp(ind.kappa1)*x(1,2,:)-p(ind.kappa1)*dx(1,2,:)<span class="keyword">...</span>
+    -dp(ind.kappa2)*x(1,3,:)-p(ind.kappa2)*dx(1,3,:);
+rhs_dir{2}=@(x,p,dx,dp)<span class="keyword">...</span>
+    -2*dp(ind.gamma)*dx(1,1,:)-2*dp(ind.kappa1)*dx(1,2,:)-2*dp(ind.kappa2)*dx(1,3,:);
+tau_dir{1}=@(nr,x,p,dx,dp)dp(ind.a1-1+nr)+dp(ind.c)*x(1,1,:)+p(ind.c)*dx(1,1,:);
+tau_dir{2}=@(nr,x,p,dx,dp)2*dp(ind.c)*dx(1,1,:);
+fdirectional=set_funcs(<span class="string">'sys_rhs'</span>,rhs,<span class="string">'sys_ntau'</span>,sys_ntau,<span class="string">'sys_tau'</span>,tau,<span class="keyword">...</span>
+    <span class="string">'sys_dirderi'</span>,rhs_dir,<span class="string">'sys_dirdtau'</span>,tau_dir,<span class="string">'x_vectorized'</span>,true);
+</pre><h2>(Alternative 5) create all derivatives with symbolic toolbox<a name="8"></a></h2><p>The code generation script is <a href="gen_sym_humphriesetal.html">gen_sym_humphriesetal.html</a>. The function <tt>set_symfuncs</tt> is a wrapper around <tt>set_funcs</tt>. The call does not need to specify the number of delays (as this has been given in gen_sym_humphriesetal.html&gt;).</p><pre class="codeinput">fsymbolic=set_symfuncs(@sym_humphriesetal);
+</pre><h2>(Alternative 1a/2a/3a/4a) Maple for high-order nested derivatives<a name="9"></a></h2><p>Normal form computations do not benefit from derivatives of right-hand side or delays of order higher than 1. They require higher-order derivatives of the nested functional</p><p><img src="humphriesetal_demo_eq11001053254630589084.png" alt="$$f(x)=-\gamma x(0)-\kappa_1 x(-a_1-c x(0))-\kappa_2 x(-a_2- c x(0))$$"></p><p>in a constant function <img src="humphriesetal_demo_eq11882463133032725889.png" alt="$x(t)=x_*$"> in the direction of an arbitrary function <img src="humphriesetal_demo_eq14572899804194177108.png" alt="$v(t)$">. This is approximated by numerical finite differences by default. However, one may provide these derivatives in the form of a function <tt>y=@(k,xeq,v,par)</tt>, providing the <tt>k|th derivative of |f(xeq+h*v)</tt> with respect to <tt>h</tt> in <tt>h=0</tt>. The input x is a vector of length <tt>n</tt> (in this example of length 1), which is the equilibrium. The input <tt>v</tt> is a function <tt>@(i,t)</tt> returning the <tt>i|th dervaitve of the deviation at delay time |t</tt>.</p><p>A maple script for code generation is provided. The symbolic toolbox code generation also provides this function (part of <tt>fsymbolic: fsymbolc.sys_dirmf</tt>, included automatically). This function may be appended to any of the alternatives for increased accuracy.</p><pre class="codeinput">maple_nesteddirderi=@humphriesetal_dirderi;
+fdirectional_mf=set_funcs(fdirectional,<span class="string">'sys_dirmf'</span>,maple_nesteddirderi);
+ftraditional_mf=set_funcs(ftraditional,<span class="string">'sys_dirmf'</span>,maple_nesteddirderi);
+fnum_mf=set_funcs(fnum,<span class="string">'sys_dirmf'</span>,maple_nesteddirderi);
+</pre><h2>First step: continuation of equilibria and their bifurcations and normal forms<a name="10"></a></h2><p>see <a href="humphriesetal_equilibria.html">humphriesetal_equilibria.html</a>.</p><pre class="codeinput">save(<span class="string">'humphriesetal_demo_funcs_results.mat'</span>);
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Demo for state-dependent delays REPLACE_WITH_DASH_DASH- example from Humpries etal (DCDS-A 2012)
+%
+% <html>
+% $Id: humphriesetal_demo.html 179 2017-03-15 16:16:30Z jansieber $
+% </html>
+%
+% Humphries et al ( A. R. Humphries,  O. A. DeMasi,
+% F. M. G. Magpantay,  F. Upham (2012), _Dynamics of a delay differential equation
+% with multiple state-dependent delays_, Discrete and Continuous Dynamical
+% Systems 32(8) pp. 2701-2727 <http://dx.doi.org/10.3934/dcds.2012.32.2701>)
+%
+% consider a scalar DDE with two state-dependent delays:
+% 
+% $$x'(t)=-\gamma x(t)-\kappa_1 x(t-a_1-c x(t))-\kappa_2 x(t-a_2-c x(t))\mbox{.}$$
+%
+% The system exhibits double Hopf bifurcations, folds of periodic orbits
+% and torus bifurcations, which can be computed and demonstrated using
+% DDE-Biftool.
+%%
+%% Add path to DDE-Biftool
+clear
+close all
+addpath('../../ddebiftool/',...
+    '../../ddebiftool_extra_psol/',...
+    '../../ddebiftool_extra_nmfm/',...
+    '../../ddebiftool_utilities/');
+%% Function definitions (right-hand side and delays)
+% Define the right-hand side and the state-dependent delays. We also provide their
+% derivatives (in separate functions) to speed up execution.
+% 
+%% Order of the parameters: 
+% |p(1:2)=kappa1:2, p(3:4)=a1:2, p(5)=gamma, p(6)=c|
+parnames={'kappa1','kappa2','a1','a2','gamma','c'};
+cind=[parnames;num2cell(1:length(parnames))];
+ind=struct(cind{:});
+%% Options for defining the problem
+% below are several ways in which one can define the problem. One can
+% choose one of them by setting |funcs=...| at the end.
+%%  (Alternative 1) Minimal - Right-hand side and delays
+% All derivatives are approximated by finite differences
+ntaus=2;
+rhs=@(x,p)-p(ind.gamma)*x(1,1,:)-p(ind.kappa1)*x(1,2,:)-p(ind.kappa2)*x(1,3,:);
+sys_ntau=@()ntaus;
+tau=@(nr,x,p)p(ind.a1-1+nr)+p(ind.c)*x(1,1,:);
+fnum=set_funcs('sys_rhs',rhs,'sys_ntau',sys_ntau,'sys_tau',tau,'x_vectorized',true);
+%% (Alternative 2) traditional provision of first- and 2nd-order derivatives
+% This is sufficient for all standard bifurcation analysis. Normal form
+% computations require nested higher-order derivatives.
+drhs=@(x,p,nx,np,v)sys_deri_humphries_etal(rhs,x,p,nx,np,v);
+dtau=@(nr,x,p,nx,np)sys_dtau_humphries_etal(tau,nr,x,p,nx,np);
+ftraditional=set_funcs('sys_rhs',rhs,'sys_ntau',sys_ntau,'sys_tau',tau,...
+    'sys_deri',drhs,'sys_dtau',dtau,'x_vectorized',true);
+%% (Alternative 3) provide directional derivatives of rhs and tau
+% Only 1st- and 2nd-order is needed (not used for normal form computations).
+rhs_dir{1}=@(x,p,dx,dp)...
+    -dp(ind.gamma)*x(1,1,:)-p(ind.gamma)*dx(1,1,:)...
+    -dp(ind.kappa1)*x(1,2,:)-p(ind.kappa1)*dx(1,2,:)...
+    -dp(ind.kappa2)*x(1,3,:)-p(ind.kappa2)*dx(1,3,:);
+rhs_dir{2}=@(x,p,dx,dp)...
+    -2*dp(ind.gamma)*dx(1,1,:)-2*dp(ind.kappa1)*dx(1,2,:)-2*dp(ind.kappa2)*dx(1,3,:);
+tau_dir{1}=@(nr,x,p,dx,dp)dp(ind.a1-1+nr)+dp(ind.c)*x(1,1,:)+p(ind.c)*dx(1,1,:);
+tau_dir{2}=@(nr,x,p,dx,dp)2*dp(ind.c)*dx(1,1,:);
+fdirectional=set_funcs('sys_rhs',rhs,'sys_ntau',sys_ntau,'sys_tau',tau,...
+    'sys_dirderi',rhs_dir,'sys_dirdtau',tau_dir,'x_vectorized',true);
+%% (Alternative 5) create all derivatives with symbolic toolbox
+% The code generation script is <gen_sym_humphriesetal.html>. The function
+% |set_symfuncs| is a wrapper around |set_funcs|. The call does not need to
+% specify the number of delays (as this has been given in
+% gen_sym_humphriesetal.html>).
+fsymbolic=set_symfuncs(@sym_humphriesetal);
+%% (Alternative 1a/2a/3a/4a) Maple for high-order nested derivatives
+% Normal form computations do not benefit from derivatives of right-hand
+% side or delays of order higher than 1. They require higher-order
+% derivatives of the nested functional
+%
+% $$f(x)=-\gamma x(0)-\kappa_1 x(-a_1-c x(0))-\kappa_2 x(-a_2- c x(0))$$
+%
+% in a constant function $x(t)=x_*$ in the direction of an arbitrary
+% function $v(t)$. This is approximated by numerical finite differences by
+% default. However, one may provide these derivatives in the form of a
+% function |y=@(k,xeq,v,par)|, providing the |k|th derivative of
+% |f(xeq+h*v)| with respect to |h| in |h=0|. The input x is a vector of
+% length |n| (in this example of length 1), which is the equilibrium. The
+% input |v| is a function |@(i,t)| returning the |i|th dervaitve of the
+% deviation at delay time |t|.
+%
+% A maple script for code generation is provided. The symbolic toolbox code
+% generation also provides this function (part of |fsymbolic:
+% fsymbolc.sys_dirmf|, included automatically). This function may be
+% appended to any of the alternatives for increased accuracy.
+maple_nesteddirderi=@humphriesetal_dirderi;
+fdirectional_mf=set_funcs(fdirectional,'sys_dirmf',maple_nesteddirderi);
+ftraditional_mf=set_funcs(ftraditional,'sys_dirmf',maple_nesteddirderi);
+fnum_mf=set_funcs(fnum,'sys_dirmf',maple_nesteddirderi);
+%% First step: continuation of equilibria and their bifurcations and normal forms
+% see <humphriesetal_equilibria.html>.
+save('humphriesetal_demo_funcs_results.mat');
+
+##### SOURCE END #####
+--></body></html>

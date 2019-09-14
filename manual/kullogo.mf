@@ -1,0 +1,90 @@
+%
+% Metafont File for K.U.Leuven LOGO
+%
+% The following characters are provided:
+%     m (miniature) M (miniature)
+%     v (very small) V (very small)
+%     t (tiny)  T (Tiny)   f (footnotesize) F (Footnotesize)
+%     s (small) S (Small)  n (normalsize)   N (Normalsize)
+%     l (large) L (Large)  h (huge)
+% each one is sqrt(1.2) times bigger than its predecessor
+%
+
+font_identifier "KULlogo"; font_size 10pt#;
+
+message "K.U.Leuven LOGO; B.L.R.J. De Decker; version <1.0>; February 1992";
+message "Updated for the new-style logo by G. Uytterhoeven, version <2.0>; February 1997";
+message "";
+
+mode_setup;
+
+wd# := 12.25mm#;		% width
+ht# := 19.8mm#;			% height
+cap#:= ht#/2;			% baseline halfway, makes positioning easier
+desc#:= ht#/2;
+define_pixels(wd,ht,cap,desc);
+
+% rot = 0;  % final rotation; Do not use it, the result is horrible ...
+
+def pickpen =% Adapt pen dimensions
+thinline := 1.4(h+d)/maxy + 0.45;	% Happens to give good results ...
+pickup pencircle scaled thinline ; % rotated -rot;
+enddef;
+
+def picksmallpen =% Adapt pen dimensions
+thinline := 1.3(h+d)/maxy;	% Happens to give good results ...
+pickup pencircle scaled thinline ; % rotated -rot;
+enddef;
+
+offx = .2;  %  x1-offx ... x2+offx
+            %  offx should be < .5, otherwise segments might be joined together
+offy  = .5; % Position in the middle of a line
+
+def line (expr a, c, b) = % Draw a line
+draw ((a-minx)*dx-offx,(b-miny)*dy-d+offy)--
+     ((c-minx)*dx+offx,(b-miny)*dy-d+offy);%rotatedabout((hx*dx,hy*dy+offy),rot);
+enddef;
+
+% You might also want the line MACRO to draw a segment as a sequence of dots.
+% This gives BAD results and METAFONT needs hours to process the file. 
+% In case you want to try, here is the new definition for line:
+%
+% def line (expr a, c, b) = % Draw a line as a sequence of dots
+% for i = a step 1 until c: drawdot ((i+.5)*dx,(c+.5)*dy); endfor;
+% enddef;
+%
+
+input kulmad.mf;  % Here comes the pattern from ... defines logo macro
+
+idx := 1;
+for code := "V", "v", "M", "m":
+	scale := (1.2)**(idx);
+	beginchar(code,wd#/scale,cap#/scale,desc#/scale);
+		message "KUL logo " & code; message"";
+		dx := w/(maxx-minx+1);
+		dy := (h+d)/(maxy-miny+1);
+		% hy := (maxy-miny+1)/2;
+		% hx := (maxx-minx+1)/2;
+		picksmallpen;
+		logo;
+	endchar;
+	idx := idx+1;;
+endfor;
+
+idx := 0;
+for code := "t", "T", "f", "F", "s", "S", "n", "N", "l", "L", "h":
+	scale := (1.2)**(idx/2);
+	beginchar(code,wd#*scale,cap#*scale,desc#*scale);
+		message "KUL logo " & code; message"";
+		dx := w/(maxx-minx+1);
+		dy := (h+d)/(maxy-miny+1);
+		% hy := (maxy-miny+1)/2;
+		% hx := (maxx-minx+1)/2;
+		pickpen;
+		logo;
+	endchar;
+	idx := idx+1;;
+endfor;
+
+font_coding_scheme := "mMvVtTfFsSnNlLh only";
+end.

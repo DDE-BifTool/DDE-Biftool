@@ -1,0 +1,237 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>SetupPOfold - Initialize continuation of folds of periodic orbits</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-04-01"><meta name="DC.source" content="SetupPOfold.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+
+  </style></head><body><div class="content"><h1>SetupPOfold - Initialize continuation of folds of periodic orbits</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Inputs</a></li><li><a href="#3">Outputs</a></li><li><a href="#4">process options</a></li><li><a href="#5">initialize branch of folds (pbranch) and pass on optional args</a></li><li><a href="#6">set up numbering and values of additional parameters and artificial delays</a></li><li><a href="#8">set up functions of extended system</a></li><li><a href="#9">required amendments of structures for extended system</a></li><li><a href="#12">set up functions of extended system</a></li><li><a href="#13">required amendments of structures for extended system</a></li><li><a href="#15">create initial guess for correction</a></li><li><a href="#16">correct initial guess and find 2nd point along branch if desired</a></li></ul></div><pre class="codeinput"><span class="keyword">function</span> [pfuncs,pbranch,suc]=SetupPOfold(funcs,branch,ind,varargin)
+</pre><h2>Inputs<a name="2"></a></h2><pre>* |funcs|: functions used for DDE
+* |branch|: branch of psols along which fold was discovered
+* |ind|: index in points array that is closest to fold (for initial
+    guess)</pre><p>optional inputs</p><div><ul><li><tt>contpar</tt> (integer default <tt>[]</tt>): set of continuation parameters (if []   then free parameters of input branch are used)</li><li><tt>sys_deri</tt> (default <tt>1e-4</tt>): used for finite differencing when approximating   jacobian of rhs, will be replaced by funcs.sys_deri if funcs.sys_deri is   provided by user</li><li><tt>correc</tt> (logical, default true): apply <tt>p_correc</tt> to first points on fold   branch</li><li><tt>dir</tt> (integer, default <tt>[]</tt>): which parameter to vary initially along fold   branch (pbranch has only single point if <tt>dir</tt> is empty)</li><li><tt>step</tt> (real, default <tt>1e-3</tt>): size of initial step if <tt>dir</tt> is non-empty</li><li><tt>pitchfork</tt> (logical, default false) if true then initialization assumes   that detected "fold" is pitchfork bifurcation (not safe)</li><li><tt>hjac</tt> (default <tt>1e-4</tt>) deviation for numerical derivatives if needed</li></ul></div><p>All other named arguments are passed on to pbranch.method.continuation, pbranch.method.point and pbranch.parameter</p><h2>Outputs<a name="3"></a></h2><div><ul><li><tt>pfuncs</tt>: functions used for extended DDE</li><li><tt>pbranch</tt>: fold branch with first point (or two points)</li><li><tt>suc</tt>: flag whether corection was successful</li></ul></div><p>
+$Id: SetupPOfold.html 20 2014-04-11 19:27:33Z jan.sieber $
+</p><h2>process options<a name="4"></a></h2><pre class="codeinput">default={<span class="string">'contpar'</span>,[],<span class="string">'sys_deri'</span>,1e-4,<span class="string">'sys_dtau'</span>,1e-4,<span class="string">'correc'</span>,true,<span class="string">'dir'</span>,[],<span class="keyword">...</span>
+    <span class="string">'step'</span>,1e-3,<span class="string">'pitchfork'</span>,false,<span class="string">'hjac'</span>,1e-4,<span class="string">'df_deriv'</span>,false};
+[options,pass_on]=dde_set_options(default,varargin,<span class="string">'pass_on'</span>);
+<span class="keyword">if</span> isfield(funcs,<span class="string">'sys_deri_provided'</span>) &amp;&amp; funcs.sys_deri_provided
+    options.sys_deri=funcs.sys_deri;
+<span class="keyword">end</span>
+<span class="keyword">if</span> funcs.tp_del &amp;&amp; isfield(funcs,<span class="string">'sys_dtau_provided'</span>) &amp;&amp; funcs.sys_dtau_provided
+    options.sys_dtau=funcs.sys_dtau;
+<span class="keyword">end</span>
+branch.point=branch.point(ind); <span class="comment">% remove all points but approx fold</span>
+</pre><h2>initialize branch of folds (pbranch) and pass on optional args<a name="5"></a></h2><pre class="codeinput">pbranch=replace_branch_pars(branch,options.contpar,pass_on);
+</pre><h2>set up numbering and values of additional parameters and artificial delays<a name="6"></a></h2><pre class="codeinput">point=pbranch.point;
+<span class="keyword">if</span> isfield(point,<span class="string">'stability'</span>)
+    point=rmfield(point,<span class="string">'stability'</span>);
+<span class="keyword">end</span>
+dim=size(point.profile,1);    <span class="comment">% dimension of original problem</span>
+npar=length(point.parameter); <span class="comment">% number of original system parameters</span>
+beta_ind=npar+1;              <span class="comment">% location of add. parameter beta</span>
+period_ind=npar+2;            <span class="comment">% location of copy of period</span>
+pfuncs=funcs;
+pfuncs.get_comp=@(p,component)extract_from_POfold(p,component,npar);
+<span class="keyword">if</span> ~funcs.tp_del <span class="comment">% constant delay</span>
+</pre><pre class="codeinput">    orig_tau_ind=funcs.sys_tau(); <span class="comment">% system delays</span>
+    <span class="comment">% additional delays needed for extended system:</span>
+    [ext_tau,xtau_ind,relations]=generate_tau_ext(point.parameter,orig_tau_ind,<span class="keyword">...</span>
+        <span class="string">'ext_tau_base'</span>,period_ind);
+    ext_tau_ind=period_ind+(1:length(ext_tau));
+</pre><h2>set up functions of extended system<a name="8"></a></h2><pre class="codeinput">    pfuncs.sys_rhs=@(x,p)sys_rhs_POfold(x,p(1:npar),p(beta_ind),p(period_ind),<span class="keyword">...</span>
+        [0,p(orig_tau_ind)],funcs.sys_rhs,dim,xtau_ind,options.sys_deri);
+    pfuncs.sys_tau=@()[orig_tau_ind,ext_tau_ind];
+    pfuncs.sys_deri=@(x,p,nx,np,v)<span class="keyword">...</span>
+        sys_deri_POfold(x,p,nx,np,v,options.hjac,<span class="keyword">...</span>
+        beta_ind,period_ind,dim,xtau_ind,funcs,pfuncs,options.df_deriv);
+</pre><h2>required amendments of structures for extended system<a name="9"></a></h2><pre class="codeinput">    pbranch.parameter.free=[pbranch.parameter.free,beta_ind,period_ind,ext_tau_ind];
+</pre><pre class="codeinput"><span class="keyword">else</span> <span class="comment">% state-dependent delay</span>
+</pre><pre class="codeinput">    <span class="comment">% indices of additional delays needed for extended system:</span>
+    n_orig_tau=funcs.sys_ntau();  <span class="comment">% number of state-dependent delays</span>
+    xtau_ind=tauSD_ext_ind(n_orig_tau);
+    ext_tau=[];
+    relations=[];
+</pre><h2>set up functions of extended system<a name="12"></a></h2><pre class="codeinput">    pfuncs.sys_rhs=@(x,p)sys_rhs_SD_POfold(x,p(1:npar),p(beta_ind),p(period_ind),<span class="keyword">...</span>
+        funcs.sys_rhs,funcs.sys_tau,options.sys_deri,options.sys_dtau,dim,xtau_ind);
+    pfuncs.sys_cond=@(p)sys_cond_POfold(p,funcs.sys_cond,dim,beta_ind,<span class="keyword">...</span>
+        period_ind,pfuncs.get_comp,[]);
+    pfuncs.sys_tau=@(itau,x,p)sys_tau_SD_PObif(itau,x,p(1:npar),funcs.sys_tau,dim,xtau_ind);
+    pfuncs.sys_ntau=@()n_orig_tau*(n_orig_tau+1);
+    pfuncs.sys_deri_provided=false;
+    pfuncs.sys_deri=@(x,p,nx,np,v)df_deriv(struct(<span class="string">'sys_rhs'</span>,pfuncs.sys_rhs),<span class="keyword">...</span>
+        x,p,nx,np,v,options.hjac);
+    pfuncs.sys_dtau=@(itau,x,p,nx,np)df_derit(struct(<span class="string">'sys_tau'</span>,pfuncs.sys_tau),<span class="keyword">...</span>
+        itau,x,p,nx,np,options.hjac);
+</pre><h2>required amendments of structures for extended system<a name="13"></a></h2><pre class="codeinput">    pbranch.parameter.free=[pbranch.parameter.free,beta_ind,period_ind];
+</pre><pre class="codeinput"><span class="keyword">end</span>
+pfuncs.sys_cond=@(p)sys_cond_POfold(p,funcs.sys_cond,dim,beta_ind,<span class="keyword">...</span>
+    period_ind,pfuncs.get_comp,relations);
+</pre><h2>create initial guess for correction<a name="15"></a></h2><pre class="codeinput">pfoldini0=POfoldInit(funcs,point,branch.method.point,ext_tau,options.pitchfork);
+</pre><h2>correct initial guess and find 2nd point along branch if desired<a name="16"></a></h2><pre class="codeinput">pbranch.method.point.extra_condition=1;
+[pbranch,suc]=correct_ini(pfuncs,pbranch,pfoldini0,<span class="keyword">...</span>
+    options.dir,options.step,options.correc);
+</pre><pre class="codeinput"><span class="keyword">end</span>
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.14<br></p></div><!--
+##### SOURCE BEGIN #####
+%% SetupPOfold - Initialize continuation of folds of periodic orbits
+%%
+function [pfuncs,pbranch,suc]=SetupPOfold(funcs,branch,ind,varargin)
+%% Inputs
+%
+%  * |funcs|: functions used for DDE
+%  * |branch|: branch of psols along which fold was discovered
+%  * |ind|: index in points array that is closest to fold (for initial
+%      guess)
+%
+% optional inputs
+%
+% * |contpar| (integer default |[]|): set of continuation parameters (if []
+%   then free parameters of input branch are used)
+% * |sys_deri| (default |1e-4|): used for finite differencing when approximating
+%   jacobian of rhs, will be replaced by funcs.sys_deri if funcs.sys_deri is
+%   provided by user
+% * |correc| (logical, default true): apply |p_correc| to first points on fold
+%   branch
+% * |dir| (integer, default |[]|): which parameter to vary initially along fold
+%   branch (pbranch has only single point if |dir| is empty)
+% * |step| (real, default |1e-3|): size of initial step if |dir| is non-empty
+% * |pitchfork| (logical, default false) if true then initialization assumes
+%   that detected "fold" is pitchfork bifurcation (not safe)
+% * |hjac| (default |1e-4|) deviation for numerical derivatives if needed
+%
+% All other named arguments are passed on to pbranch.method.continuation,
+% pbranch.method.point and pbranch.parameter
+%% Outputs
+%
+% * |pfuncs|: functions used for extended DDE
+% * |pbranch|: fold branch with first point (or two points)
+% * |suc|: flag whether corection was successful
+%
+%
+% <html>
+% $Id: SetupPOfold.html 20 2014-04-11 19:27:33Z jan.sieber $
+% </html>
+%
+%% process options
+default={'contpar',[],'sys_deri',1e-4,'sys_dtau',1e-4,'correc',true,'dir',[],...
+    'step',1e-3,'pitchfork',false,'hjac',1e-4,'df_deriv',false};
+[options,pass_on]=dde_set_options(default,varargin,'pass_on');
+if isfield(funcs,'sys_deri_provided') && funcs.sys_deri_provided
+    options.sys_deri=funcs.sys_deri;
+end
+if funcs.tp_del && isfield(funcs,'sys_dtau_provided') && funcs.sys_dtau_provided
+    options.sys_dtau=funcs.sys_dtau;
+end
+branch.point=branch.point(ind); % remove all points but approx fold
+%% initialize branch of folds (pbranch) and pass on optional args
+pbranch=replace_branch_pars(branch,options.contpar,pass_on);
+%% set up numbering and values of additional parameters and artificial delays
+point=pbranch.point;
+if isfield(point,'stability')
+    point=rmfield(point,'stability');
+end
+dim=size(point.profile,1);    % dimension of original problem
+npar=length(point.parameter); % number of original system parameters
+beta_ind=npar+1;              % location of add. parameter beta
+period_ind=npar+2;            % location of copy of period
+pfuncs=funcs;
+pfuncs.get_comp=@(p,component)extract_from_POfold(p,component,npar);
+if ~funcs.tp_del % constant delay
+    orig_tau_ind=funcs.sys_tau(); % system delays
+    % additional delays needed for extended system:
+    [ext_tau,xtau_ind,relations]=generate_tau_ext(point.parameter,orig_tau_ind,...
+        'ext_tau_base',period_ind);
+    ext_tau_ind=period_ind+(1:length(ext_tau));
+    %% set up functions of extended system
+    pfuncs.sys_rhs=@(x,p)sys_rhs_POfold(x,p(1:npar),p(beta_ind),p(period_ind),...
+        [0,p(orig_tau_ind)],funcs.sys_rhs,dim,xtau_ind,options.sys_deri);
+    pfuncs.sys_tau=@()[orig_tau_ind,ext_tau_ind];
+    pfuncs.sys_deri=@(x,p,nx,np,v)...
+        sys_deri_POfold(x,p,nx,np,v,options.hjac,...
+        beta_ind,period_ind,dim,xtau_ind,funcs,pfuncs,options.df_deriv);
+    %% required amendments of structures for extended system
+    pbranch.parameter.free=[pbranch.parameter.free,beta_ind,period_ind,ext_tau_ind];
+else % state-dependent delay
+    % indices of additional delays needed for extended system:
+    n_orig_tau=funcs.sys_ntau();  % number of state-dependent delays
+    xtau_ind=tauSD_ext_ind(n_orig_tau);
+    ext_tau=[];
+    relations=[];
+    %% set up functions of extended system
+    pfuncs.sys_rhs=@(x,p)sys_rhs_SD_POfold(x,p(1:npar),p(beta_ind),p(period_ind),...
+        funcs.sys_rhs,funcs.sys_tau,options.sys_deri,options.sys_dtau,dim,xtau_ind);
+    pfuncs.sys_cond=@(p)sys_cond_POfold(p,funcs.sys_cond,dim,beta_ind,...
+        period_ind,pfuncs.get_comp,[]);
+    pfuncs.sys_tau=@(itau,x,p)sys_tau_SD_PObif(itau,x,p(1:npar),funcs.sys_tau,dim,xtau_ind);
+    pfuncs.sys_ntau=@()n_orig_tau*(n_orig_tau+1);
+    pfuncs.sys_deri_provided=false;
+    pfuncs.sys_deri=@(x,p,nx,np,v)df_deriv(struct('sys_rhs',pfuncs.sys_rhs),...
+        x,p,nx,np,v,options.hjac);
+    pfuncs.sys_dtau=@(itau,x,p,nx,np)df_derit(struct('sys_tau',pfuncs.sys_tau),...
+        itau,x,p,nx,np,options.hjac);
+    %% required amendments of structures for extended system
+    pbranch.parameter.free=[pbranch.parameter.free,beta_ind,period_ind];
+end
+pfuncs.sys_cond=@(p)sys_cond_POfold(p,funcs.sys_cond,dim,beta_ind,...
+    period_ind,pfuncs.get_comp,relations);
+%% create initial guess for correction
+pfoldini0=POfoldInit(funcs,point,branch.method.point,ext_tau,options.pitchfork);
+%% correct initial guess and find 2nd point along branch if desired
+pbranch.method.point.extra_condition=1;
+[pbranch,suc]=correct_ini(pfuncs,pbranch,pfoldini0,...
+    options.dir,options.step,options.correc);
+end
+
+##### SOURCE END #####
+--></body></html>

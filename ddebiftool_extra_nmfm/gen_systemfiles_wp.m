@@ -1,0 +1,386 @@
+function s = gen_systemfiles_wp(f,n,p,free_pars,taus,...
+    vectorized,generate_multiplinearforms)
+%% Generate the rhs file, the standard derivative file,
+%  the vectorized standard derivative file,
+%  the multilinear forms needed for calculating
+%  the critical and parameter-dependent normal form coefficients
+%  Input:
+%    f the system
+%    n number of components
+%    p number of normal parameters
+%    free_pars parameters used for unfolding codim 2 bifurcation
+%    taus array with indeces of nonzero delays
+%    vectorized boolean for generating vectorized standards derivative file
+%    generate_multiplinearforms boolean for generating multilinear forms
+%   Ouput:
+%       s 1 success, 0 failed
+%
+% @author Maikel Bosschaert, maikel.bosschaert -at- uhasselt.be
+% @Id $Id: gen_systemfiles_wp.m 309 2018-10-28 19:02:42Z jansieber $
+%
+
+%% set defaults
+if exist ('OCTAVE_VERSION', 'builtin') > 0
+    gen_systemfiles_octave(f,n,p,free_pars,taus,sys_dir,...
+        vectorized,generate_multiplinearforms);
+else
+    m = length(taus)+1;
+    par = sym('par', [1,p+m-1]);
+    xx = sym('xx', [n,m]);
+    v = sym('v', [1,n]);
+    
+    %% Generate rhs file
+    disp('Generating system file')
+    
+    str='function f = sys_rhs(xx,par)\n\n';
+    for i=1:n
+        str=strcat(str,sprintf('f(%d,:) = ',i),char(f(i)),';\n');
+    end
+    str=strcat(str,'\nend\n');
+    
+    expression = 'par(\d+)';
+    replace = 'par($1)';
+    str = regexprep(str,expression,replace);
+    
+    expression = 'xx(\d+)_(\d+)';
+    replace = 'xx($1,$2,:)';
+    str = regexprep(str,expression,replace);
+    
+    expression = '*';
+    replace = '.*';
+    str = regexprep(str,expression,replace);
+    
+    expression = '\^';
+    replace = '.^';
+    str = regexprep(str,expression,replace);
+    
+    % save to file
+    fid = fopen('sys_rhs.m', 'w');
+    fprintf(fid, str);
+    fclose(fid);
+    %% Generate standard derivative file
+    disp('Generating standard derivative file')
+    
+    str = strcat(['function J = sys_deri(xx,par,nx,np,v)\n\n'...
+        'J = [];\n\n'...
+        'if length(nx) == 1 && isempty(np) && isempty(v)\n'...
+        '\tswitch nx\n']);
+    for nx=0:m-1
+        str = strcat(str,sprintf('\tcase %d',nx),...
+            '\n\t\tJ = [');
+        for i=1:n
+            for j=1:n
+                deri = diff(f(i), xx(j,nx+1));
+                str = strcat(str,char(deri));
+                if j < n
+                    str = strcat(str,', ');
+                end
+            end
+            if i < n
+                str = strcat(str,'; ');
+            end
+        end
+        str = strcat(str,'];\n');
+    end
+    str = strcat(str,['\tend\n'...
+        'elseif isempty(nx) && length(np) == 1 && isempty(v)\n'...
+        '\tswitch np\n']);
+    for np=1:p
+        str = strcat(str,sprintf('\tcase %d',np),...
+            '\n\t\tJ = [');
+        for i=1:n
+            deri = diff(f(i), par(np));
+            str = strcat(str,char(deri));
+            if i < n
+                str = strcat(str,'; ');
+            end
+        end
+        str = strcat(str,'];\n');
+    end
+    str = strcat(str,['\tend\n'...
+        'elseif length(nx) == 1 && length(np) == 1 && isempty(v)\n'...
+        '\tswitch nx\n']);
+    for nx=0:m-1
+        str = strcat(str,sprintf('\tcase %d',nx),...
+            '\n\t\tswitch np\n');
+        for np=1:p
+            str = strcat(str,sprintf('\t\tcase %d',np),...
+                '\n\t\t\tJ = [');
+            for i=1:n
+                for j=1:n
+                    deri = diff(f(i), par(np), xx(j,nx+1));
+                    str = strcat(str,char(deri));
+                    if j < n
+                        str = strcat(str,', ');
+                    end
+                end
+                if i < n
+                    str = strcat(str,'; ');
+                end
+            end
+            str = strcat(str,'];\n');
+        end
+        str = strcat(str,'\t\tend\n');
+    end
+    str = strcat(str,['\tend\n'...
+        'elseif length(nx) == 2 && isempty(np) && ~isempty(v)\n'...
+        '\tnx1 = nx(1); nx2 = nx(2);\n'...
+        '\tswitch nx1\n']);
+    for nx1=0:m-1
+        str = strcat(str,sprintf('\tcase %d',nx1),...
+            '\n\t\tswitch nx2\n');
+        for nx2=0:m-1
+            str = strcat(str,sprintf('\t\tcase %d',nx2),...
+                '\n\t\t\tJ = [');
+            for i=1:n
+                for j=1:n
+                    deri1=0;
+                    for s=1:n
+                        deri1=deri1+diff(f(i),xx(s,nx1+1))*v(s);
+                    end
+                    deri = diff(deri1, xx(j,nx2+1));
+                    str = strcat(str,char(deri));
+                    if j < n
+                        str = strcat(str,', ');
+                    end
+                end
+                if i < n
+                    str = strcat(str,'; ');
+                end
+            end
+            str = strcat(str,'];\n');
+        end
+        str = strcat(str,'\t\tend\n');
+    end
+    str = strcat(str,['\tend\n'...
+        'end\n'...
+        'if isempty(J)\n\tdisplay([nx np size(v)]);\n'...
+        '\terror(''SYS_DERI: requested derivative could not be computed!'');\nend']);
+    
+    expression = 'par(\d+)';
+    replace = 'par($1)';
+    str = regexprep(str,expression,replace);
+    
+    expression = 'xx(\d+)_(\d+)';
+    replace = 'xx($1,$2)';
+    str = regexprep(str,expression,replace);
+    
+    expression = 'v(\d+)';
+    replace = 'v($1)';
+    str = regexprep(str,expression,replace);
+    
+    % save to file
+    fid = fopen('sys_deri.m', 'w');
+    fprintf(fid, str);
+    fclose(fid);
+    %% Generate vectorized standard derivative file
+    if vectorized
+        disp('Generating vectorized standard derivative file')
+        str = strcat(['function J = sys_deri_vec(xx,par,nx,np,v)\n\n'...
+            'J = [];\n\n'...
+            'I=ones(size(xx(1,1,:)));\n\n'...
+            'if length(nx) == 1 && isempty(np) && isempty(v)\n'...
+            '\tswitch nx\n']);
+        for nx=0:m-1
+            str = strcat(str,sprintf('\tcase %d',nx),...
+                '\n\t\tJ = [');
+            for i=1:n
+                for j=1:n
+                    deri = diff(f(i), xx(j,nx+1));
+                    str = strcat(str,'(',char(deri),'*I)');
+                    if j < n
+                        str = strcat(str,', ');
+                    end
+                end
+                if i < n
+                    str = strcat(str,'; ');
+                end
+            end
+            str = strcat(str,'];\n');
+        end
+        str = strcat(str,['\tend\n'...
+            'elseif isempty(nx) && length(np) == 1 && isempty(v)\n'...
+            '\tswitch np\n']);
+        for np=1:p
+            str = strcat(str,sprintf('\tcase %d',np),...
+                '\n\t\tJ = [');
+            for i=1:n
+                deri = diff(f(i), par(np));
+                str = strcat(str,'(',char(deri),'*I)');
+                if i < n
+                    str = strcat(str,'; ');
+                end
+            end
+            str = strcat(str,'];\n');
+        end
+        str = strcat(str,['\tend\n'...
+            'elseif length(nx) == 1 && length(np) == 1 && isempty(v)\n'...
+            '\tswitch nx\n']);
+        for nx=0:m-1
+            str = strcat(str,sprintf('\tcase %d',nx),...
+                '\n\t\tswitch np\n');
+            for np=1:p
+                str = strcat(str,sprintf('\t\tcase %d',np),...
+                    '\n\t\t\tJ = [');
+                for i=1:n
+                    for j=1:n
+                        deri = diff(f(i), par(np), xx(j,nx+1));
+                        str = strcat(str,'(',char(deri),'*I)');
+                        if j < n
+                            str = strcat(str,', ');
+                        end
+                    end
+                    if i < n
+                        str = strcat(str,'; ');
+                    end
+                end
+                str = strcat(str,'];\n');
+            end
+            str = strcat(str,'\t\tend\n');
+        end
+        str = strcat(str,['\tend\n'...
+            'elseif length(nx) == 2 && isempty(np) && ~isempty(v)\n'...
+            '\tnx1 = nx(1); nx2 = nx(2);\n'...
+            '\tswitch nx1\n']);
+        for nx1=0:m-1
+            str = strcat(str,sprintf('\tcase %d',nx1),...
+                '\n\t\tswitch nx2\n');
+            for nx2=0:m-1
+                str = strcat(str,sprintf('\t\tcase %d',nx2),...
+                    '\n\t\t\tJ = [');
+                for i=1:n
+                    for j=1:n
+                        deri1=0;
+                        for s=1:n
+                            deri1=deri1+diff(f(i),xx(s,nx1+1))*v(s);
+                        end
+                        deri = diff(deri1, xx(j,nx2+1));
+                        str = strcat(str,'(',char(deri),'*I)');
+                        if j < n
+                            str = strcat(str,', ');
+                        end
+                    end
+                    if i < n
+                        str = strcat(str,'; ');
+                    end
+                end
+                str = strcat(str,'];\n');
+            end
+            str = strcat(str,'\t\tend\n');
+        end
+        str = strcat(str,['\tend\n'...
+            'end\n'...
+            'if isempty(J)\n\tdisplay([nx np size(v)]);\n'...
+            '\terror(''SYS_DERI: requested derivative could not be computed!'');\nend']);
+        
+        expression = 'par(\d+)';
+        replace = 'par($1)';
+        str = regexprep(str,expression,replace);
+        
+        expression = 'xx(\d+)_(\d+)';
+        replace = 'xx($1,$2,:)';
+        str = regexprep(str,expression,replace);
+        
+        expression = 'v(\d+)';
+        replace = 'v($1,:,:)';
+        str = regexprep(str,expression,replace);
+        
+        expression = '*';
+        replace = '.*';
+        str = regexprep(str,expression,replace);
+        
+        expression = '\^';
+        replace = '.^';
+        str = regexprep(str,expression,replace);
+        
+        % save to file
+        fid = fopen('sys_deri_vec.m', 'w');
+        fprintf(fid, str);
+        fclose(fid);
+    end
+    
+    %% Generate sys_tau file
+    disp('Generating sys_tau file')
+    fid = fopen('sys_tau.m', 'w');
+    fprintf(fid, 'function tau = sys_tau();\r\n');
+    fprintf(fid, 'tau=%s;\r\n',mat2str(taus));
+    fprintf(fid, 'end');
+    fclose(fid);
+    
+    %% Generate multilinear form files
+    if generate_multiplinearforms
+        disp('Generating multilinear form files for normal form computation')
+        
+        m = length(taus)+1;
+        par = sym('par', [1,p+m-1]);
+        xx = sym('xx', [n,m]);
+        pars=par(free_pars);
+        xx=[xx;repmat(transpose(pars),1,m)];
+        
+        phi0 = sym('phi0', [(n+length(free_pars))*m,1]);
+        phi1 = sym('phi1', [(n+length(free_pars))*m,1]);
+        phi2 = sym('phi2', [(n+length(free_pars))*m,1]);
+        phi3 = sym('phi3', [(n+length(free_pars))*m,1]);
+        phi4 = sym('phi4', [(n+length(free_pars))*m,1]);
+        
+        %% Calculuate multilinear forms
+        A=jacobian(f,xx(:))*phi0;
+        B=jacobian(jacobian(f,xx(:))*phi0,xx(:))*phi1;
+        C=jacobian(jacobian(jacobian(f,xx(:))*phi0,xx(:))*phi1,xx(:))*phi2;
+        D=jacobian(jacobian(jacobian(jacobian(f,xx(:))*phi0,xx(:))*phi1,xx(:))*phi2,xx(:))*phi3;
+        E=jacobian(jacobian(jacobian(jacobian(jacobian(f,xx(:))*phi0,xx(:))*phi1,xx(:))*phi2,xx(:))*phi3,xx(:))*phi4;
+        
+        %% generate functions
+        A=matlabFunction(A,'vars',{xx,par,phi0});
+        B=matlabFunction(B,'vars',{xx,par,phi0,phi1});
+        C=matlabFunction(C,'vars',{xx,par,phi0,phi1,phi2});
+        D=matlabFunction(D, 'vars',{xx,par,phi0,phi1,phi2,phi3});
+        E=matlabFunction(E,'vars',{xx,par,phi0,phi1,phi2,phi3,phi4});
+        
+        %% generate multilinear form file as used by the critical normal form computation
+        str=['function y = sys_mfderi(xx,par,varargin)\n\n'...
+            'if nargin == 2\n'...
+            '\terror(''SYS_MFDERI: no arguments.'');\n'...
+            'elseif nargin > 7\n'...
+            '\terror(''SYS_MFDERI: too many arguments.'');\n'...
+            'end\n\n'...
+            'y=0;\n\n'...
+            'numarg = nargin - 2;\n\n'];
+        
+        str = strcat(str,['switch numarg\n'...
+            '\tcase 1\n'...
+            '\t\tu1 = varargin{1};\n'...
+            '\t\tA=',func2str(A),';\n'...
+            '\t\ty=A(xx,par,u1(:));\n']);
+        
+        str = strcat(str, ['\tcase 2\n'...
+            '\t\tu1 = varargin{1}; u2 = varargin{2};\n'...
+            '\t\tB=',func2str(B),';\n'...
+            '\t\ty=B(xx,par,u1(:),u2(:));\n']);
+        
+        str = strcat(str, ['\tcase 3\n'...
+            '\t\tu1 = varargin{1}; u2 = varargin{2}; u3 = varargin{3};\n'...
+            '\t\tC=',func2str(C),';\n'...
+            '\t\ty=C(xx,par,u1(:),u2(:),u3(:));\n']);
+        
+        str = strcat(str, ['\tcase 4\n'...
+            '\t\tu1 = varargin{1}; u2 = varargin{2}; u3 = varargin{3}; u4 = varargin{4};\n'...
+            '\t\tD=',func2str(D),';\n'...
+            '\t\ty=D(xx,par,u1(:),u2(:),u3(:),u4(:));\n']);
+        
+        str = strcat(str, ['\tcase 5\n'...
+            '\t\tu1 = varargin{1}; u2 = varargin{2}; u3 = varargin{3}; u4 = varargin{4}; u5 = varargin{5};\n'...
+            '\t\tE=',func2str(E),';\n'...
+            '\t\ty=E(xx,par,u1(:),u2(:),u3(:),u4(:),u5(:));\n']);
+        
+        str=strcat(str,'\nend');
+        
+        % save to file
+        fid = fopen(strcat('sys_mfderi.m'), 'w');
+        fprintf(fid, str);
+        fclose(fid);
+    end
+    %% done
+    disp('done')
+    s=1;
+end

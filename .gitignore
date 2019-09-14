@@ -1,0 +1,12 @@
+*~
+*.mat
+*.log
+*.pdf
+*.eps
+*.aux
+*.toc
+*.out
+*.synctex.*
+!Addendum_Manual_DDE-BIFTOOL_2_03.pdf
+# ignore published output
+**/html/*.png

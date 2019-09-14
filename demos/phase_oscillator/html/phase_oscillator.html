@@ -1,0 +1,258 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Demo for analysis of phase oscillators with delay</title><meta name="generator" content="MATLAB 8.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-09-05"><meta name="DC.source" content="phase_oscillator.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Demo for analysis of phase oscillators with delay</h1><!--introduction--><p>(contributed by Azamat Yeldesbay)</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">r.h.s. and initial parameters</a></li><li><a href="#3">Integrate to observe rotations</a></li><li><a href="#4">Plot solution time profile</a></li><li><a href="#5">Create functions for ddebiftool</a></li><li><a href="#6">Cut out final full rotation period and create initial piece of branch</a></li><li><a href="#7">Continue branch of rotations</a></li><li><a href="#8">Compute stability</a></li><li><a href="#9">Plot solution profiles and bifurcation diagram of rotations</a></li></ul></div><p>$Id: phase_oscillator.m 126 2016-09-05 22:37:08Z jansieber $</p><p>This demo shows that phase oscillators and rotations can be treated as periodic orbits.</p><p>The equation:</p><p><img src="phase_oscillator_eq03209040380775334733.png" alt="$$\dot{\psi} = 1 - \nu + \alpha \sin(\psi_{\tau}&#xA;- \psi - \nu \tau) - \epsilon \sin(\psi).$$"></p><p>It is a simple model of an oscillator with intrinsic delayed feedback driven by an external periodic force. Parameters of the system are <tt>alpha = 1/3</tt>, <tt>tau = pi</tt>, and for  <tt>nu</tt> in <tt>[0.5 , 1.5 ]</tt>, <tt>epsilon</tt> in <tt>[0,0.1]</tt>. The rotation solution appears, for example, at <tt>alpha=1/3</tt>, <tt>tau=pi</tt>, <tt>epsilon=0.02</tt>, <tt>nu=1.3</tt>, or <tt>epsilon=0.005</tt> and <tt>nu=1</tt>. A periodic solution after Hopf bifurcation appears at <tt>alpha=1/3</tt>, <tt>tau=pi</tt>, <tt>epsilon=0.03</tt>, and nu=1.</p><pre class="codeinput">clear
+close <span class="string">all</span>
+addpath(<span class="string">'../../ddebiftool/'</span>,<span class="keyword">...</span>
+    <span class="string">'../../ddebiftool_extra_psol/'</span>,<span class="keyword">...</span>
+    <span class="string">'../../ddebiftool_utilities/'</span>);
+</pre><h2>r.h.s. and initial parameters<a name="2"></a></h2><pre class="codeinput">indnu=1;
+indeps=2;
+indtau=3;
+indalpha=4;
+indper=5;
+f=@(psi,p)1-p(indnu)+p(indalpha)*sin(psi(1,2,:)-psi(1,1,:)-p(indnu)*p(indtau))-<span class="keyword">...</span>
+    p(indeps)*sin(psi(1,1,:));
+par0([indnu,indeps,indtau,indalpha])=[1.3,0.02,pi,1/3];
+getp=@(br,ind)arrayfun(@(x)x.parameter(ind),br.point);
+</pre><h2>Integrate to observe rotations<a name="3"></a></h2><pre class="codeinput">sol23=dde23(@(t,y,z)f([y,z],par0),par0(indtau),0,[0,1000],<span class="keyword">...</span>
+    ddeset(<span class="string">'Events'</span>,@(t,y,z)cross_pi_dde23(y),<span class="string">'RelTol'</span>,1e-6));
+</pre><h2>Plot solution time profile<a name="4"></a></h2><pre class="codeinput">figure(1);ax1=gca;
+plot(ax1,sol23.x,mod(sol23.y+pi,2*pi)-pi,<span class="string">'.-'</span>,sol23.xe,mod(sol23.ye,2*pi),<span class="string">'o'</span>);
+xlabel(ax1,<span class="string">'time'</span>);
+ylabel(ax1,<span class="string">'x'</span>);
+grid(ax1,<span class="string">'on'</span>);
+title(ax1,<span class="string">'time profile of integration modulo 2*pi'</span>);
+</pre><img vspace="5" hspace="5" src="phase_oscillator_01.png" alt=""> <h2>Create functions for ddebiftool<a name="5"></a></h2><p>Note that we add an equation to track the period as an independent parameter (parameter(5))</p><pre class="codeinput">funcs=set_funcs(<span class="string">'sys_rhs'</span>,f,<span class="string">'sys_tau'</span>,@()indtau,<span class="keyword">...</span>
+    <span class="string">'sys_cond'</span>,@(pt)copy_period(pt,indper),<span class="string">'x_vectorized'</span>,true);
+</pre><h2>Cut out final full rotation period and create initial piece of branch<a name="6"></a></h2><p>We specify the index of the period as a parameter in the optional argument indperiod. Other ooptinoal parameters are passed on to p_correc.</p><pre class="codeinput">rot_br=branch_from_sol(funcs,sol23,[indnu,indper],par0,<span class="string">'indperiod'</span>,indper,<span class="keyword">...</span>
+    <span class="string">'extra_condition'</span>,true,<span class="string">'print_residual_info'</span>,1);
+</pre><pre class="codeoutput">it=1, res=0.0207629
+it=2, res=1.49643e-05
+it=3, res=4.16791e-10
+it=1, res=0.120415
+it=2, res=0.0158882
+it=3, res=0.000144747
+it=4, res=5.85404e-09
+</pre><h2>Continue branch of rotations<a name="7"></a></h2><pre class="codeinput">figure(2);clf;ax2=gca;
+xlabel(ax2,<span class="string">'parameter nu'</span>);
+ylabel(ax2,<span class="string">'period of rotation'</span>);
+grid(ax2,<span class="string">'on'</span>);
+title(ax2,<span class="string">'single-parameter bifurcation diagram for rotations'</span>);
+rot_br=br_contn(funcs,rot_br,30,<span class="string">'plotaxis'</span>,ax2);
+rot_br=br_rvers(rot_br);
+rot_br=br_contn(funcs,rot_br,10,<span class="string">'plotaxis'</span>,ax2);
+hold(ax2,<span class="string">'off'</span>);
+</pre><pre class="codeoutput">it=1, res=0.0369315
+it=2, res=0.001123
+it=3, res=1.75086e-06
+it=4, res=4.0151e-11
+it=1, res=0.0606396
+it=2, res=0.00355682
+it=3, res=1.92371e-05
+it=4, res=8.65493e-10
+it=1, res=0.000297648
+it=2, res=5.39853e-11
+it=1, res=0.106307
+it=2, res=0.015299
+it=3, res=0.000403976
+it=4, res=3.73716e-07
+it=5, res=8.332e-12
+it=1, res=0.197638
+it=2, res=0.343365
+it=3, res=0.0703184
+it=4, res=0.010634
+it=5, res=0.00042007
+it=1, res=0.0163169
+it=2, res=0.000354355
+it=3, res=2.43707e-07
+it=4, res=5.79448e-12
+it=1, res=0.000127758
+it=2, res=1.44373e-11
+it=1, res=0.0477811
+it=2, res=0.00472865
+it=3, res=5.07049e-05
+it=4, res=9.29968e-09
+...</pre><img vspace="5" hspace="5" src="phase_oscillator_02.png" alt=""> <h2>Compute stability<a name="8"></a></h2><pre class="codeinput">[nunstrot,domrot,triv_defectrot,rot_br.point]=<span class="keyword">...</span>
+    GetStability(rot_br,<span class="string">'funcs'</span>,funcs,<span class="string">'exclude_trivial'</span>,true);
+</pre><h2>Plot solution profiles and bifurcation diagram of rotations<a name="9"></a></h2><pre class="codeinput">rot_nu=arrayfun(@(x)x.parameter(indnu),rot_br.point);
+rot_period=arrayfun(@(x)x.period,rot_br.point);
+figure(2);clf;ax2=gca;
+plot(rot_nu,rot_period,<span class="string">'.-'</span>);
+hold(ax2,<span class="string">'off'</span>);
+xlabel(ax2,<span class="string">'parameter nu'</span>);
+ylabel(ax2,<span class="string">'period of rotation'</span>);
+grid(ax2,<span class="string">'on'</span>);
+title(ax2,<span class="string">'single-parameter bifurcation diagram for rotations'</span>);
+figure(3);clf;ax3=gca;
+hold(ax3,<span class="string">'on'</span>);
+<span class="keyword">for</span> i=1:length(rot_nu)
+    plot(ax3,rot_br.point(i).mesh*rot_period(i),rot_br.point(i).profile,<span class="string">'.-'</span>);
+<span class="keyword">end</span>
+hold(ax3,<span class="string">'off'</span>);
+xlabel(ax3,<span class="string">'time (unscaled)'</span>);
+ylabel(ax3,<span class="string">'x'</span>);
+grid(ax3,<span class="string">'on'</span>);
+title(ax3,<span class="string">'time profiles of rotations'</span>);
+</pre><img vspace="5" hspace="5" src="phase_oscillator_03.png" alt=""> <img vspace="5" hspace="5" src="phase_oscillator_04.png" alt=""> <pre class="codeinput"><span class="comment">%save('phase_oscillator_results.mat');</span>
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Demo for analysis of phase oscillators with delay
+% (contributed by Azamat Yeldesbay)
+%%
+%
+% $Id: phase_oscillator.m 126 2016-09-05 22:37:08Z jansieber $
+%
+% This demo shows that phase oscillators and rotations can be treated as
+% periodic orbits.
+%
+% The equation: 
+%
+% $$\dot{\psi} = 1 - \nu + \alpha \sin(\psi_{\tau}
+% - \psi - \nu \tau) - \epsilon \sin(\psi).$$
+% 
+% It is a simple model of an oscillator with intrinsic delayed feedback
+% driven by an external periodic force. Parameters of the system are |alpha
+% = 1/3|, |tau = pi|, and for  |nu| in |[0.5 , 1.5 ]|, |epsilon| in |[0,0.1]|.
+% The rotation solution appears, for example, at |alpha=1/3|, |tau=pi|,
+% |epsilon=0.02|, |nu=1.3|, or |epsilon=0.005| and |nu=1|. A periodic solution
+% after Hopf bifurcation appears at |alpha=1/3|, |tau=pi|, |epsilon=0.03|, and
+% nu=1.
+clear
+close all
+addpath('../../ddebiftool/',...
+    '../../ddebiftool_extra_psol/',...
+    '../../ddebiftool_utilities/');
+%% r.h.s. and initial parameters
+indnu=1;
+indeps=2;
+indtau=3;
+indalpha=4;
+indper=5;
+f=@(psi,p)1-p(indnu)+p(indalpha)*sin(psi(1,2,:)-psi(1,1,:)-p(indnu)*p(indtau))-...
+    p(indeps)*sin(psi(1,1,:));
+par0([indnu,indeps,indtau,indalpha])=[1.3,0.02,pi,1/3];
+getp=@(br,ind)arrayfun(@(x)x.parameter(ind),br.point);
+%% Integrate to observe rotations
+sol23=dde23(@(t,y,z)f([y,z],par0),par0(indtau),0,[0,1000],...
+    ddeset('Events',@(t,y,z)cross_pi_dde23(y),'RelTol',1e-6));
+%% Plot solution time profile
+figure(1);ax1=gca;
+plot(ax1,sol23.x,mod(sol23.y+pi,2*pi)-pi,'.-',sol23.xe,mod(sol23.ye,2*pi),'o');
+xlabel(ax1,'time');
+ylabel(ax1,'x');
+grid(ax1,'on');
+title(ax1,'time profile of integration modulo 2*pi');
+%% Create functions for ddebiftool
+% Note that we add an equation to track the period as an independent
+% parameter (parameter(5))
+funcs=set_funcs('sys_rhs',f,'sys_tau',@()indtau,...
+    'sys_cond',@(pt)copy_period(pt,indper),'x_vectorized',true);
+%% Cut out final full rotation period and create initial piece of branch
+% We specify the index of the period as a parameter in the optional
+% argument indperiod. Other ooptinoal parameters are passed on to p_correc.
+rot_br=branch_from_sol(funcs,sol23,[indnu,indper],par0,'indperiod',indper,...
+    'extra_condition',true,'print_residual_info',1);
+%% Continue branch of rotations
+figure(2);clf;ax2=gca;
+xlabel(ax2,'parameter nu');
+ylabel(ax2,'period of rotation');
+grid(ax2,'on');
+title(ax2,'single-parameter bifurcation diagram for rotations');
+rot_br=br_contn(funcs,rot_br,30,'plotaxis',ax2);
+rot_br=br_rvers(rot_br);
+rot_br=br_contn(funcs,rot_br,10,'plotaxis',ax2);
+hold(ax2,'off');
+%% Compute stability
+[nunstrot,domrot,triv_defectrot,rot_br.point]=...
+    GetStability(rot_br,'funcs',funcs,'exclude_trivial',true);
+%% Plot solution profiles and bifurcation diagram of rotations
+rot_nu=arrayfun(@(x)x.parameter(indnu),rot_br.point);
+rot_period=arrayfun(@(x)x.period,rot_br.point);
+figure(2);clf;ax2=gca;
+plot(rot_nu,rot_period,'.-');
+hold(ax2,'off');
+xlabel(ax2,'parameter nu');
+ylabel(ax2,'period of rotation');
+grid(ax2,'on');
+title(ax2,'single-parameter bifurcation diagram for rotations');
+figure(3);clf;ax3=gca;
+hold(ax3,'on');
+for i=1:length(rot_nu)
+    plot(ax3,rot_br.point(i).mesh*rot_period(i),rot_br.point(i).profile,'.-');
+end
+hold(ax3,'off');
+xlabel(ax3,'time (unscaled)');
+ylabel(ax3,'x');
+grid(ax3,'on');
+title(ax3,'time profiles of rotations');
+
+%%
+%save('phase_oscillator_results.mat');
+##### SOURCE END #####
+--></body></html>

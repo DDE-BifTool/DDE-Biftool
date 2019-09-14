@@ -1,0 +1,455 @@
+\documentclass[11pt]{scrartcl}
+% $Id: Extra_psol_extension.tex 153 2017-02-20 21:45:32Z jansieber $
+\usepackage[scaled=0.9]{helvet}
+\usepackage[T1]{fontenc}
+\usepackage[scaled=0.9]{beramono}
+\usepackage{amsmath,graphicx,upquote}
+\usepackage{gensymb,paralist}
+\usepackage{mathpazo}
+%\usepackage{eulervm}
+%\usepackage[notref,notcite]{showkeys}
+%\usepackage[charter]{mathdesign}
+\usepackage{color,listings,calc,url}
+\typearea{12}
+\usepackage[pdftex,colorlinks]{hyperref}
+\definecolor{darkblue}{cmyk}{1,0,0,0.8}
+\definecolor{darkred}{cmyk}{0,1,0,0.7}
+\hypersetup{anchorcolor=black,
+  citecolor=darkblue, filecolor=darkblue,
+  menucolor=darkblue,pagecolor=darkblue,urlcolor=darkblue,linkcolor=darkblue}
+%\renewcommand{\floor}{\operatorname{floor}}
+\newcommand{\mt}[1]{\mathrm{#1}}
+\newcommand{\id}{\mt{I}}
+\newcommand{\matlab}{\texttt{Matlab}}
+\renewcommand{\i}{\mt{i}}
+\renewcommand{\d}{\mathop{}\!\mathrm{d}}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\phi}{\varphi}
+\newcommand{\sign}{\operatorname{sign}}
+\newcommand{\atant}{\blist{atan2}}
+\providecommand{\e}{\mt{e}}
+\newcommand{\re}{\mt{Re}}
+\newcommand{\im}{\mt{Im}}
+\newcommand{\nbc}{n_\mt{bc}}
+\newcommand{\gbc}{g_\mt{bc}}
+\newcommand{\gic}{g_\mt{ic}}
+\newcommand{\nic}{n_\mt{ic}}
+\newcommand{\R}{\mathbb{R}}
+\usepackage{microtype}
+
+\definecolor{var}{rgb}{0,0.25,0.25}
+\definecolor{comment}{rgb}{0,0.5,0} \definecolor{kw}{rgb}{0,0,0.5}
+\definecolor{str}{rgb}{0.5,0,0}
+\newcommand{\mlvar}[1]{\lstinline[keywordstyle=\color{var}]!#1!}
+\newcommand{\blist}[1]{\mbox{\lstinline!#1!}}  \newlength{\tabw}
+\lstset{language=Matlab,%
+  basicstyle={\ttfamily\small},%
+  commentstyle=\color{comment},%
+  stringstyle=\color{str},%
+  keywordstyle=\color{kw},%
+  identifierstyle=\color{var},%
+  upquote=true,%
+  deletekeywords={beta,gamma,mesh}%
+} \title{Description of extensions \texttt{ddebiftool\_extra\_psol} and
+  \texttt{ddebiftool\_extra\_rotsym}} \author{Jan Sieber}\date{\today}
+\begin{document}
+\maketitle
+\noindent This addendum describes two extensions to DDE-BifTool
+\cite{ELS01,ELR02,homoclinic,RS07,VLR08}, a bifurcation analysis
+toolbox running in
+\texttt{Matlab}\footnote{\url{http://www.mathworks.com}} or
+\texttt{octave}\footnote{\url{http://www.gnu.org/software/octave}}. The
+extension \texttt{ddebiftool\_extra\_psol} enables continuation of
+periodic orbit bifurcations for delay-differential equations with
+constant or state-dependent delay. The extension
+\texttt{ddebiftool\_extra\_rotsym} enables continuation of relative
+equilibria, relative periodic orbits and their local bifurcations in
+systems with rotational symmetry. The extensions are implemented by
+creating \emph{extended problems} and re-using the core DDE-BifTool
+algorithms for periodic orbits.
+\tableofcontents
+
+\section{Overview}
+\label{sec:quick}
+To get up and running quickly, users familiar with DDE-BifTool should
+look at the demo in folder \texttt{minimal\_demo} (script
+\texttt{rundemo.m}). The results are pre-computed and stored in
+\texttt{mat} files. Otherwise, please see the main manual and the
+tutorial demos \texttt{neuron}, \texttt{sd\_demo} and \texttt{hom\_demo}
+for an introduction to using basic DDE-BifTool.
+
+\noindent This extension introduces three functions that can be called
+by the user:
+\begin{compactitem}
+\item \blist{SetupPOfold} to initialize continuation of folds of periodic
+  orbits,
+\item \blist{SetupTorusBifurcation} to initialize continuation of
+  torus bifurcations, and
+\item \blist{SetupPeriodDoubling} to initialize
+  continuation of period doublings (this is identical to torus
+  bifurcations).
+\end{compactitem}
+
+
+\section{Functionality}
+\label{sec:extra}
+
+The folder \texttt{ddebiftool\_extra\_psol} contains functions that
+implement tracking of
+\begin{compactitem}
+\item saddle-nodes (folds),
+\item period doublings, and
+\item torus bifurcations
+\end{compactitem}
+of periodic orbits in two parameters. This is done by creating an
+\emph{extended} DDE from the user-provided right-hand side. The
+periodic orbits of the extended DDEs are then continued using
+DDE-BifTool's original routines for periodic orbits.  To access the
+additional routines, the folder \texttt{ddebiftool\_extra\_psol} has
+to be added to the path, for example:
+\begin{lstlisting}
+  addpath('../../ddebiftool');            % path to original DDE-BifTool
+  addpath('../../ddebiftool_extra_psol'); % path to additional routines
+\end{lstlisting}
+(adapt to your own folder structure).
+\subsection{Functions of interest in user scripts}
+\label{sec:user}
+
+
+
+\subsubsection{\blist{SetupPOfold} for folds of periodic orbits}
+\label{fold}
+
+\paragraph{Header}\
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+function [pfuncs,pbranch,suc]=SetupPOfold(funcs,branch,ind,varargin)
+\end{lstlisting}
+
+\paragraph{Brief description}
+Sets up functions defining right-hand side (in \blist{pfuncs}) and the
+initial part of the branch with the first two points (in
+\blist{pbranch}) of a curve of folds of periodic orbits.
+
+\paragraph{Inputs}
+\begin{compactitem}
+\item \blist{funcs}\quad Structure, containing the user-defined right-hand
+  side, conditions, delays, etc., as created with \blist{set_funcs}.
+\item \blist{branch}\quad Branch of periodic orbits along which the
+  fold that the user intends to track was detected. This has to be a
+  structure of the format expected and created by DDE-BifTool routines
+  such as \blist{df_brnch} or \blist{br_contn}.
+\item \blist{ind}\quad index of point along the branch that is close
+  to the fold. The periodic orbit \blist{branch.point(ind)} will be
+  used to create an initial guess.
+\item Optional inputs (key-value pairs in arbitrary order, default in
+  brackets):
+  \begin{compactitem}
+  \item \blist{'contpar'} (\blist{[]}, integer)\quad \emph{index
+    of continuation parameters}. This argument can be used in two
+    ways:
+    \begin{compactitem}
+    \item[o] empty (not given): the indices given in
+      \blist{branch.parameters.free} will be used.
+    \item[o]  array \blist{k} with more than a single integer:  \blist{k}
+    will \emph{replace} the parameters in the field
+    \blist{branch.parameters.free}.
+    \end{compactitem}
+  \item \blist{'dir'} (\blist{[]}, integer)\quad \emph{initial direction of
+      branch}; index of parameter to be changed for second point along
+    branch of folds. If empty, then only a single fold point will be
+    computed.
+  \item \blist{'step'} (\blist{1e-3}, real) how much the parameter is
+    changed. For the second point on the branch the relation holds
+    \begin{lstlisting}
+pbranch.point(2).parameter(dir)=...
+      pbranch.point(1).parameter(dir)+step;
+    \end{lstlisting}
+  \item \blist{'correc'} (\blist{true}, logical) Apply
+    \blist{p_correc} to the initial points.
+  \item \blist{'sys_deri'} (\blist{1e-4}), \blist{'sys_dtau'}
+    (\blist{1e-4}), \blist{'hjac'} (\blist{1e-4}) deviations used in
+    finite-difference formulas. If the user has provided the functions
+    \mlvar{sys_deri} and \mlvar{sys_dtau} then these options will not
+    be used for constant delays. For state-dependent delays the
+    analytic Jacobian of the extended system is not yet implemented
+    such that \blist{'hjac'} will be used in the finite-difference
+    approximation of the Jacobian.
+  \end{compactitem}
+\end{compactitem}
+
+\paragraph{Outputs}
+If the output \blist{suc} is non-zero, then \blist{pfuncs} and \blist{pbranch} can be fed into \blist{br_contn}. For example,
+\begin{lstlisting}
+  pbrlong=br_contn(pfuncs,pbranch,100);
+\end{lstlisting}
+\begin{compactitem}
+\item \blist{pfuncs} Structure defining right-hand side of the
+  extended DDE for folds of periodic orbits. The structure has an
+  additional field \blist{'get_comp'}, which can be used to extract
+  the original solution components from the solution of the extended
+  system (removing additional components and prameters, see example).
+\item \blist{pbranch} A DDE-BifTool branch structure, containing the
+  first point or the first two points (if desired by setting the
+  optional argument \blist{'dir'}).
+\item \blist{suc} (logical) indicates success of approximation (and
+  correction if desrired) of initial points.
+\end{compactitem}
+
+\paragraph{Example}
+See \texttt{minimal\_demo}, the Duffing oscillator with delayed feedback of the form
+\begin{equation}\label{eq:duff}
+%x''(t)+d*x'(t)+a*x(t)+x^3+b*[x(t)-x(t-tau)]=0, parameters [tau,a,b,d]
+  \ddot x(t)+d \dot x(t)+a x(t)+x(t)^3+b[x(t)-x(t-\tau)]=0\mbox{,}
+\end{equation}
+with parameters $p=(\tau,a,b,d)$ (initially $p=(0, 0.5, 0.6, 0.05)$).
+After continuation of the family of periodic orbits in $\tau$ ($p_1$)
+one has a branch
+{\small
+\begin{verbatim}
+>> per_orb
+per_orb = 
+       method: [1x1 struct]
+    parameter: [1x1 struct]
+        point: [1x173 struct]
+\end{verbatim}
+} with $173$ points, of which point $52$ is close to a fold
+\begin{verbatim}
+>> ind_fold
+ind_fold =    52
+>> per_orb.point(ind_fold).stability.mu(1:3)
+ans =
+   1.0000          
+   0.9985          
+  -0.0263 + 0.0219i
+\end{verbatim}
+such that one can call
+\begin{lstlisting}
+[pfuncs,pbranch]=SetupPOfold(funcs,per_orb,ind_fold,...
+    'contpar',[3,1],'dir',3,'step',-1e-3);
+pbranch=br_contn(pfuncs,pbranch,60);
+\end{lstlisting}
+The free parameters and the intial step in $p_3$ (as requested by
+the arguments \blist{'dir'} and \blist{'step'}) are
+\begin{verbatim}
+>> pbranch.parameter.free
+ans =     3     1     5     6     7
+>> pbranch.point(2).parameter(3)
+ans =    0.5990
+>> pbranch.point(1).parameter(3)
+ans =    0.6000
+\end{verbatim}
+Note that the extended system introduces the additional parameters
+$(\beta,T_\mathrm{copy},\tau_\mathrm{ext})$ (see \cite{S13}), which
+are stored at indices $5$ to $7$. The extensions are also visible when
+looking at the points:
+\begin{verbatim}
+>> pbranch.point(1)
+ans =    kind: 'psol'
+    parameter: [1x7 double]
+         mesh: [1x81 double]
+       degree: 4
+      profile: [4x81 double]
+       period: 0.5386
+\end{verbatim}
+Use \blist{pfuncs.get_comp} to remove all additional components and parameters:
+\begin{verbatim}
+>> pfuncs.get_comp(pbranch.point(1),'solution')
+ans =    kind: 'psol'
+    parameter: [0.9343 0.5000 0.6000 0.0500]
+         mesh: [1x81 double]
+       degree: 4
+      profile: [2x81 double]
+       period: 0.5386
+\end{verbatim}
+The function \blist{pfuncs.get_comp} supports the strings
+\begin{compactitem}
+\item  \blist{'kind'}\quad returning \blist{'POfold'},
+\item \blist{'solution'}\quad removing all extensions, returning a
+  point of the same format as the original periodic orbits,
+\item \blist{'nullvector'}\quad returning the extended components of
+  \blist{point.profile} (in the example, rows $3$ and $4$), and the
+  extension parameter $\beta$ (in the example in position $5$) as a
+  \blist{'psol'} structure,
+\item \blist{'delays'}\quad returning the additional parameter(s)
+  $\tau_\mathrm{ext}$ (see \cite{S13} for their meaning).
+\end{compactitem}
+\paragraph{Warning}
+For problems with constant delays the extended problem \mlvar{pfuncs}
+introduces $n_\tau(n_\tau+1)/2$ additional delays as parameter
+$\tau_\mt{ext}$. For problems with state-dependent delays the
+additional delays do not show up as additional parameters. However,
+the number of additional delays is $n_\tau(n_\tau+1)$. Since the
+user-defined functions have to be called at all delay-shifted
+collocation points the computations may become slow for problems with
+many delays (particularly for state-dependent delay problems).
+
+\subsubsection{\blist{SetupTorusBifurcation} for torus bifurcations}
+\label{sec:torusbif}
+
+\paragraph{Header}\
+\begin{lstlisting}
+function [trfuncs,trbranch,suc]=SetupTorusBifurcation(...
+                                         funcs,branch,ind,varargin)
+\end{lstlisting}
+
+\paragraph{Brief description}
+Sets up the right-hand side (in \blist{trfuncs}) and the first two
+points (in \blist{trbranch}) of a curve of torus bifurcations or
+period doublings of periodic orbits (which one depends on the Floquet
+multipliers of \blist{branch.point(ind)}). The meaning of inputs and
+outputs are the same as for \blist{SetupPOfold}, except that the
+points on the resulting branch lie on a torus or period doubling
+bifurcation curve. Also, the right-hand side of the extended DDE is
+different from the corresponding output of \blist{SetupPOfold} (see
+\cite{S13} for the extended system).
+
+\paragraph{Example}
+(See again \texttt{minimal\_demo}.) The point with index
+\blist{ind_tr1} has two complex Floquet multipliers near the unit
+circle: {\small
+\begin{verbatim}
+>> per_orb.point(ind_tr1).stability.mu(1:5)
+ans =
+   1.1643          
+  -0.6292 + 0.8380i
+  -0.6292 - 0.8380i
+   1.0000          
+   0.5968          
+\end{verbatim}
+} So, one can call
+\begin{lstlisting}
+[trfuncs,trbranch1]=SetupTorusBifurcation(funcs,per_orb,ind_tr1,...
+    'contpar',[3,1],'dir',3,'step',-1e-3);
+trbranch1=br_contn(trfuncs,trbranch1,50);
+\end{lstlisting}
+to continue the torus bifurcation in the two parameters $(\tau,b)$. An
+interesting parameter to watch during torus continuation is $\omega$,
+the first extended parameter, which is the angle of the complex
+Floquet multipliers on the unit circle in multiples of $\pi$ (so, if
+the Floquet multiplier is at $-1$, $\omega$ equals $1$ for period doublings).
+
+\paragraph{Warning}
+For problems with state-dependent delays the extended problem
+\mlvar{pfuncs} introduces $n_\tau(n_\tau+1)$ additional delays. The
+additional delays do not show up as additional parameters.  Since the
+user-defined functions have to be called at all delay-shifted
+collocation points the computations may become slow for problems with
+many delays.
+
+\subsubsection{\blist{SetupPeriodDoubling} for period doublings}
+\label{sec:pd}
+\paragraph{Header}\ 
+\begin{lstlisting}
+function [trfuncs,trbranch,suc]=SetupPeriodDoubling(...
+                                         funcs,branch,ind,varargin)
+\end{lstlisting}
+This function is a wrapper, just calling
+\blist{SetupTorusBifurcation}, to avoid the misleading name. The free
+parameter $\omega$ equals unity for period doublings (corresponding to
+a rotation by $\pi$).
+
+
+
+\section{List of demos}\label{sec:demos}
+\begin{compactitem}
+\item \textbf{\texttt{minimal\_demo}}: Duffing oscillator with delayed
+  feedback. The delay is a parameter \cite{YP09}. This demonstrates
+  usage of \blist{set_funcs} and continuation of folds and torus
+  bifurcations of periodic orbits in two parameters.
+\item \textbf{\texttt{Mackey-Glass}}: Mackey-Glass equation
+  \begin{displaymath}
+    \dot x(t)=\beta
+  \frac{x(t-\tau)}{1+x(t-\tau)^n}-\gamma x(t)\mbox{.}
+\end{displaymath}
+(\url{http://www.scholarpedia.org/article/Mackey-Glass_equation}). The
+delay is a parameter. This demonstrates the continuation of period
+doublings in two parameters. This demo has a switch
+\blist{x_vectorize} at the top. Change it to \blist{false} to see the
+effect of vectorization on speed.
+% \item \textbf{\texttt{Bando}}: $N$ Cars on a ring road with delays due to
+%   reaction time (model is taken from \cite{OWES10}). This demonstrates
+%   the continuation of folds of periodic orbits in a $2N$-dimensional
+%   model ($N=10$ by default).
+\item \textbf{\texttt{nested}}: Demonstrates continuation of periodic
+  orbits, computation of their stability and continuation of fold of
+  periodic orbits in two parameters for a system with state-dependent delays and arbitrary levels of nesting. The default system is
+  \begin{displaymath}
+    \dot x(t)=x(t-p_1-x(t-p_1-x(t-p_1-x(t))))+p_2x^5\mbox{.}
+  \end{displaymath}
+\item \textbf{\texttt{humphriesetal}}: example studied in \cite{HDMU12},
+%rhs=@(x,p)-p(5)*x(1,1,:)-p(1)*x(1,2,:)-p(2)*x(1,3,:);
+%sys_ntau=@()2;
+%tau=@(nr,x,p)p(2+nr)+p(6)*x(1,1,:);
+%-gamma*x(t)-kappa1*x(t-a1-c*x(t))-kappa2*x(t-a2-c*x(t))
+  \begin{displaymath}
+    \dot x(t)=-\gamma x(t)-\kappa_1x(t-\alpha_1-cx(t))-
+    \kappa_2x(t-\alpha_2-cx(t))\mbox{.}
+  \end{displaymath}
+  Demonstrates continuation of folds of periodic orbits and torus
+  bifurcations for an equation with state-dependent delay.
+% \item \textbf{\texttt{turning}}: model for turning with finite
+%   stiffness of the tool in lateral direction \cite{IBS08}. The
+%   implicit definition of the (state-dependent) delay is converted into
+%   an ordinary differential equation for the delay using Baumgarte
+%   reduction. The example deomnstrates the continuation of folds of
+%   periodic orbits.
+\end{compactitem}
+
+\section{Relative equilibria and periodic orbits in systems with
+  rotational symmetry}
+\label{sec:rot}
+
+As a showcase demonstrating how one can extend DDE-BifTool's
+functionality, the subfolder \texttt{ddebiftool\_extra\_rotsym} and
+the demo \texttt{rotsym\_demo} are included. The routines in
+\texttt{ddebiftool\_extra\_rotsym} enable users to track relative
+equilibria and periodic orbits of DDE systems with rotational symmetry
+and constant delays. Specifically, if the right-hand side of the DDE
+\begin{equation}\label{eq:rot}
+  \dot x=f(x(t),x(t-\tau_1),\ldots,x(t-\tau_{n_\tau}),p)
+\end{equation}
+satisfies
+\begin{displaymath}
+  \exp(A\phi)f(x_0,x_1,\ldots,x_{n_\tau},p)=
+  f(\exp(A\phi)x_0,\exp(A\phi)x_1,\ldots,
+  \exp(A\phi)x_{n_\tau},p)
+\end{displaymath}
+for some anti-symmetric matrix $A$ ($A^T=-A$) and all $\phi\in\R$,
+$x_0$,\ldots,$x_{n_\tau}\in\R^n$ and parameters $p$, then
+\eqref{eq:rot} possesses two special types of solutions:
+\begin{compactitem}
+\item \emph{Relative equilibria} (or \emph{rotating waves}). These are
+  periodic orbits of the the form
+  \begin{equation}
+    x(t)=\exp(A\rho t)x_0\mbox{.}\label{eq:rw}
+\end{equation}
+\item \emph{Relative periodic orbits} (or \emph{modulated
+    waves}). These are invariant two-tori of the form
+  \begin{equation}
+    x(t)=\exp(A(\rho t+\phi))x_0(t)\label{eq:mw}
+  \end{equation}
+  for all $t\in\R$ and some $\phi\in\R$ and periodic function
+  $x_0(\cdot)$ (that is, $x_0(t)=x_0(t+T)$ for all $t\in\R$ and some $T>0$).
+\end{compactitem}
+For DDE-BifTool to be useful for DDEs with rotational symmetry, it
+has to be able to continue relative equilibria and their bifurcations
+similar to classical equilibria, and relative periodic orbits and their
+bifurcations similar to classical periodic orbits. The function
+\blist{set_rotfuncs} in \texttt{ddebiftool\_extra\_rotsym} creates a
+right-hand side \blist{rot_rhs} out of the user-given right-hand side
+$f$ and the matrix $A$ (and $\exp(A)$ if provided) in rotating
+coordinates. The rotation frequency $\rho$ is an additional unknown
+that gets fixed with an additional phase condition (in
+\blist{rot_cond}). The other functions in
+\texttt{ddebiftool\_extra\_rotsym} create wrappers around their
+classical counterparts found in \texttt{ddebiftool\_extra\_psol}. The
+demo \texttt{rotsym\_demo} shows how to use the extensions for
+rotational symmetry for the Lang-Kobayashi equations \cite{LK80}.
+
+
+
+{\small\bibliographystyle{unsrt} \bibliography{manual}
+}
+
+
+\end{document}

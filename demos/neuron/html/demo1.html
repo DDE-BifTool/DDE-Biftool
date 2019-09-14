@@ -1,0 +1,133 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>DDE-BIFTOOL demo 1 - Neuron</title><meta name="generator" content="MATLAB 9.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-02-03"><meta name="DC.source" content="demo1.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>DDE-BIFTOOL demo 1 - Neuron</h1><!--introduction--><p>
+$Id: demo1.m 73 2014-12-31 10:47:51Z jan.sieber $
+</p><p>This demo is an illustrative example, which uses a system of delay differential equations taken from [Shay,99].</p><p>The demo will show</p><div><ul><li>which functions the user has to provide and how to put them into the structure <tt>funcs</tt> (<a href="demo1_funcs.html">demo1_funcs.html</a>)</li><li>continuation of equilibria in a single parameter, <a href="demo1_stst.html">demo1_stst.html</a></li><li>computation of their stability (eigenvalues of linearization), <a href="demo1_stst.html">demo1_stst.html</a></li><li>continuation of Hopf bifurcations in two parameters (<a href="demo1_hopf.html">demo1_hopf.html</a>)</li><li>computation of normal form coefficients for Hopf bifurcations (to check if they are supercritical or subcritical), and of normal form coefficients for codimension-two bifurcations encountered along Hopf curves (<a href="demo1_normalforms.html">demo1_normalforms.html</a>),</li><li>branching off from a Hopf bifurcation to continue a family of periodic orbits in a single parameter <a href="demo1_psol.html">demo1_psol.html</a></li><li>computation of stability of periodic orbits (Floquet multipliers of linearization) <a href="demo1_psol.html">demo1_psol.html</a></li><li>continuation of homoclinic connections in two parameters    <a href="demo1_hcli.html">demo1_hcli.html</a></li><li>continuation of folds of periodic orbits in two parameters   <a href="demo1_POfold.html">demo1_POfold.html</a></li><li>Background information on how a nonlinear system is constructed for point structures <a href="demo1_definingsystems.html">demo1_definingsystems.html</a>.</li></ul></div><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Differential equations</a></li><li><a href="#3">First step: the definition of user-defined functions, see <a href="demo1_funcs.html">demo1_funcs.html</a></a></li></ul></div><h2 id="1">Differential equations</h2><p>The differential equations for this example are</p><p><img src="demo1_eq01440467975577787343.png" alt="$$\left\{\begin{array}{l}\dot{x_1}(t)=&#xA;-\kappa x_1(t)+\beta \tanh(x_1(t-\tau_s))+a_{12}\tanh(x_2(t-\tau_2)) \\&#xA;\dot{x_2}(t)=-\kappa x_2(t)+\beta \tanh(x_2(t-\tau_s))+a_{21}\tanh(x_1(t-\tau_1)).&#xA;\end{array}\right.$$"></p><p>This system models two coupled neurons with time delayed connections. It has two components (<img src="demo1_eq06613056106014670631.png" alt="$x_1$"> and <img src="demo1_eq03385156042344747669.png" alt="$x_2$">), three delays (<img src="demo1_eq18422924223242836946.png" alt="$\tau_1$">, <img src="demo1_eq10838569786326464271.png" alt="$\tau_2$"> and <img src="demo1_eq16585733689390013092.png" alt="$\tau_s$">), and four other parameters (<img src="demo1_eq16107531617707909724.png" alt="$\kappa$">, <img src="demo1_eq17331442575217596290.png" alt="$\beta$">, <img src="demo1_eq05447675844696260048.png" alt="$a_{12}$"> and <img src="demo1_eq00088373482002467634.png" alt="$a_{21}$">).</p><p>The primary bifurcation parameter will be <img src="demo1_eq00088373482002467634.png" alt="$a_{21}$"> the second parameter is <img src="demo1_eq16585733689390013092.png" alt="$\tau_s$">.</p><pre class="codeinput">clear;                                   <span class="comment">% clear variables</span>
+format <span class="string">compact</span>
+addpath([pwd(),<span class="string">'/../../ddebiftool/'</span>]);    <span class="comment">% add ddebiftool folder to path</span>
+<span class="comment">%#ok&lt;*ASGLU,*NOPTS,*NASGU&gt;</span>
+</pre><h2 id="3">First step: the definition of user-defined functions, see <a href="demo1_funcs.html">demo1_funcs.html</a></h2><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% DDE-BIFTOOL demo 1 - Neuron
+%
+% <html>
+% $Id: demo1.m 73 2014-12-31 10:47:51Z jan.sieber $
+% </html>
+%
+% This demo is an illustrative example, which uses a system of delay 
+% differential equations taken from [Shay,99].
+%
+% The demo will show
+%
+% * which functions the user has to provide and how to put them into the
+% structure |funcs| (<demo1_funcs.html>)
+% * continuation of equilibria in a single parameter, <demo1_stst.html>
+% * computation of their stability (eigenvalues of linearization), <demo1_stst.html>
+% * continuation of Hopf bifurcations in two parameters (<demo1_hopf.html>)
+% * computation of normal form coefficients for Hopf bifurcations (to check
+% if they are supercritical or subcritical), and of normal form
+% coefficients for codimension-two bifurcations encountered along Hopf
+% curves (<demo1_normalforms.html>),
+% * branching off from a Hopf bifurcation to continue a family of periodic
+% orbits in a single parameter <demo1_psol.html>
+% * computation of stability of periodic orbits (Floquet multipliers of
+% linearization) <demo1_psol.html>
+% * continuation of homoclinic connections in two parameters
+%    <demo1_hcli.html>
+% * continuation of folds of periodic orbits in two parameters
+%   <demo1_POfold.html>
+% * Background information on how a nonlinear system is constructed for
+% point structures <demo1_definingsystems.html>.
+%
+
+%% Differential equations
+% The differential equations for this example are
+% 
+% $$\left\{\begin{array}{l}\dot{x_1}(t)=
+% -\kappa x_1(t)+\beta \tanh(x_1(t-\tau_s))+a_{12}\tanh(x_2(t-\tau_2)) \\ 
+% \dot{x_2}(t)=-\kappa x_2(t)+\beta \tanh(x_2(t-\tau_s))+a_{21}\tanh(x_1(t-\tau_1)).
+% \end{array}\right.$$
+%
+% This system models two coupled neurons with time delayed connections.
+% It has two components ($x_1$ and $x_2$), three delays 
+% ($\tau_1$, $\tau_2$ and $\tau_s$), and four other parameters 
+% ($\kappa$, $\beta$, $a_{12}$ and $a_{21}$).
+%
+% The primary bifurcation parameter will be $a_{21}$ the second parameter
+% is $\tau_s$.
+%
+%%
+clear;                                   % clear variables
+format compact
+addpath([pwd(),'/../../ddebiftool/']);    % add ddebiftool folder to path
+%#ok<*ASGLU,*NOPTS,*NASGU>
+%% First step: the definition of user-defined functions, see <demo1_funcs.html>
+
+##### SOURCE END #####
+--></body></html>

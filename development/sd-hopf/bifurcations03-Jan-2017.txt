@@ -1,0 +1,162 @@
+ 
+Potential Bifurcation #1
+Between branch points 14 and 15
+For 2.0287<k1<2.1285 : 3.8247<k2<3.7524
+Number of unstable eigenvalues changes from 2 to 0
+Refining potential Hopf-Hopf point
+This normal form computed in 18.3135 seconds
+ 
+Double Hopf at k1=2.0809202, k2=3.7868009
+omega1=2.4871028, omega2=1.5821521
+High Order Approx:
+    g2100: -0.027604 -   0.017898i
+    g1011: -0.020674 -   0.015339i
+    g1110: 0.00061529 -   0.032075i
+    g0021: -0.0039073 -   0.011857i
+    theta: 5.2911
+    delta: -0.02229
+Low Order Approx:
+    g2100: -0.027604 -   0.017898i
+    g1011: -0.020674 -   0.015339i
+    g1110: 0.00061529 -   0.032075i
+    g0021: -0.0039073 -   0.011857i
+    theta: 5.2911
+    delta: -0.02229
+Total Runtime:111.9563 seconds
+ 
+Potential Bifurcation #1
+Between branch points 62 and 63
+For 5.5773<k1<5.6444 : 2.6745<k2<2.6082
+Number of unstable eigenvalues changes from 4 to 2
+Refining potential Hopf-Hopf point
+This normal form computed in 21.0578 seconds
+ 
+Double Hopf at k1=5.6088607, k2=2.6433526
+omega1=6.6083519, omega2=1.7657577
+High Order Approx:
+    g2100: -0.32182 -    0.29193i
+    g1011: -0.34843 -   0.056091i
+    g1110: 0.23836 +   0.009705i
+    g0021: -0.043478 -   0.028522i
+    theta: 8.0138
+    delta: -0.74067
+Low Order Approx:
+    g2100: -0.32182 -    0.29193i
+    g1011: -0.34843 -   0.056091i
+    g1110: 0.23836 +   0.009705i
+    g0021: -0.043478 -   0.028522i
+    theta: 8.0138
+    delta: -0.74067
+Total Runtime:117.0507 seconds
+
+Potential Bifurcation #1
+Between branch points 6 and 7
+For 9.2239<k1<9.3239 : 4.4484<k2<4.3754
+Number of unstable eigenvalues changes from 6 to 4
+Refining potential Hopf-Hopf point
+This normal form computed in 32.5336 seconds
+ 
+Double Hopf at k1=9.2848623, k2=4.4039065
+omega1=10.930732, omega2=1.9520091
+High Order Approx:
+    g2100: -0.49067 -    0.97036i
+    g1011: -1.4684 +    0.76149i
+    g1110: 1.4664 -     1.7796i
+    g0021: -0.013998 -  0.0076785i
+    theta: 104.91
+    delta: -2.9885
+Low Order Approx:
+    g2100: -0.49067 -    0.97036i
+    g1011: -1.4684 +    0.76149i
+    g1110: 1.4664 -     1.7796i
+    g0021: -0.013998 -  0.0076785i
+    theta: 104.91
+    delta: -2.9885
+Total Runtime:160.7711 seconds
+BR_CONTN warning: boundary hit.
+Computing steady state stability
+Detecting steady state bifurcations
+BR_BIFDET: Hopf detected near par(3) = 3.2349660269.
+TIME_H warning: h_min is reached.
+BR_BIFDET: Hopf located at  par(3) = 3.2060953099.
+BR_BIFDET: Normal form coefficient: L1 = -0.0202021596
+
+BR_BIFDET: Hopf detected near par(3) = 3.5349660269.
+TIME_H warning: h_min is reached.
+BR_BIFDET: the detected hopf point does not fall within the branch.
+
+BR_BIFDET: Hopf detected near par(3) = 4.0349660269.
+TIME_H warning: h_min is reached.
+BR_BIFDET: Hopf located at  par(3) = 3.9730240602.
+BR_BIFDET: Normal form coefficient: L1 = -0.0099251510
+
+BR_BIFDET: Hopf detected near par(3) = 4.9349660269.
+TIME_H warning: h_min is reached.
+BR_BIFDET: the detected hopf point does not fall within the branch.
+
+BR_BIFDET: Hopf detected near par(3) = 5.3349660269.
+TIME_H warning: h_min is reached.
+BR_BIFDET: Hopf located at  par(3) = 5.2478591629.
+BR_BIFDET: Normal form coefficient: L1 = -0.0418783067
+
+BR_BIFDET: Hopf detected near par(3) = 7.5349660269.
+TIME_H warning: h_min is reached.
+BR_BIFDET: Hopf located at  par(3) = 7.4599031000.
+BR_BIFDET: Normal form coefficient: L1 = -0.0159702694
+
+BR_BIFDET: Hopf detected near par(3) = 8.3349660269.
+TIME_H warning: h_min is reached.
+BR_BIFDET: the detected hopf point does not fall within the branch.
+
+BR_BIFDET: Hopf detected near par(3) = 9.1349660269.
+TIME_H warning: h_min is reached.
+BR_BIFDET: the detected hopf point does not fall within the branch.
+
+BR_BIFDET: Hopf detected near par(3) = 11.2349660269.
+TIME_H warning: h_min is reached.
+BR_BIFDET: Hopf located at  par(3) = 11.1429728817.
+BR_BIFDET: Normal form coefficient: L1 = -0.0892699760
+
+BR_BIFDET: Hopf detected near par(3) = 12.4349660269.
+TIME_H warning: h_min is reached.
+BR_BIFDET: the detected hopf point does not fall within the branch.
+
+BR_BIFDET: Hopf detected near par(3) = 13.8349660269.
+TIME_H warning: h_min is reached.
+BR_BIFDET: Hopf located at  par(3) = 13.7912643981.
+BR_BIFDET: Normal form coefficient: L1 = -0.0992457613
+
+Computing Hopf curve 5
+BR_CONTN warning: boundary hit.
+BR_CONTN warning: boundary hit.
+Computing Hopf curve stability
+Detecting bifurcations from Hopf curve 5
+Looking for HH3
+Found 1 bifurcations
+ 
+Potential Bifurcation #1
+Between branch points 6 and 7
+For 9.2239<k1<9.3239 : 4.4484<k2<4.3754
+Number of unstable eigenvalues changes from 6 to 4
+Refining potential Hopf-Hopf point
+<a href="matlab: opentoline('/home/jansie/sourceforge-ddebiftool/code/trunk/dde_biftool/demos/sd-hopf/df_func_mfderiv.m',37,1)">37  </a>dord=length(devs);                            % order of derivative
+if system_dependent('IsDebugMode')==1, dbcont; end
+This normal form computed in 105.4036 seconds
+ 
+Double Hopf at k1=9.2848623, k2=4.4039065
+omega1=10.930732, omega2=1.9520091
+High Order Approx:
+    g2100: -0.49067 -    0.97036i
+    g1011: -1.4684 +    0.76149i
+    g1110: 1.4664 -     1.7796i
+    g0021: -0.013998 -  0.0076785i
+    theta: 104.91
+    delta: -2.9885
+Low Order Approx:
+    g2100: -0.49067 -    0.97036i
+    g1011: -1.4684 +    0.76149i
+    g1110: 1.4664 -     1.7796i
+    g0021: -0.013998 -  0.0076785i
+    theta: 104.91
+    delta: -2.9885
+Total Runtime:237.0225 seconds

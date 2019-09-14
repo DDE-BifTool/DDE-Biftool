@@ -1,0 +1,230 @@
+\documentclass[11pt]{scrartcl}
+% $Id: Changes-v3.tex 51 2014-06-27 11:05:26Z jan.sieber $
+\usepackage[scaled=0.9]{helvet}
+\usepackage[T1]{fontenc}
+\usepackage[scaled=0.9]{beramono}
+\usepackage{amsmath,graphicx,upquote}
+\usepackage{gensymb,paralist}
+\usepackage{mathpazo}
+%\usepackage{eulervm}
+%\usepackage[notref,notcite]{showkeys}
+%\usepackage[charter]{mathdesign}
+\usepackage{color,listings,calc,url}
+\typearea{12}
+\usepackage[pdftex,colorlinks]{hyperref}
+\definecolor{darkblue}{cmyk}{1,0,0,0.8}
+\definecolor{darkred}{cmyk}{0,1,0,0.7}
+\hypersetup{anchorcolor=black,
+  citecolor=darkblue, filecolor=darkblue,
+  menucolor=darkblue,pagecolor=darkblue,urlcolor=darkblue,linkcolor=darkblue}
+%\renewcommand{\floor}{\operatorname{floor}}
+\newcommand{\mt}[1]{\mathrm{#1}}
+\newcommand{\id}{\mt{I}}
+\newcommand{\matlab}{\texttt{Matlab}}
+\renewcommand{\i}{\mt{i}}
+\renewcommand{\d}{\mathop{}\!\mathrm{d}}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\phi}{\varphi}
+\newcommand{\sign}{\operatorname{sign}}
+\newcommand{\atant}{\blist{atan2}}
+\providecommand{\e}{\mt{e}}
+\newcommand{\re}{\mt{Re}}
+\newcommand{\im}{\mt{Im}}
+\newcommand{\nbc}{n_\mt{bc}}
+\newcommand{\gbc}{g_\mt{bc}}
+\newcommand{\gic}{g_\mt{ic}}
+\newcommand{\nic}{n_\mt{ic}}
+\newcommand{\R}{\mathbb{R}}
+\usepackage{microtype}
+
+\definecolor{var}{rgb}{0,0.25,0.25}
+\definecolor{comment}{rgb}{0,0.5,0}
+\definecolor{kw}{rgb}{0,0,0.5}
+\definecolor{str}{rgb}{0.5,0,0}
+\newcommand{\mlvar}[1]{\lstinline[keywordstyle=\color{var}]!#1!}
+\newcommand{\blist}[1]{\mbox{\lstinline!#1!}}
+\newlength{\tabw}
+\lstset{language=Matlab,%
+  basicstyle={\ttfamily\small},%
+  commentstyle=\color{comment},%
+  stringstyle=\color{str},%
+  keywordstyle=\color{kw},%
+  identifierstyle=\color{var},%
+  upquote=true,%
+  deletekeywords={beta,gamma,mesh}%
+}
+\title{Changes of functionality or code in core DDE-BifTool
+  routines from v.~2.03 to v.~3.0}
+\author{Jan Sieber}\date{\today}
+
+\begin{document}
+\maketitle
+% \tableofcontents
+% \section{Changes of functionality or code in core DDE-BifTool
+%   routines}
+% \label{sec:corechanges}
+Substantial changes to the following core DDE-BifTool
+\cite{ELS01,ELR02,homoclinic,RS07,VLR08} routines were
+made. % The updates of the core routines are placed in the folder
+% \texttt{ddebiftool\_extra\_psol/}, keeping the original version in the
+% folder \texttt{ddebiftool/}.
+
+\paragraph{\blist{psol_jac}}
+Enabled vectorization, re-use for Floquet multipliers and vectors, and
+nested state-dependent delays \cite{S13}. Additional optional inputs (as
+name-value pairs):
+\begin{compactitem}
+\item \blist{'wrapJ'} (default \blist{true}): if \blist{false} mesh
+  gets extended backward and forward in time to cover all delayed time
+  points. For \blist{wrapJ==false} no augmentation is done (that is,
+  derivatives w.r.t. period or parameters are not calculated) and no
+  phase or boundary conditions are appended to output matrix
+  \mlvar{J}.
+\item \blist{'bc'} (default \blist{true}): controls whether to append
+  boundary conditions.
+\item \blist{'c_is_tvals'} (default \blist{false}): entries of
+  argument \blist{c} are interpreted as the collocation points in the
+  full interval (usually \blist{c} is empty or giving the collocation
+  points relative to a subinterval). The residual is only calculated
+  in these points (incompatible with \blist{'bc'==true}).
+\item \blist{'Dtmat'} (default \blist{eye(size(psol_prof,1))}):
+  pre-factor in front of time derivative. This permits evaluation of
+  algebraic constraints.
+\end{compactitem}
+Additional outputs:
+\begin{compactitem}
+\item additional output \mlvar{tT} (array of delays, scaled by period)
+\item additional output \mlvar{extmesh} (mesh of time points extended
+  back to \blist{-max(tT(:))} if \blist{wrapJ} is \blist{false},
+  otherwise equal to argument \blist{mesh}.
+\end{compactitem}
+The loops are re-arranged to enable a single vectorized call of the
+user functions in the new function \mlvar{psol_sysvals}. Moreover, the
+evaluation of \blist{xx} at points in $[0,1]$ now uses
+\blist{psol_eva} to avoid code repetition.
+
+\paragraph{\blist{p_correc}} Changed to avoid code duplication and
+permit finding of zero-crossings of state-dependent delays with
+arbitrary levels of nesting. The original contained a large chunk of
+code repeating code from \blist{psol_jac} to create a constraint of
+the form $\tau_j(t_z)=0$, $\tau'_j(t_z)=0$ for a fixed
+$t_z\in[0,1]$. This code has been replaced by an addiitonal function
+\blist{delay_zero_cond}, which in turn calls the now more flexible
+\blist{psol_jac} to perform the calculations.
+
+\paragraph{\blist{mult_app}}Changed to avoid code duplication.
+\begin{compactitem}
+\item Has second (optional) output argument \mlvar{eigenfuncs},
+  returning the eigenfunctions on the extended mesh \mlvar{extmesh}
+  as output by \blist{psol_jac}. The extended mesh (\mlvar{extmesh}
+  is the third output in this case.
+\item The original version repeated the code for the Jacobian from
+  \blist{psol_jac} and appended code for calculating the monodromy
+  matrix. These two parts have been replaced by calls to the new more
+  flexible \blist{psol_jac} and the manual calculation of the
+  monodromy matrix has been replaced by a call to the backslash
+  operator.
+\item If the delays are negative another (more general, but possibly
+  more expensive) algorithm is used. The Jacobian $J$ on
+  \mlvar{extmesh}, as output by \mlvar{psol_jac} has dimensions
+  $N_r\times
+  N_c=\blist{n*(length(mesh)-1)}\times\blist{n*length(extmesh)}$.  We
+  solve an augmented and a generalized eigenvalue problem. Let
+  $N_\mt{ext}=N_c-N_r$ be the difference between the column and row
+  dimensions of the unwrapped Jacobian $J$. Then the generalized
+  eigenvalue problem for the eigenpair ($\mu,v)$ is
+  \begin{displaymath}
+    \begin{bmatrix}
+      J\\
+      \begin{matrix}
+       0_{N_\mt{ext}\times (N_c-N_\mt{ext})}& \id_{N_\mt{ext}} 
+      \end{matrix}
+    \end{bmatrix}
+    v=\mu
+    \begin{bmatrix}
+      0_{N_r\times N_c}\\
+      \begin{matrix}
+        \id_{N_\mt{ext}} & 0_{N_\mt{ext}\times (N_c-N_\mt{ext})}
+      \end{matrix}
+    \end{bmatrix}v\mbox{.}
+  \end{displaymath}
+  This generalized eigenvalue problem can in principle also be used to
+  detect bifurcations of periodic orbits with delays of mixed
+  signs. It gives up to numerical round-off errors results that are
+  identical to the results from the monodromy matrix used in the
+  original code. However, it operates on a pair of large full
+  matrices, becoming expensive for large delays or fine
+  discretizations.
+\end{compactitem}
+
+\paragraph{\blist{p_topsol}} Uses the general routine
+\blist{mult_crit} instead of \blist{mult_dbl} and \blist{mult_one} to
+compute eigenfunction for critical Floquet multipliers. This avoids
+code duplication. Both, \blist{mult_dbl} and \blist{mult_one},
+originally duplicated code from the original \blist{psol_jac} and
+\blist{mult_app}. The routine \blist{mult_crit} calls \blist{mult_app}
+instead.
+
+\paragraph{\blist{psol_eva}, \blist{p_tau}, \blist{p_tsgn},
+  \blist{poly_elg}, \blist{poly_del}, \blist{poly_lgr},
+  \blist{poly_dla}} Changed to support and speed up call with many
+evaluation points.
+
+
+\paragraph{\blist{df_deriv} and \blist{df_derit}}
+Both functions have been amended to enable (pass on) vectorization
+such that they can now perform the requested operation for arguments
+\blist{xx} of size $n\times (n_\tau+1)\times n_\mt{vec}$ and return
+Jacobians of the corresponding shape. They also apply central
+difference formulas, making them slower, but potentially more
+accurate.  Note that this may result in errors in scripts that
+previously worked. For example, if the right-hand side becomes invalid
+for certain negative arguments and this argument is close to $0$.
+
+\paragraph{\blist{stst_stabil} and \blist{get_pts_h_new}}
+In the computation of eigenvalues of equilibria an a-priori heuristics
+estimates where eigenvalues can lie in the complex plane and adjusts
+the discretization stepsize accordingly (see \cite{VLR08} for
+technical details). The implementation in v.~2.03 resulted in error
+messages in various common situations, for example, if the system had
+more than $3$ delays, if all delays were zero, or if the estimates
+returned only  real parts less than \blist{minimal_real_part}.
+
+
+\paragraph{Additional auxiliary functions}
+\begin{itemize}
+\item \blist{p_dot} computes the dot product between two points of
+  kind \blist{'psol'}. The function uses the Gauss weights for the
+  evaluation of the integral. The options \blist{'free_par_ind'}
+  (default empty) and \blist{'period'} (default \blist{false}) set
+  which free parameters (non-zero list of indices are included into
+  the dot product. The option \blist{'derivatives'} (default
+  \blist{[0,0]}) sets hiw often each of the two profiles is
+  differentiated before taking the dot product (useful for computing
+  products of type $\int_0^1(\dot p(t))^Tq(t)\d t$).
+% \item \blist{monodromy_matrix} extracts monomdromy matrix from
+%   Jacobian created by \blist{psol_jac}. The code is taken factored out
+%   of \blist{mult_app} for possible re-use in other functions.
+\item \blist{delay_zero_cond} is a function that has a format suitable
+  for use with \blist{method.extra_condition}. It returns the residual
+  and the Jacobian for $\tau_j(t_z)=0$ for point types
+  \blist{'stst'},\blist{'hopf'} and \blist{'fold'}, and
+  $\tau_j(t_z)=0$, $\tau'_j(t_z)=0$ for point type \blist{'psol'}.
+\item \blist{VAopX} and \blist{sparse_blkdiag} functions enabling
+  vectorized matrix multiplication. For a $n\times m\times p$ array
+  \blist{A} and a $m\times q\times p$ array \blist{B}
+  \begin{lstlisting}
+    C=VAopX(A,B,'*')
+  \end{lstlisting}
+  gives an $n\times q\times p$ array \blist{C} consisting of the
+  matrix products for each of the $p$ stacked matrices.
+\item \blist{psol_sysvals} checks if \blist{funcs.x_vectorized} is set
+  and performs user function calls (either vectorized or not). This part
+  has been factored out of \blist{psol_jac} to make \blist{psol_jac}
+  less complex.
+\item \blist{dde_set_options} is an auxiliary routine used for
+  treatment of optional arguments.
+\end{itemize}
+{\small\bibliographystyle{unsrt} \bibliography{manual}
+}
+\end{document}
