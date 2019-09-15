@@ -8,5 +8,6 @@
 *.out
 *.synctex.*
 !Addendum_Manual_DDE-BIFTOOL_2_03.pdf
+!manual/fig/*.pdf
 # ignore published output
 **/html/*.png
