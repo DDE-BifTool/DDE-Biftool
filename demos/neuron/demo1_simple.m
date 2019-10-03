@@ -309,12 +309,12 @@ title('Continuation of fold of periodic orbits');
 fprintf('max number of unstable Floquet multipliers: %d\n',max(nunst_pf));
 %% Defect of trivial Floquet multipliers
 % plot the defect of the trivial Floquet multiplier as computed by
-% GetStability
+% |GetStability|. This becomes very inaccurate close to the singularity.
 n_orbits=length(pfold_branch.point);
 figure(5);clf;
 a21_pfold=getp(pfold_branch,'a21');
 taus_pfold=getp(pfold_branch,'taus');
-plot(1:n_orbits,triv_defect,lw{:});
+semilogy(1:n_orbits,triv_defect,lw{:});
 xlabel('point number');
 ylabel('defect of trivial Floquet multiplier');
 title('Comparison of Floquet multiplier computation with extended system');

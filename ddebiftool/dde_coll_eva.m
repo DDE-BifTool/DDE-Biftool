@@ -80,10 +80,29 @@ end
 end
 %%
 function itcoarse=find_subintervals(tcoarse,x,submesh_limit)
-itcoarse=dde_coll_subinterval(tcoarse,x);
+itcoarse=NaN(size(x));
+nt=length(tcoarse);
+itcoarse(x<tcoarse(1))=0;
+itcoarse(x>tcoarse(end))=nt+1;
+itcoarse(x==tcoarse(end))=nt;
+sel=x>=tcoarse(1)&x<tcoarse(end);
+itcoarse(sel)=floor(interp1(tcoarse,1:nt,x(sel),'linear'));
+%itcoarse=coll_subinterval(tcoarse,x);
+%itcoarse2=dde_coll_subinterval(tcoarse,x);
+%assert(all(itcoarse==itcoarse2));
 itcoarse(itcoarse==length(tcoarse))=length(tcoarse)-1;
 if submesh_limit==1
     ixch= x-tcoarse(itcoarse)==0 & x>0;
     itcoarse(ixch)=itcoarse(ixch)-1;
 end
 end
+%%
+%function itcoarse=coll_subinterval(tcoarse,x)
+%itcoarse=NaN(size(x));
+%nt=length(tcoarse);
+%itcoarse(x<tcoarse(1))=0;
+%itcoarse(x>tcoarse(end))=nt+1;
+%itcoarse(x==tcoarse(end))=nt;
+%sel=x>=tcoarse(1)&x<tcoarse(end);
+%itcoarse(sel)=floor(interp1(tcoarse,1:nt,x(sel),'linear'));
+%end

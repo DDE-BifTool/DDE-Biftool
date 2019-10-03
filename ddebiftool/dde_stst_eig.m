@@ -26,14 +26,15 @@ if ~all(lhs_num(:)==id(:))
     if rklhs<dim && ~strcmp(method.discretization,'cheb')
         error('dde_stst_eig:method',['dde_stst_eig: method %s ',...
             'not implemented for neutral equations'],method.discretization);
-    else
+    elseif rklhs==dim && ~strcmp(method.discretization,'cheb')
         for i=1:size(A,3)
             A(:,:,i)=lhs_num\A(:,:,i);
         end
+        lhs_num=id;
     end
 end
 stability=feval(['dde_stst_eig_',method.discretization],A,tau,'method',method,...
-    'lhs_matrix',funcs.lhs_matrix(size(A,1)),pass_on{:});
+    'lhs_matrix',lhs_num,pass_on{:});
 if ~isempty(options.fill)
     ext=@(s)cat(1,s(:),repmat(options.fill,method.max_number_of_eigenvalues-length(s),1));
     stability.l0=ext(stability.l0).';

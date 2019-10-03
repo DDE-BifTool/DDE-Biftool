@@ -77,14 +77,16 @@ pf_orbits=foldfuncs.get_comp(branch7.point,'solution');
 
 %% Stability of fold orbits
 % We compute Floquet multipliers for these orbits using the utility
-% function |GetStability(psol_array,...)|. Its optional inputs instruct it
-% to ignore the two eigenvalues closest to 1 when computing stability. It
+% function |GetStability(...)|. Its optional inputs instruct it to exclude
+% trivial eigenvalues (which are 2 x 1 for folds f periodic orbits). It
 % also returns |triv_defect| which measures the distance of the supposedly
 % trivial eigenvalues (as computed) to their correct values. |GetStability|
 % needs the optional input |'funcs'| if its first argument does not yet
-% have a stability structure.
-[nunst_pf,dom,triv_defect,pf_orbits]=GetStability(pf_orbits,'funcs',funcs,...
-    'exclude_trivial',true,'locate_trivial',@(x)[1,1]);
+% have a stability structure. Passing on the |foldfuncs| structure enables
+% |GetStability| to notice that this is a family of folds of periodic
+% orbits.
+[nunst_pf,dom,triv_defect,pf_orbits]=GetStability(branch7,'funcs',foldfuncs,...
+    'exclude_trivial',true);
 fprintf('max number of unstable Floquet multipliers: %d\n',max(nunst_pf));
 n_orbits=length(pf_orbits);
 figure(16);
