@@ -21,7 +21,12 @@
 clear;                                % clear variables
 format compact
 %close all                             % close figures
-addpath([pwd(),'/../../ddebiftool/']);% add ddebiftool folder to path
+addpath([pwd(),'/../../ddebiftool/'],...
+    [pwd(),'/../../ddebiftool_utilities']);% add ddebiftool folder to path
+format compact
+%close all                             % close figures
+addpath([pwd(),'/../../ddebiftool/'],...
+    [pwd(),'/../../ddebiftool_utilities']);% add ddebiftool folder to path
 %#ok<*ASGLU,*NOPTS,*NASGU>
 %% Differential equations
 % The model is given as a two-dimensional system of differential equations
@@ -101,7 +106,7 @@ xlabel('time/period');ylabel('x1,x2');
 % We convert this point to a point of homoclinic type. This yields an
 % (initially uncorrected) initial homoclinic profile.  Note that the steady
 % state is also uncorrected.
-hcli0=p_tohcli(funcs,psol)
+hcli0=dde_heteroclinic_from_psol(psol,'funcs',funcs)
 figure(4);clf;
 p_pplot(hcli0);
 xlabel('time/period');ylabel('x1,x2');

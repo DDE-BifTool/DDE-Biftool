@@ -56,6 +56,7 @@ if ~zeho.nmfm.transcritical
         [zn,     zn,   h020] };
     %% approximation to limit cycle
     psolbr=nmfm_psol_from_C2(funcs,profile,dpar,d_om,freepars,radius,psoltemplate);
+    psolbr=replace_branch_pars(psolbr,psolbr.parameter.free,pass_on);
     augmented=false;
     if options.fix_rotation
         psolbr.tangent=@fix_rotation;
@@ -130,6 +131,7 @@ else
             [zn,  2*q1]};    
         %% approximation to limit cycle
         psolbr(1/2*i+3/2)=nmfm_psol_from_C2(funcs,profile,dpar,d_om,freepars,radius,psoltemplate);
+        psolbr(1/2*i+3/2)=replace_branch_pars(psolbr(1/2*i+3/2),psolbr(1/2*i+3/2).parameter.free,pass_on);
     end
     if options.fix_rotation
       for i=[1,-1]

@@ -43,5 +43,6 @@ profile={...
     [zn,     zn,    h20]};
 %% approximation to limit cycle
 psolbr=nmfm_psol_from_C2(funcs,profile,dpar,d_om,freepars,radius,psol);
+psolbr=replace_branch_pars(psolbr,psolbr.parameter.free,varargin);
 augmented=false;
 end

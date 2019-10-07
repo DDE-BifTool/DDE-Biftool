@@ -25,7 +25,7 @@ else
    qq0 = q0;
 end
 % Use bordering technique
-Border = [A, pp0(:,1); conj(qq0(:,1)'), 0];
+Border = [A, pp0(:,1); qq0(:,1)', 0];
 qsol = Border\[zeros(n,1) ;1];
 q = qsol(1:n);
 psol = [zeros(1,n), 1]/Border;

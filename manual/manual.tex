@@ -4,6 +4,7 @@
 %
 %\usepackage{CWTWcover}
 %\pdfoutput=1
+\usepackage[T1]{fontenc}
 \usepackage[labelfont={small},textfont={small}]{caption}
 \usepackage{subcaption}
 \usepackage{tocloft}
@@ -15,7 +16,7 @@
 % use other font during editing for better screen readability
 \usepackage[scaled=0.9]{helvet}
 \usepackage{mathpazo}%[charter]{mathdesign}
-%\usepackage[notcite,notref]{showkeys}
+% \usepackage[notcite,notref]{showkeys}
 % % new packages
 % \renewcommand\cftsecfont{\normalfont}
 % \renewcommand\cftsecpagefont{\normalfont}
@@ -30,6 +31,7 @@
 \usepackage{microtype}
 \usepackage{url}
 \usepackage[pdftex]{hyperref}
+\usepackage{cleveref}
 \definecolor{darkblue}{cmyk}{1,1,0,0}
 \definecolor{darkred}{cmyk}{0,1,0,0.7}
 \hypersetup{colorlinks, anchorcolor=black,
@@ -247,13 +249,13 @@ be available (under a different license) on
   derivative $x'(t)$. A demo \blist{ddae_demo} at
   \url{../demos/ddae_demo/html/ddae_demo.html} on a laser model with
   rotational symmetry is included. The default, when $M$ is not
-  provided by the user is the identity matrix.
+  provided by the user, is the identity matrix.
 \item \textbf{(internal)} The methods for solving nonlinear systems
   and the creation of defining systems have been separated. This
-  enables the user to replace \DDEBIFCODE{}'s onlinear methods with
+  enables the user to replace \DDEBIFCODE{}'s nonlinear methods with
   other standard methods, such as \blist{fsolve} from Matlab's
   optimization toolbox, or the general continuation package
-  \texttt{Coco} \cite{DS13}.  New function:
+  \textsc{COCO} \cite{DS13}.  New function:
   \begin{lstlisting}
 [f,x0,data]=p_correc_setup(funcs,point,free_par,method,...)
   \end{lstlisting}
@@ -266,11 +268,11 @@ be available (under a different license) on
   when using the optimization toolbox routine \blist{fsolve}.
 \item A set of demos in folder \url{../demos/coco} and the functions
   in folder \url{../ddebiftool_coco} demonstrate how to create an
-  interface to other nonlinear packages. The \texttt{Coco} atlas
-  algorithm has additional features such as multi-parameter
-  (e.g. surface) continuation and online monitoring of monitoring
-  parameters that are currently not implemented in \DDEBIFCODE{}'s
-  native algorithm (\blist{br_contn}).
+  interface to other nonlinear packages by creating an interface for
+  \textsc{COCO}. The \textsc{COCO} atlas algorithm has additional
+  features such as multi-parameter (e.g. surface) continuation and
+  online monitoring of monitoring parameters that are currently not
+  implemented in \DDEBIFCODE{}'s native algorithm (\blist{br_contn}).
 \item Support for storing collocation polynomials on non-equidistant
   grids on each subinterval, together with pre-defined options of
   storing the polynomials on Chebyshev grids (options
@@ -296,9 +298,10 @@ be available (under a different license) on
   \blist{SetupPOfold} etc now perform their initial corrections
   orthogonal to the tangent of the nullspace of the Jacobian in the
   initial guess. Correspondingly, their initial step is along the
-  tangent, affecting the meaning of the stepsize. This should be more
-  robust (permitting starting in folds) but may lead to small changes
-  in the free parameters.
+  tangent, affecting the meaning of the initial stepsize. This should
+  be more robust (permitting starting in folds) but may lead to small
+  changes in the computational behaviour (number of steps required
+  along branch etc).
 \end{itemize}
 
 \subsection{Changes from 3.1.1 to 3.2a}
@@ -485,9 +488,10 @@ All computations can be performed for problems with an arbitrary
 number of discrete delays. These delays can be either parameters
 (DDEs) or functions of the state (sd-DDEs).  The only exception are
 computations of connecting orbits, which support only problems with
-delays as parameters (and exclude NDDEs) at the moment.
+delays as parameters (and exclude NDDEs and the use of Chebyshev
+polynomials) at the moment.
 
-A practical difference to AUTO, MatCont or Coco is that the package
+A practical difference to AUTO, MatCont or \textsc{COCO} is that the package
 does not detect bifurcations automatically because the computation of
 eigenvalues or Floquet multipliers may require more computational
 effort than the computation of the equilibria or periodic orbits (for
@@ -529,13 +533,14 @@ of this manual we assume the reader is familiar with the notion of a
 delay differential equation and with the basic concepts of bifurcation
 analysis for ordinary differential equations.  The theory on delay
 differential equations and a large number of examples are described in
-several books. Most notably the early
+several books. Most notably the early references
 \cite{Bell63,Driv77,El's73,Hale77a,Kolm86} and the more recent
-\cite{Azbe91,Kolm92,Hale93,Diek95,Kolm99}.  Several excellent books
-contain introductions to dynamical systems and bifurcation theory of
-ordinary differential equations, see, e.g.,
-\cite{Argy94,Chow82,Guck83,Kuzn04,Seyd94}. For background on
-continuation methods one may refer to the textbooks \cite{DS13,Doed07,G00}.
+references \cite{Azbe91,Kolm92,Hale93,Diek95,Kolm99}.  Several
+excellent books contain introductions to dynamical systems and
+bifurcation theory of ordinary differential equations, see, e.g.,
+\cite{Argy94,Chow82,Guck83,Kuzn04,Seyd94}. For background on numerical
+continuation methods one may refer to the textbooks
+\cite{DS13,Doed07,G00}.
 
 \paragraph{Tutorial demos}
 The tutorial demos \texttt{demo1}, \texttt{minimal\_demo} and
@@ -567,10 +572,10 @@ equations. Currently maintained packages are
   using FORTRAN or C \cite{Doed99,Doed07},\\
   \texttt{MatCont}\>url: \url{http://sourceforge.net/projects/matcont/}\>
   for MATLAB \cite{DGK03,G00}, and\\
-  \texttt{Coco}\> url: \url{http://sourceforge.net/projects/cocotools}\> for
+  \textsc{COCO}\> url: \url{http://sourceforge.net/projects/cocotools}\> for
   MATLAB \cite{DS13}.\\[1ex]
   For delay differential equations the package\\[0.5ex]
-  \texttt{knut}\> url: \url{http://gitorious.org/knut}\> using C++
+  \texttt{knut}\> url: \url{https://rs1909.github.io/knut/}\> using C++
 \end{tabbing}
 (formerly \texttt{PDDECONT}) is available as a stand-alone package
 (written in C++, but with a user interface requiring no
@@ -707,15 +712,15 @@ sections~\ref{point_manipulation} respectively
 \ref{branch_manipulation}.
 
 \paragraph{Constructor and wrapping utilities}
-During construction of branches \DDEBIFCODE{} required a combination
-of calls to routines in layer 2 and 3. Constructors in folder
-\texttt{ddebiftool\_utilties} automate these tasks (e.g.,
-\blist{SetupStst}). They also provide additional automated extraction
-and creation of stability information (\blist{GetStability}) plotting
-(\blist{Plot2dBranch}), normal form processing
-(e.g. \blist{LocateSpecialPoints}) and branching
-(e.g. \blist{SetupPsol}, \blist{ChangeBranchParameters},
-\blist{BranchFromCodimension2}).
+During construction of branches earlier versions of \DDEBIFCODE{}
+required a combination of calls to routines in layer 2 and
+3. Constructors in folder \url{../ddebiftool_utilties} automate these
+tasks (e.g., \blist{SetupStst}). They also provide additional
+automated extraction and creation of stability information
+(\blist{GetStability}) plotting (\blist{Plot2dBranch}), branching
+(e.g. \blist{ChangeBranchParameters}, \blist{SetupPsol}, 
+\blist{BranchFromCodimension2}) and normal form
+processing (e.g. \blist{LocateSpecialPoints}).
 
 The distinction between layers (esp. layer 2 and 3) and utilities and
 extensions is for historical reasons only. For example, for
@@ -757,7 +762,7 @@ where, using $f\equiv f(x^0,x^1,\ldots,x^m,\eta)$,
 A_i(t)=\frac{\partial f}{\partial x^i}(x^*(t),x^*(t-\tau_1),\ldots,x^*(t-\tau_m),\eta), 
 \ i=0,\ldots,m. 
 \end{equation}
-For regular $M$ \eqref{the_dde_type} is a classical DDE. For singular
+For regular $M$ \cref{the_dde_type} is a classical DDE. For singular
 $M$, equations of type \eqref{the_dde_type} can create a variety of
 different types of equation, including differential algebraic
 equations, backward-forward equations and neutral DDEs (NDDEs). \DDEBIFCODE{}
@@ -844,22 +849,31 @@ integrates the variational equation (\ref{the_var_equa}) around
 $x^*(t)$ from time $t=0$ over the period.  This operator is called the
 \define{monodromy operator} and its (infinite number of) eigenvalues,
 which are independent of the starting moment $t=0$, are called the
-\define{Floquet multipliers}.  Furthermore, if $S(T,0)^k$ is compact
-for $k>\tau/T$. Thus, there are at most finitely many Floquet
-multipliers outside of any ball around the origin of the complex
-plane.
+\define{Floquet multipliers}.  Furthermore, for classical DDEs ($M=I$) the operator
+$S(T,0)^k=S(kT,0)$ is compact for $k>\tau/T$. Thus, there are at most finitely
+many Floquet multipliers outside of any ball around the origin of the
+complex plane.
 
 For autonomous systems there is always a \define{trivial} Floquet
 multiplier at unity, corresponding to a perturbation along the time
 derivative of the periodic solution. The periodic solution is
 exponentially stable provided all multipliers (except the trivial one)
 have modulus smaller than unity, it is exponentially unstable if there
-exists a multiplier with modulus larger than unity.
+exists a multiplier with modulus larger than unity. \emph{Local
+  bifurcations} are characterized by additional Floquet multipliers on
+the unit circle:
+\begin{compactitem}
+\item Fold of periodic orbits (\blist{POfold}): double Floquet multiplier at $1$;
+\item Period doubling (\blist{PeriodDoubling}): Floquet multiplier at $-1$;
+\item Torus vbifurcation (\blist{TorusBifurcation}): complex pair of
+  Floquet multipliers $\exp(\pm\i\pi\omega)$ with $\omega\in(0,1/2)$.
+\end{compactitem}
+
 
 %G's addition
 \subsubsection{Connecting orbits}
 \label{sec:dde:hcli}
-We call a solution $x^*(t)$ of (\ref{the_dde_type}) at $\eta=\eta^*$ a 
+We call a solution $x^*(t)$ of \cref{the_dde_type} at $\eta=\eta^*$ a 
 \textit{connecting orbit} if the limits 
 \begin{equation}
 \lim_{t\to -\infty} x^*(t)=x^{-}, \qquad \lim_{t\to +\infty} x^*(t)=x^{+},
@@ -876,7 +890,7 @@ state-dependent delays (sd-DDEs),
 \begin{equation}\label{the_dde_type2}
 \left\{
 \begin{aligned}
-\frac{\d}{\d t}{x(t)}&=f(x_0,x_1,\ldots,x_m,\eta),\\
+\frac{\d}{\d t}{x(t)}&=f(x_0,x_1,\ldots,x_m,\eta)\mbox{,\quad with}\\
 x_j&=x(t-\tau_j(x_0,\ldots,x_{j-1},\eta)\quad\mbox{($\tau_0=0$, $j=1,\ldots,m$)}\mbox{,}
 \end{aligned}
 \right.
@@ -915,24 +929,24 @@ where $(x^*)^{'}(t)={\d}x^*(t)/{\d}t$, and
 \end{aligned}
 \end{equation}
 
-If $(x^*(t),\tilde{\tau}^*(t))$ corresponds to a steady state
+If $(x^*(t))$ corresponds to a steady state
 solution, then $x^*(t)=x^*_0=\ldots=x^*_m\equiv x^*\in\RR^n$, and
 $\tau^*_j(t)\equiv \tau_j(x^*,\ldots,x^*,\eta^*)$ for all $j\geq1$, with
 \[
-f(x^*,x^*,\ldots,x^*,\eta^*)=0
+f(x^*,x^*,\ldots,x^*,\eta^*)=0\mbox{.}
 \]
-then the matrices $A_i(t)$ are constant, $A_i(t)\equiv A_i$, and the
+Then the matrices $A_i(t)$ are constant, $A_i(t)\equiv A_i$, and the
 vectors $B_{i,j}(t)$ consist of zero elements only.  In this case, the
 corresponding variational equation \eqref{the_var_equa2} is a constant
 delay differential equation and it leads to the characteristic
 equation (\ref{the_char_eq}), i.e.~a characteristic equation with
-constant delays. Hence the stability analysis of a
-steady state solution of \eqref{the_dde_type2} is similar to the
-stability analysis of \eqref{the_dde_type}.
+constant delays. Hence the stability analysis of a steady state
+solution of \eqref{the_dde_type2} is identical to the stability analysis
+of \eqref{the_dde_type}.
 
 Note that the right-hand side $f$, when considered as a functional
 mapping a history segment into $\RR^n$ is not locally Lipschitz
-continuous. This creates technical difficulties when considering an
+continuous. This creates technical difficulties when considering a
 sd-DDE of type \eqref{the_dde_type2} as an infinite-dimensional
 system, because the solution does not depend smoothly on the
 initial condition (see Hartung \emph{et al. }\cite{HKWW06} for a
@@ -968,12 +982,31 @@ bifurcation in sd-DDEs is also given in \cite{S12}).
 Moreover, Mallet-Paret and Nussbaum \cite{MN11} proved that the
 stability of the linear variational equation \eqref{the_var_equa2}
 indeed reflects the {\normalfont\itshape local stability} of the solution
-$(x^*(t),\tilde{\tau}^*(t))$ of \eqref{the_dde_type2}. 
+$(x^*(t))$ of \cref{the_dde_type2}. 
 For details on the relevant theory and numerical bifurcation analysis
 of differential equations with state-dependent delay see
-\cite{luz01,HKWW06} and the references therein.
+\cite{luz01,HKWW06,S17} and the references therein.
 
 \section{System definition}\label{sec:system:def}
+
+\subsection{Change from \DDEBIFCODE{} v.~3.1 to v.~3.2: symbolic generation}
+\label{sec:symbolic}
+The folder \url{../ddebiftool_extra_symbolic} contains routines that
+enable the user to create right-hand sides, delays (if
+state-dependent) and their derivatives through automatic code
+generation. The routines rely on either the symbolic toolbox of Matlab
+or the package \texttt{symbolic} of Octave (which relies on the
+\texttt{sympy} python library. In particular, right-hand sides and
+derivatives geenrated with the symbolic toolbox do not require the
+symbolic toolbox to be used in computations. Right-hand sides and
+derivatives generated with Octave can be used in Matlab (and vice
+versa).
+
+Previous versions had external Mathematica scripts such as
+\url{../external_tools/genr_sys.mth}, provided by D. Pieroux (still available).
+
+For manually implemented derivatives, the user may also provide
+directional derivatives instead of the more complex Jacobians.
 \subsection{Change from \DDEBIFCODE{} v.~2.03 to
   v.~3.0} Note that in \DDEBIFCODE{} \version{} all
 user-provided functions can be arbitrary function handles, collected
@@ -985,6 +1018,9 @@ the user functions can be arbitrary, and user functions can be
 anonymous. This is a change from previous versions. See the tutorials
 in \demobase{} for examples of usage, and the function description in
 section~\ref{sec:funcs} for details.
+
+The new version also supports \textbf{\emph{vectorized}} right-hand
+sides and delays, leadingto speed-up in computations involving periodic orbits.
 \subsection{Equations with constant delays}\label{sys_def1}
 
 As an illustrative example we will use the following system of delay 
@@ -1012,8 +1048,8 @@ functions, given in the following paragraphs for system \eqref{example_sys}.
 \subsubsection{Right-hand side --- \texorpdfstring{\blist{sys_rhs}}{sys\_rhs}}\label{sec:constrhs} 
 The right-hand side is a function of two arguments. For our example
 \eqref{example_sys}, this would have the form (giving the right-hand
-side the name \blist{neuron_sys_rhs})
-\begin{lstlisting}[frame=lines,label=neuron_sys_rhs,caption={Definition for right-hand side of \eqref{example_sys} as a variable.}]
+side the name \blist{neuron_sys_rhs}) given in \Cref{neuron_sys_rhs}.
+\begin{lstlisting}[float,frame=lines,label=neuron_sys_rhs,caption={Definition for right-hand side of \eqref{example_sys} as a variable. See \Cref{neuron_sys_rhs_vec} for the vectorized version.}]
 neuron_sys_rhs=@(xx,par)[...
   -par(1)*xx(1,1)+par(2)*tanh(xx(1,4))+par(3)*tanh(xx(2,3));...
   -par(1)*xx(2,1)+par(2)*tanh(xx(2,4))+par(4)*tanh(xx(1,2))];  
@@ -1035,8 +1071,10 @@ $\dot{x}=\tau x(t-\tau)$.  From these inputs the right hand side $f$
 is evaluated at time $t$. Notice that the parameters have a specific
 order in $\parm{par}$ indicated in the comment line.
 
-An alternative (vectorized) form would be
-\begin{lstlisting}[frame=lines,label=neuron_sys_rhs_vec,caption={Alternative definition of the right-hand side of \eqref{example_sys}, vectorized for speed-up of periodic orbit computations.}]
+\paragraph{Vectorization}
+An alternative (vectorized) form would be as given in
+\Cref{neuron_sys_rhs_vec}.
+\begin{lstlisting}[float,frame=lines,label=neuron_sys_rhs_vec,caption={Alternative definition of the right-hand side of \eqref{example_sys}, vectorized for speed-up of periodic orbit computations.}]
   neuron_sys_rhs=@(xx,p)[...
   -p(1)*xx(1,1,:)+p(2)*tanh(xx(1,4,:))+p(3)*tanh(xx(2,3,:));....
   -p(1)*xx(2,1,:)+p(2)*tanh(xx(2,4,:))+p(4)*tanh(xx(1,2,:))];
@@ -1057,13 +1095,20 @@ this is
 This function has no arguments for constant delays, and returns a row
 vector of indices into the parameter vector.
 
-\subsubsection{Jacobians of right-hand side --- \texorpdfstring{\blist{sys_deri}}{sys\_deri} (optional, but recommended)}\label{sec:constjac}
+\subsubsection{Derivatives or Jacobians of right-hand side ---
+  \texorpdfstring{\blist{sys_deri}}{sys\_deri} (optional, but
+  recommended)}\label{sec:constjac}
+\begin{quote}
+  \textbf{Note}: See alternative \blist{sys_dirderi} in
+  \cref{sec:dirderi}, providing directional derivatives.
+\end{quote}
 Several derivatives of the right hand side function $f$ need to be
 evaluated during bifurcation analysis. By default, \DDEBIFCODE{} uses
 a finite-difference approximation, implemented in
-\file{df\_deriv.m}. For speed-up or in case of convergence
-difficulties the user may provide the Jacobians of the right-hand side
-analytically as a separate function. Its header is of the format
+\blist{dde_dirderiv}, combined with \blist{dde_gen_deriv}. For
+speed-up or in case of convergence difficulties the user may provide
+the Jacobians of the right-hand side analytically as a separate
+function. Its header is of the format
 \begin{lstlisting}
   function J=sys_deri(xx,par,nx,np,v)
 \end{lstlisting}
@@ -1167,6 +1212,64 @@ All other derivatives are only necessary in the
 Jacobians of the respective Newton procedures and thus
 influence only the convergence speed. 
 
+\subsection{Directional derivatives}
+\label{sec:dirderi}
+\begin{lstlisting}[float,floatplacement=t,frame=lines,label=neuron_sys_dirderi,caption={First two directional derivatives of right-hand side of \cref{example_sys} (not vectorized, see \url{../demos/neuron/html/demo1_funcs.html} and note that
+ provision of this pair of functions is less complex than the routine
+ for \blist{neuron_sys_deri} in \Cref{neuron:sys:deri}).}]
+dtanh=@(x)(1-tanh(x)^2);
+ddtanh=@(x)(tanh(x)^2-1)*2*tanh(x);
+neuron_sys_dirderi{1}=@(x,p,dx,dp)[...
+ -dp(1)*x(1,1)-p(1)*dx(1,1)+...
+  dp(2)*tanh(x(1,4))+p(2)*dtanh(x(1,4))*dx(1,4)+...
+  dp(3)*tanh(x(2,3))+p(3)*dtanh(x(2,3))*dx(2,3);...
+ -dp(1)*x(2,1)-p(1)*dx(2,1)+...
+  dp(2)*tanh(x(2,4))+p(2)*dtanh(x(2,4))*dx(2,4)+...
+  dp(4)*tanh(x(1,2))+p(4)*dtanh(x(1,2))*dx(1,2)];
+neuron_sys_dirderi{2}=@(x,p,dx,dp)[...
+ -2*dp(1)*dx(1,1)+...
+  2*dp(2)*dtanh(x(1,4))*dx(1,4)+p(2)*ddtanh(x(1,4))*dx(1,4)^2+...
+  2*dp(3)*dtanh(x(2,3))*dx(2,3)+p(3)*ddtanh(x(2,3))*dx(2,3)^2; ...
+ -2*dp(1)*dx(2,1)+...
+  2*dp(2)*dtanh(x(2,4))*dx(2,4)+p(2)*ddtanh(x(2,4))*dx(2,4)^2+...
+  2*dp(4)*dtanh(x(1,2))*dx(1,2)+p(4)*ddtanh(x(1,2))*dx(1,2)^2];
+ \end{lstlisting}
+As an alternative to the function \blist{sys_deri} the user may
+provide directional derivatives. The $k$th directional derivative of
+the right-hand side $f(x_0,\ldots,x_m,\eta)$,
+\begin{displaymath}
+  \d^kf(x_0,\ldots,x_m,\eta)[\tilde{x}_0,\ldots,\tilde{x}_m,\tilde{\eta}]^k:=
+  \frac{\d^k}{\d h^k}f(x_0+h\tilde{x}_0,\ldots,x_m+h\tilde{x}_m,\eta+h\tilde{\eta})\vert_{h=0}\mbox{,}
+\end{displaymath}
+ has to have the form
+\begin{lstlisting}
+  function J=sys_dirderi(xx,par,dxx,dpar)
+\end{lstlisting}
+Arguments:
+\begin{itemize}
+\item $\blist{xx}\in\RR^{n\times (m+1)}$ contains the state
+  variable(s), $\blist{xx(:,j)}=x_{j-1}$, $x_0,\ldots,x_m$, at the present and in the past (as
+  for the right-hand side),;
+\item $\blist{par}\in\RR^{1\times
+  p}$ contains the parameters, $\blist{par}=\eta$  (as for the right-hand side);
+\item \blist{dxx}$\in\RR^{n\times(m+1)}$ contains the deviations that is applied to
+  \blist{xx}: \blist{dxx(:,j)}$=\tilde{x}_{j-1}$ for
+    $j=1\ldots,m+1$(empty, one integer or two integers) index
+    (indices) of \blist{xx} with respect to which the right-hand side
+    is to be differentiated
+\item \blist{dpar}$\in\RR^{1\times
+  p}$ contains the deviations to the parameters, $\blist{dpar}=\tilde{\eta}$.
+\end{itemize}
+The set of all deriviatives up to \blist{maxorder} will be passed on
+in a $1\times\blist{maxorder}$ cell array to \blist{set_funcs} (see
+\cref{sec:funcs}). For standard bifurcation analysis derivatives up to
+order $2$ are used. For normal form analysis derivatives up to order
+$5$ are used. Any derivatives that are not provided by either
+\blist{sys_deri} or \blist{sys_dirderi} will be approximated by finite
+differences. For the example \eqref{example_sys}, the first two
+directional derivatives can be implemented as given in
+\Cref{neuron_sys_dirderi}.  Directional derivatives are also easier to
+vectorize.
 
 \subsection{Equations with state-dependent
   delays}\label{sys_def2}
@@ -1214,7 +1317,7 @@ sections for system \eqref{example_sys2}.
 
 \subsubsection{Right-hand side --- \texorpdfstring{\blist{sys_rhs}}{sys\_rhs}}
 \label{sec:sdrhs}
-The definition and functionality of this routine is equivalent to the
+The definition and functionality of this routine is identical to the
 one described in section \ref{sec:constrhs}.  Notice that the argument
 \blist{xx} contains the state variable(s) at the present and in the
 past, $\blist{xx}=[x(t)\ x(t-\tau_1)\ \ldots\ \ldots\ x(t-\tau_m)]$.
@@ -1233,7 +1336,7 @@ The format and semantics of the routines specifying the delays differ
 from the one described in section~\ref{sec:consttau}. The user has to provide two functions:
 \begin{lstlisting}
   function ntau=sys_ntau()        
-  function  tau=sys_tau (ind,xx,par)
+  function  tau=sys_tau(ind,xx,par)
 \end{lstlisting}
 The function \blist{sys_ntau} has no arguments and  returns the number of (constant and state-dependent) delays. For the example \eqref{example_sys2}, this could be the anonymous function \blist{@()6;}.
 
@@ -1246,22 +1349,31 @@ The function \blist{sys_tau} has the three arguments:
 \item \blist{par} (row vector) is the vector of system parameters
 \end{itemize}
 The output is the value of $\tau_{\blist{ind}}$, the \blist{ind}'th
-delay. \DDEBIFCODE{} calls \blist{sys_tau} $m$ times
-where $m=$\blist{sys_ntau()}. In the first call \blist{xx} is the
-$n\times1$ vector, $x(t)$ such that $\tau_1$ may depend on $x(t)$ and
+delay. \DDEBIFCODE{} calls \blist{sys_tau} $m$ times where
+$m=$\blist{sys_ntau()}. In the first call \blist{xx} is the $n\times1$
+vector, $x(t)$ such that $\tau_1$ may depend on $x(t)$ and
 \blist{par}. After the first call to \blist{sys_tau}, \DDEBIFCODE{}
-computes $x(t-\tau_1)$. In the second call to \blist{sys_tau}
+computes $x(t-\tau_1)$. In the second call to \blist{sys_tau},
 \blist{xx} is a $n\times2$ matrix, consisting of $[x(t),x(t-\tau_1)]$
 such that the delay $\tau_2$ may depend on $x(t)$ , $x(t-\tau_1)$ and
 \blist{par}, etc. In this way, the user can define state-dependent
 point delays with arbitrary levels of nesting. The delay function for
-the example \eqref{example_sys2} is given in Listing~\ref{sd_tau}.
+the example \eqref{example_sys2} is given in \Cref{sd_tau}.
 
-\paragraph{Note: order of delays} The order of the delays
+\paragraph{Implicitly defined delays}
+Note that, due to the possiblility of specifying a singular matrix $M$
+in front of the left-hand side derivative $x'(t)$, it is in principle
+possible to specify fully implicit delays. One would introduce $m$
+additional scalar variables $x_{n+_j}$ and add the $m$ equations
+$0=x_{n+j}(t)-\tau_j(x(t),x(t-\tau_1),\ldots,x(t-\tau_m))$ as part of
+the right-hand side. Then one may define the $j$th delay as equal to
+$x_{n+j}$.
+
+\paragraph{Order of delays} The order of the delays
 requested in \blist{sys_tau} corresponds to the order in which they
 appear in \blist{xx} as passed to the functions \blist{sys_rhs} and
 \blist{sys_deri}.
-\paragraph{Note: difference to section~\ref{sec:consttau}} When calling
+\paragraph{Difference to \cref{sec:consttau}} When calling
   \blist{sys_tau} for a constant delay, the value of the delay is
   returned.  This is in contrast with the definition of \blist{sys_tau}
   in section \ref{sec:consttau}, where the position in the parameter list
@@ -1271,23 +1383,30 @@ appear in \blist{xx} as passed to the functions \blist{sys_rhs} and
   \blist{'sys_tau'} function for \eqref{example_sys2}, here called
   \blist{sd_tau}.}]{sd_tau.m}
 
-\subsubsection{Jacobian of right-hand side --- \texorpdfstring{\blist{sys_deri}}{sys\_deri}
-  (optional, but recommended)}
+\subsubsection{Jacobian or directional derivatives of right-hand side
+  --- \texorpdfstring{\blist{sys_deri}}{sys\_deri} or
+  \texorpdfstring{\blist{sys_dirderi}}{sys\_dirderi} (optional, but
+  recommended)}
 \label{sec:sdjac}
 The definition and functionality of this routine is equivalent to the
 one described in section \ref{sec:constjac}.  We do not present here
 the routine since it is quite long, see the MATLAB code
-\file{sd\_deri.m} in the demo example \file{sd\_demo}. If the user does
-not provide a function for the Jacobians the finite-difference
-approximation (\file{df\_deriv.m}) will be used by default.  However,
-as for constant delays, it is recommended to provide at least
-the first order derivatives with respect to the state variables using
-analytical formulas.  
+\file{sd\_deri.m} in the demo example \file{sd\_demo}. If the user
+does not provide a function for the Jacobians the finite-difference
+approximation will be used by default.  However, as for constant
+delays, it is recommended to provide at least the first order
+derivatives with respect to the state variables using analytical
+formulas.
 
 
-\subsubsection{Jacobians of delays --- \texorpdfstring{\blist{sys_dtau}}{sys\_dtau} ({}optional, but
+\subsubsection{Jacobians of delays ---
+  \texorpdfstring{\blist{sys_dtau}}{sys\_dtau} ({}optional, but
   recommended)}
 \label{sec:sddtau}
+\begin{quote}
+  \textbf{Note}: See alternative \blist{sys_dirdtau} in
+  \cref{sec:dirdtau}, providing directional derivatives.
+\end{quote}
 The routine of the format
 \begin{lstlisting}
   function dtau=sd_dtau(ind,xx,par,nx,np)
@@ -1295,17 +1414,18 @@ The routine of the format
 supplies derivatives of all delays with respect to the state and
 parameters. Its functionality is similar to the function
 \blist{sys_deri}. Inputs:
-\begin{itemize}
+\begin{compactitem}
 \item \blist{ind} (integer $\geq1$) the number of the delay,
-\item \blist{par} ($n\times\blist{ind}$ matrix) is the state:
+\item \blist{xx} ($n\times\blist{ind}$ matrix) is the state:
   \blist{xx(:,1)}$=x(t)$, \blist{xx(:,k)}$=x(t-\tau_{k-1})$ for
   $k=2\ldots\blist{ind}$;
+\item \blist{par}$\in\RR^{1\times p}$ arethe parameters (as for the right-hand side)
 \item \blist{nx} (empty, one integer or two integers) index (indices) of
   \blist{xx} with respect to which the right-hand side is to be
   differentiated;
 \item \blist{np} (empty or integer) whether right-hand side is to be
   differentiated with respect to parameters.
-\end{itemize}
+\end{compactitem}
 The result $\parm{dtau}$ is a scalar, vector or matrix of partial
 derivatives of the delay with number \blist{ind}, which depends on the
 type of derivative requested via \blist{nx} and \blist{np}, see table
@@ -1314,12 +1434,12 @@ type of derivative requested via \blist{nx} and \blist{np}, see table
 Appendix~\ref{sec:sys:deri} for a printout of the function body.
 
 If the user does not provide a \blist{'sys_dtau'} function then the
-default routine \blist{df_derit} will be used, which implements finite
-difference formulas to approximate the requested derivatives (using
-several calls to \blist{sys_tau}), analogously to \blist{df_deriv}. As
-in the case of \blist{sys_deri}, it is recommended to provide at least
-the first order derivatives with respect to the state variables using
-analytical formulas.
+default routine \blist{dde_dir_deriv} in combination with
+\blist{dde_gen_deriv} will be used, which implements finite difference
+formulas to approximate the requested derivatives. As in the case of
+\blist{sys_deri}, it is recommended to provide at least the first
+order derivatives with respect to the state variables using analytical
+formulas.
 
 \begin{table}[htbp]
 \begin{center}
@@ -1346,10 +1466,43 @@ analytical formulas.
   \blist{np} (\blist{ind}$=1,\ldots,m$).}
 \end{center}
 \end{table}
+\subsection{Directional derivatives of delays}
+\label{sec:dirdtau}
+As an alternative to the function \blist{sys_dtau} the user may
+provide directional derivatives. The $k$th directional derivative of
+the delay function $\tau_j(x_0,\ldots,x_{j-1},\eta)$,
+\begin{displaymath}
+  \d^k\tau_j(x_0,\ldots,x_{j-1},\eta)[\tilde{x}_0,\ldots,\tilde{x}_{j-1},\tilde{\eta}]^k:=
+  \frac{\d^k}{\d h^k}\tau_j(x_0+h\tilde{x}_0,\ldots,x_{j-1}+h\tilde{x}_{j-1},\eta+h\tilde{\eta})\vert_{h=0}\mbox{,}
+\end{displaymath}
+ has to have the form
+\begin{lstlisting}
+  function J=sys_dirdtau(ind,xx,par,dxx,dpar)
+\end{lstlisting}
+Arguments (similar to \cref{sec:dirderi} for directional derivatives of the right-hand side):
+\begin{compactitem}
+\item \blist{ind} (integer $\geq1$) the number of the delay,
+\item \blist{xx} ($n\times\blist{ind}$ matrix) is the state:
+  \blist{xx(:,1)}$=x(t)$, \blist{xx(:,i)}$=x(t-\tau_{i-1})$ for
+  $i=2\ldots\blist{ind}$;
+\item \blist{par}$\in\RR^{1\times p}$ are the parameters (as for the right-hand side)
+\item \blist{dxx} ($n\times\blist{ind}$ matrix) are the deviations $\tilde{x}_i$ from \blist{xx}
+\item \blist{dpar}$\in\RR^{1\times
+  p}$ contains the deviations to the parameters, $\blist{dpar}=\tilde{\eta}$.
+\end{compactitem}
+The set of all deriviatives up to \blist{maxorder} will be passed on
+in a $1\times\blist{maxorder}$ cell array to \blist{set_funcs} (see
+\cref{sec:funcs}). For standard bifurcation analysis derivatives up to
+order $1$ are used. For normal form analysis derivatives up to order
+$5$ are used. Any derivatives that are not provided by either
+\blist{sys_dtau} or \blist{sys_dirdtau} will be approximated by finite
+differences.  Directional derivatives are also easier to vectorize.
+
 \subsection{Extra conditions --- \texorpdfstring{\blist{sys_cond}}{sys\_cond}}\label{sec:syscond}
-A system routine \blist{sys_cond} with a header of the type
+A system routine \blist{sys_cond} with a header of either of the types
 \begin{lstlisting}
   function [res,p]=sys_cond(point)
+  function [res,p]=sys_cond(point,pref)
 \end{lstlisting}
 can be used to add extra conditions during corrections and
 continuation, see section \ref{extra_cond} for an explanation of
@@ -4698,7 +4851,7 @@ Other possible future developments include
 \begin{itemize}
 \item a graphical user interface;
 \item incorporation of the numerical core
-  routines into a general continuation framework such as \texttt{Coco}
+  routines into a general continuation framework such as \textsc{COCO}
   \cite{DS13} (which would permit the user to grow higher-dimensional
   solution families and wrap other continuation algorithms around the
   core DDE routines),
