@@ -2,7 +2,8 @@ function grid=dde_coll_set_grid(purpose,degree,varargin)
 %% define various node grids for polynomial interpolation
 % $Id: dde_coll_set_grid.m 369 2019-08-27 00:07:02Z jansieber $
 %%
-default={'type','equidistant','subset',@(x)x(2:end)};
+default={'type',[],'subset',@(x)x(2:end),...
+    'lhs_num',1,'daetest','rank','maxdegree_linear',10};
 options=dde_set_options(default,varargin,'pass_on');
 if isa(options.type,'function_handle')
     grid=options.type(purpose,degree);
@@ -12,10 +13,26 @@ elseif isnumeric(options.type) && ~isempty(options.type)
     return
 end
 if isempty(options.type) 
-    if ~strcmp(purpose,'collocation')
-        options.type='equidistant';
-    else
-        options.type='gauss';
+    switch purpose
+        case 'collocation'
+            dim=size(options.lhs_num,1);
+            switch options.daetest
+                case 'rank'
+                    isdae=rank(options.lhs_num)<dim;
+                otherwise
+                    isdae=any(options.lhs_num(:)~=reshape(eye(dim),[],1));
+            end
+            if ~isdae
+                options.type='gauss';
+            else
+                options.type='cheb';
+            end                
+        otherwise
+            if degree<=options.maxdegree_linear
+                options.type='equidistant';
+            else
+                options.type='cheb';
+            end
     end
 end
 switch options.type

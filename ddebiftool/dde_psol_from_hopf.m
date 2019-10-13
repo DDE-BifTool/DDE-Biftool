@@ -18,13 +18,6 @@ if length(options.intervals)==1
 else
     coarsemesh=options.intervals;
 end
-if isempty(options.submesh)
-    if options.degree<=10
-        options.submesh='equidistant';
-    else
-        options.submesh='cheb';
-    end
-end
 pmesh=dde_coll_meshfill(coarsemesh,options.degree,'grid',options.submesh);
 psol=dde_psol_create('point',point,...
     'mesh',pmesh,...

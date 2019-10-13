@@ -38,14 +38,9 @@ default={'wrapJ',true,...
 n=size(pt.profile,1);
 if ~options.c_is_tvals
     if isempty(options.c)
-        lhs_num=funcs.lhs_matrix(n);
-        if any(reshape(lhs_num-eye(n),1,[])~=0)
-            options.c='cheb';
-        else
-            options.c='gauss';
-        end
+        options.c=dde_coll_set_grid('collocation',pt.degree,'type',options.c,...
+            'lhs_num',funcs.lhs_matrix(n));
     end
-    options.c=dde_coll_set_grid('collocation',pt.degree,'type',options.c);
     if 1==max(options.c)
         options.submesh_limit=1;
     end

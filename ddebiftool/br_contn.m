@@ -312,7 +312,11 @@ if mth.plot>=1
     try
         ish=ishold(ax);
         hold(ax,'on');
-        args={'HandleVisibility','off'};
+        if ~dde_isoctave()
+            args={'HandleVisibility','off'};
+        else
+            args={};
+        end
         plot(ax,[x1 x2],[y1 y2],clr,args{:});
         plot(ax,x2,y2,[clr,'.'],args{:});
         steplength=p_norm(p_axpy(-1,last_point,new_point));
