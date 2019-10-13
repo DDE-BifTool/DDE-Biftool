@@ -35,10 +35,10 @@ nw=length(w);
 dim=size(p1.profile,1);
 dg=sparse(options.ind_comp,options.ind_comp,ones(length(options.ind_comp),1),dim,dim);
 wmat=kron(sparse(1:nw,1:nw,w),dg);
-[y1,W1]=dde_coll_eva(p1.profile,p1.mesh,t,p1.degree,...
-    'diff',options.derivatives(1),'kron',true); %#ok<ASGLU>
-[y2,W2]=dde_coll_eva(p2.profile,p2.mesh,t,p2.degree,...
-    'diff',options.derivatives(2),'kron',true); %#ok<ASGLU>
+W1=dde_coll_eva(p1.profile,p1.mesh,t,p1.degree,...
+    'diff',options.derivatives(1),'kron',true,'output','matrix');
+W2=dde_coll_eva(p2.profile,p2.mesh,t,p2.degree,...
+    'diff',options.derivatives(2),'kron',true,'output','matrix');
 W1=sgn*W1;
 W=W1.'*wmat*W2;
 y=p1.profile(:).'*W*p2.profile(:);

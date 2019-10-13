@@ -312,8 +312,9 @@ if mth.plot>=1
     try
         ish=ishold(ax);
         hold(ax,'on');
-        plot(ax,[x1 x2],[y1 y2],clr);
-        plot(ax,x2,y2,[clr,'.']);
+        args={'HandleVisibility','off'};
+        plot(ax,[x1 x2],[y1 y2],clr,args{:});
+        plot(ax,x2,y2,[clr,'.'],args{:});
         steplength=p_norm(p_axpy(-1,last_point,new_point));
         title(ax,sprintf('step %d, steplength=%5.3e',step,abs(steplength)));
         if ~ish

@@ -89,6 +89,7 @@ end
 ncheb=max(ceil(min(ncheb,options.inisize/dim)),ceil(options.min_number_of_eigenvalues/dim));
 %% compute approx eigenvalues and gradually double ncheb if error too large
 err=Inf;
+lambda=NaN(0,1);
 while err>options.root_accuracy && ncheb<=options.maxsize/dim
     [D,Etau,x]=dde_dchebary_loc(ncheb,tauscal);
     D=kron(D,eye(dim));

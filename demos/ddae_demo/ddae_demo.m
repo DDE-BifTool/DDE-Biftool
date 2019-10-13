@@ -194,9 +194,13 @@ xlabel(ax6,'b');ylabel(ax6,'omega');
 %% Two parameter bifurcation diagram
 figure(2);clf;ax7=gca;hold(ax7,'on');
 inp={'ax',ax7,stab_inputs{:},'max_nunst',2};
+plot(ax7,[1,1],[0,10],'k-',lw{:})
 Plot2dBranch(rw_fold,'funcs',foldfuncs,inp{:});
 Plot2dBranch(rw_hopf,inp{:});
 Plot2dBranch(tr_branch,'funcs',trfuncs,inp{:});
 Plot2dBranch(pofold_branch,'funcs',pofoldfuncs,inp{:});
 set(ax7,'xlim',[0.6,1.2],'ylim',[0,10])
 xlabel(ax7,'b');ylabel(ax7,'a');
+set(ax7,'fontsize',18,'fontweight','bold','fontname','courier','linewidth',2,'box','on');
+%%
+save('ddae_demo_results.mat');

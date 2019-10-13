@@ -4,7 +4,7 @@ function [psol,tangent]=dde_psol_from_hopf(point,varargin)
 % Output is initial periodic orbit and approximate tangent
 % $Id: dde_psol_from_hopf.m 369 2019-08-27 00:07:02Z jansieber $
 %%
-default={'radius',1e-3,'degree',3,'intervals',20,'submesh','equidistant'};
+default={'radius',1e-3,'degree',3,'intervals',20,'submesh',[]};
 [options,pass_on]=dde_set_options(default,varargin,'pass_on');
 if ~strcmp(point.kind,'hopf')
     point=dde_apply({'dde_hopf_from_',point.kind,''},point,pass_on{:});
@@ -17,6 +17,13 @@ if length(options.intervals)==1
     coarsemesh=linspace(0,1,options.intervals+1);
 else
     coarsemesh=options.intervals;
+end
+if isempty(options.submesh)
+    if options.degree<=10
+        options.submesh='equidistant';
+    else
+        options.submesh='cheb';
+    end
 end
 pmesh=dde_coll_meshfill(coarsemesh,options.degree,'grid',options.submesh);
 psol=dde_psol_create('point',point,...

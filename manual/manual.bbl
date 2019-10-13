@@ -26,6 +26,11 @@ R.~Bellman and K.~L. Cooke.
   in science and engineering}.
 \newblock {A}cademic {P}ress, 1963.
 
+\bibitem{berrut2004}
+Jean-Paul Berrut and Lloyd~N Trefethen.
+\newblock Barycentric lagrange interpolation.
+\newblock {\em SIAM review}, 46(3):501--517, 2004.
+
 \bibitem{breda09}
 D.~Breda, S.~Maset, and R.~Vermiglio.
 \newblock {TRACE-DDE}{\normalfont\rmfamily :} a tool for robust analysis and

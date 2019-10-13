@@ -21,6 +21,7 @@ end
 switch options.type
     case {'gauss','legendre'}
         grid=legpts(degree,[0,1]);
+        grid=grid(:).';
     case {'cheb','chebyshev'}
         grid=dde_coll_chebxwt(degree,1:degree+1,[0,1]);
     case {'linear','equidistant'}

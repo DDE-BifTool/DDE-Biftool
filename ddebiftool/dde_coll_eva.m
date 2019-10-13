@@ -17,7 +17,7 @@ function [y,J]=dde_coll_eva(profile,mesh,x,degree,varargin)
 %
 %% options
 default={'kron',false,'diff',0,'sparse',true,'submesh_limit',0,...
-    'in_interval',[]};
+    'in_interval',[],'output','profile'};
 options=dde_set_options(default,varargin,'pass_on');
 %% rescale mesh
 tbd=mesh([1,end]);
@@ -61,9 +61,14 @@ denomfin=all(denom~=0,1);
 jac_vals(:,denomfin)=fac(:,denomfin)./repmat(sum(fac(:,denomfin),1),d1,1);
 div=(intlen*tlen).^options.diff;
 jac_vals=(Dmat'*jac_vals)./repmat(div,d1,1);
-y=profile(:,ix)*sparse_blkdiag(reshape(jac_vals,d1,1,nx));
+outmatrix=strcmp(options.output,'matrix');
+if ~outmatrix || nargout>1
+    y=profile(:,ix)*sparse_blkdiag(reshape(jac_vals,d1,1,nx));
+else
+    y=[];
+end
 %% return Jacobian if requested
-if nargout>1
+if outmatrix || nargout>1
     jac_ind=reshape(jac_ind,[],2);
     jac_vals=jac_vals(:);
     iremove=jac_vals==0;
@@ -71,11 +76,16 @@ if nargout>1
     jac_ind=jac_ind(~iremove,:);
     J=sparse(jac_ind(:,1),jac_ind(:,2),jac_vals,nx,nt);
     if options.kron
-       J=kron(J,speye(size(y,1)));
+       J=kron(J,speye(size(profile,1)));
     end
     if ~options.sparse
         J=full(J);
     end
+else
+    J=[];
+end
+if outmatrix
+    [J,y]=deal(y,J);
 end
 end
 %%

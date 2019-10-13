@@ -30,12 +30,21 @@ function [coll,extmesh]=dde_coll_map(funcs,pt,varargin)
 % $Id: dde_coll_map.m 369 2019-08-27 00:07:02Z jansieber $
 %%
 default={'wrapJ',true,...
-    'c_is_tvals',false,'c','gauss','submesh_limit',0,...
+    'c_is_tvals',false,'c',[],'submesh_limit',0,...
     'nderivs',1,'deriv_order',[]};
 [options,pass_on]=dde_set_options(default,varargin,'pass_on');
 %% Determine where residuals are computed: mesh tc 
 % only compute res & jac at specified points?
+n=size(pt.profile,1);
 if ~options.c_is_tvals
+    if isempty(options.c)
+        lhs_num=funcs.lhs_matrix(n);
+        if any(reshape(lhs_num-eye(n),1,[])~=0)
+            options.c='cheb';
+        else
+            options.c='gauss';
+        end
+    end
     options.c=dde_coll_set_grid('collocation',pt.degree,'type',options.c);
     if 1==max(options.c)
         options.submesh_limit=1;
@@ -56,7 +65,6 @@ else
     n_tau=funcs.sys_ntau();
     d=n_tau+1;
     tau=[zeros(neqs,1),NaN(neqs,n_tau)];
-    n=size(pt.profile,1);
     yarr=NaN(n,d,neqs);
 end
 if isempty(options.deriv_order)

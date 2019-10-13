@@ -890,7 +890,7 @@ state-dependent delays (sd-DDEs),
 \begin{equation}\label{the_dde_type2}
 \left\{
 \begin{aligned}
-\frac{\d}{\d t}{x(t)}&=f(x_0,x_1,\ldots,x_m,\eta)\mbox{,\quad with}\\
+M\frac{\d}{\d t}{x(t)}&=f(x_0,x_1,\ldots,x_m,\eta)\mbox{,\quad with}\\
 x_j&=x(t-\tau_j(x_0,\ldots,x_{j-1},\eta)\quad\mbox{($\tau_0=0$, $j=1,\ldots,m$)}\mbox{,}
 \end{aligned}
 \right.
@@ -915,7 +915,7 @@ $x^*_0=x^*(t)$, $\tau_j^*(t)=\tau_j(x^*_0,\ldots,x^*_{j-1},\eta^*)$ and
 $x^*_j=x^*(t-\tau^*_j(t))$ for $j\geq1$)
 \begin{equation}\label{the_var_equa2}
 \begin{aligned}
-\frac{\d}{\d t}{y(t)}&=\sum_{j=0}^mA_j(t)Y_k \\
+M\frac{\d}{\d t}{y(t)}&=\sum_{j=0}^mA_j(t)Y_k \\
 Y_0&=y(t)\\
 Y_j&=y(t-\tau^*_j(t))-(x^*)'(t-\tau_j(t))\sum_{k=0}^{j-1}B_{k,j}(t)Y_k\mbox{,\quad($j=1\ldots m$)}
 \end{aligned}
@@ -996,8 +996,8 @@ enable the user to create right-hand sides, delays (if
 state-dependent) and their derivatives through automatic code
 generation. The routines rely on either the symbolic toolbox of Matlab
 or the package \texttt{symbolic} of Octave (which relies on the
-\texttt{sympy} python library. In particular, right-hand sides and
-derivatives geenrated with the symbolic toolbox do not require the
+\texttt{sympy} python library). In particular, right-hand sides and
+derivatives generated with the symbolic toolbox do not require the
 symbolic toolbox to be used in computations. Right-hand sides and
 derivatives generated with Octave can be used in Matlab (and vice
 versa).
@@ -1008,14 +1008,14 @@ Previous versions had external Mathematica scripts such as
 For manually implemented derivatives, the user may also provide
 directional derivatives instead of the more complex Jacobians.
 \subsection{Change from \DDEBIFCODE{} v.~2.03 to
-  v.~3.0} Note that in \DDEBIFCODE{} \version{} all
+  v.~3.0} Note that from \DDEBIFCODE{} v.~3.0 all
 user-provided functions can be arbitrary function handles, collected
 into a structure using the function \blist{set_funcs}, explained in
 section~\ref{sec:funcs}. The only typical mandatory functions for the
 user to provide are the right-hand side (\blist{'sys_rhs'}) and the
 function returning the delay indices (\blist{'sys_tau'}). The names of
 the user functions can be arbitrary, and user functions can be
-anonymous. This is a change from previous versions. See the tutorials
+anonymous. This is a change from versions $<3.0$. See the tutorials
 in \demobase{} for examples of usage, and the function description in
 section~\ref{sec:funcs} for details.
 
@@ -1099,8 +1099,8 @@ vector of indices into the parameter vector.
   \texorpdfstring{\blist{sys_deri}}{sys\_deri} (optional, but
   recommended)}\label{sec:constjac}
 \begin{quote}
-  \textbf{Note}: See alternative \blist{sys_dirderi} in
-  \cref{sec:dirderi}, providing directional derivatives.
+  \textbf{Note}: See  \blist{sys_dirderi} in
+  \cref{sec:dirderi} for alternatively providing directional derivatives.
 \end{quote}
 Several derivatives of the right hand side function $f$ need to be
 evaluated during bifurcation analysis. By default, \DDEBIFCODE{} uses
@@ -1260,16 +1260,16 @@ Arguments:
 \item \blist{dpar}$\in\RR^{1\times
   p}$ contains the deviations to the parameters, $\blist{dpar}=\tilde{\eta}$.
 \end{itemize}
-The set of all deriviatives up to \blist{maxorder} will be passed on
-in a $1\times\blist{maxorder}$ cell array to \blist{set_funcs} (see
+The user passes on the set of all directional deriviatives in a
+$1\times\blist{maxorder}$ cell array to \blist{set_funcs} (see
 \cref{sec:funcs}). For standard bifurcation analysis derivatives up to
 order $2$ are used. For normal form analysis derivatives up to order
 $5$ are used. Any derivatives that are not provided by either
 \blist{sys_deri} or \blist{sys_dirderi} will be approximated by finite
 differences. For the example \eqref{example_sys}, the first two
 directional derivatives can be implemented as given in
-\Cref{neuron_sys_dirderi}.  Directional derivatives are also easier to
-vectorize.
+\Cref{neuron_sys_dirderi}.  Directional derivatives are easier to
+provide in vectorized form.
 
 \subsection{Equations with state-dependent
   delays}\label{sys_def2}
@@ -1324,7 +1324,8 @@ past, $\blist{xx}=[x(t)\ x(t-\tau_1)\ \ldots\ \ldots\ x(t-\tau_m)]$.
 Possible constant delays ($\tau_1$ and $\tau_2$ in example
 \eqref{example_sys2}) are also considered to be part of the
 parameters. See Listing \ref{sd_rhs} for the right-hand side to be
-provided for example \eqref{example_sys2}.
+provided for example \eqref{example_sys2}. Vectorization will speed up
+computation for periodic orbits.
 \lstinputlisting[frame=lines,float,label=sd_rhs,
 basicstyle={\ttfamily\small},caption={Listing of right-hand side
   \blist{'sys_rhs'} function for \eqref{example_sys2} function for
@@ -1364,17 +1365,17 @@ the example \eqref{example_sys2} is given in \Cref{sd_tau}.
 Note that, due to the possiblility of specifying a singular matrix $M$
 in front of the left-hand side derivative $x'(t)$, it is in principle
 possible to specify fully implicit delays. One would introduce $m$
-additional scalar variables $x_{n+_j}$ and add the $m$ equations
+additional scalar variables $x_{n+j}$ and add the $m$ equations 
 $0=x_{n+j}(t)-\tau_j(x(t),x(t-\tau_1),\ldots,x(t-\tau_m))$ as part of
-the right-hand side. Then one may define the $j$th delay as equal to
-$x_{n+j}$.
+the right-hand side $f$ (\blist{sys_rhs}). Then one may define the $j$th delay as equal to
+$x_{n+j}$: \blist{sys_tau=@(i,x,p)x(n+i,1,:)}
 
 \paragraph{Order of delays} The order of the delays
 requested in \blist{sys_tau} corresponds to the order in which they
 appear in \blist{xx} as passed to the functions \blist{sys_rhs} and
 \blist{sys_deri}.
 \paragraph{Difference to \cref{sec:consttau}} When calling
-  \blist{sys_tau} for a constant delay, the value of the delay is
+  \blist{sys_tau} for a state-dependent delay, the \emph{value} of the delay is
   returned.  This is in contrast with the definition of \blist{sys_tau}
   in section \ref{sec:consttau}, where the position in the parameter list
   is returned.
@@ -1388,7 +1389,7 @@ appear in \blist{xx} as passed to the functions \blist{sys_rhs} and
   \texorpdfstring{\blist{sys_dirderi}}{sys\_dirderi} (optional, but
   recommended)}
 \label{sec:sdjac}
-The definition and functionality of this routine is equivalent to the
+The definition and functionality of this routine is identical to the
 one described in section \ref{sec:constjac}.  We do not present here
 the routine since it is quite long, see the MATLAB code
 \file{sd\_deri.m} in the demo example \file{sd\_demo}. If the user
@@ -1396,7 +1397,8 @@ does not provide a function for the Jacobians the finite-difference
 approximation will be used by default.  However, as for constant
 delays, it is recommended to provide at least the first order
 derivatives with respect to the state variables using analytical
-formulas.
+formulas. Alternatively, the user may provide directional derivatives
+of \blist{sys_rhs}.
 
 
 \subsubsection{Jacobians of delays ---
@@ -1419,7 +1421,7 @@ parameters. Its functionality is similar to the function
 \item \blist{xx} ($n\times\blist{ind}$ matrix) is the state:
   \blist{xx(:,1)}$=x(t)$, \blist{xx(:,k)}$=x(t-\tau_{k-1})$ for
   $k=2\ldots\blist{ind}$;
-\item \blist{par}$\in\RR^{1\times p}$ arethe parameters (as for the right-hand side)
+\item \blist{par}$\in\RR^{1\times p}$ are the parameters (as for the right-hand side)
 \item \blist{nx} (empty, one integer or two integers) index (indices) of
   \blist{xx} with respect to which the right-hand side is to be
   differentiated;
@@ -1490,13 +1492,13 @@ Arguments (similar to \cref{sec:dirderi} for directional derivatives of the righ
 \item \blist{dpar}$\in\RR^{1\times
   p}$ contains the deviations to the parameters, $\blist{dpar}=\tilde{\eta}$.
 \end{compactitem}
-The set of all deriviatives up to \blist{maxorder} will be passed on
-in a $1\times\blist{maxorder}$ cell array to \blist{set_funcs} (see
+The use passes on the set of all deriviatives in a
+$1\times\blist{maxorder}$ cell array to \blist{set_funcs} (see
 \cref{sec:funcs}). For standard bifurcation analysis derivatives up to
 order $1$ are used. For normal form analysis derivatives up to order
 $5$ are used. Any derivatives that are not provided by either
 \blist{sys_dtau} or \blist{sys_dirdtau} will be approximated by finite
-differences.  Directional derivatives are also easier to vectorize.
+differences.  Directional derivatives are easier to provide in vectorized form.
 
 \subsection{Extra conditions --- \texorpdfstring{\blist{sys_cond}}{sys\_cond}}\label{sec:syscond}
 A system routine \blist{sys_cond} with a header of either of the types
@@ -1505,8 +1507,10 @@ A system routine \blist{sys_cond} with a header of either of the types
   function [res,p]=sys_cond(point,pref)
 \end{lstlisting}
 can be used to add extra conditions during corrections and
-continuation, see section \ref{extra_cond} for an explanation of
-arguments and outputs.
+continuation, see \cref{extra_cond} for an explanation of
+arguments and outputs. Which form \DDEBIFCODE{} assumes is determined
+by the argument \blist{sys_cond_reference} (\blist{false} for first
+form, \blist{true} for second form).
 
 \subsection{Collecting user functions into a structure --- call
   \texorpdfstring{\blist{set_funcs}}{set\_funcs}}
@@ -1515,10 +1519,11 @@ The user-provided functions are passed on as an additional argument to
 all routines of \DDEBIFCODE{} (similar to standard MATLAB routines
 such as \blist{ode45}). This was changed in \DDEBIFCODE{}\,3.0 from
 previous versions. The additional argument is a structure
-\blist{funcs} containing all the handles to all user-provided
-functions. In order to create this structure the user is recommended
-to call the function \blist{set_funcs} at the beginning of the script
-performing the bifurcation analysis:
+\blist{funcs} containing all handles to all user-provided functions,
+the left-hand side matrix $M$ and supporting information. In order to
+create this structure the user is recommended to call the function
+\blist{set_funcs} at the beginning of the script performing the
+bifurcation analysis:
 \begin{lstlisting}
   function funcs=set_funcs(...)
 \end{lstlisting}
@@ -1541,7 +1546,7 @@ defined (see section~\ref{sec:constjac}). The delay function
 the call to \blist{set_funcs} (not needing to be defined in a separate
 file or as a separate variable). If one does wish to not provide
 analytical derivatives, one may drop the \blist{'sys_deri'} pair (then
-a finite-difference approximation, implemented in \blist{df_deriv}, is
+a finite-difference approximation, implemented in \blist{dde_gen_deriv}, is
 used):
 \begin{lstlisting}
 funcs=set_funcs('sys_rhs',neuron_sys_rhs,'sys_tau',@()[5,6,7]);
@@ -1563,21 +1568,49 @@ Table~\ref{tab:funcs} in section~\ref{sec:funcs:struct} later):
   delays, described in sections~\ref{sec:consttau}, or providing the
   values of the delays for sd-DDEs as described in
   section~\ref{sec:sdtau};
-\item \blist{'sys_ntau'} (relevant for sd-DDEs only): handle of the
-  user function providing the number of delays in sd-DDEs as described
-  in section~\ref{sec:sdtau};
+\item \blist{'sys_dirderi'}: (default empty) cell array containing
+  handles to directional derviatives of \blist{'sys_rhs'}, described
+  in sections~\ref{sec:dirderi} (alternative to \blist{'sys_deri'});
 \item \blist{'sys_deri'}: handle of the user function providing the
   Jacobians of right-hand side, described in
   sections~\ref{sec:constjac} and \ref{sec:sdjac};
+\item \blist{'sys_ntau'} (relevant for sd-DDEs only): handle of the
+  user function providing the number of delays in sd-DDEs as described
+  in section~\ref{sec:sdtau};
+\item \blist{'sys_dirdtau'}: (relevant for sd-DDEs only, default empty)
+  cell array containing handles to directional derviatives of
+  \blist{'sys_tau'}, described in sections~\ref{sec:dirdtau}
+  (alternative to \blist{'sys_dtau'});
 \item \blist{'sys_dtau'} (relevant for sd-DDEs only): handle of the user
   function providing the Jacobians of delays (for sd-DDEs), described
   in section~\ref{sec:constjac};
+\item \blist{'lhs_matrix'} (numerical, default identity): the
+  $n\times n$ matrix $M$ on the left-hand side of the differential equation;
+\item \blist{'sys_cond'} (default empty): handle for user-specified extra conditions
+  (see \cref{sec:syscond} and \cref{extra_cond})
+\item \blist{'sys_cond_reference'}: (logical, default \blist{false}):
+  flag indicating if \blist{'sys_cond'} takes extra argument, see \cref{sec:syscond};
 \item \blist{'x_vectorized'} (logical, default \blist{false}): if the
+  functions in \blist{'sys_rhs'}, \blist{'sys_dirderi'}
+  \blist{'sys_deri'} (if provided), \blist{'sys_tau'} (for sd-DDEs)
+  \blist{'sys_dirdtau'} and \blist{'sys_dtau'} (for sd-DDEs if
+  provided) can be called with $3$d arrays in their \blist{xx}
+  argument. Vectorization will speed up computations for periodic
+  orbits.
+\item \blist{'x_vectorized'} (logical, default \blist{false}): if the
+  functions in \blist{'sys_rhs'}, \blist{'sys_dirderi'}
+  \blist{'sys_deri'} (if provided), \blist{'sys_tau'} (for sd-DDEs)
+  \blist{'sys_dirdtau'} and \blist{'sys_dtau'} (for sd-DDEs if
+  provided) can be called with $3$d arrays in their \blist{xx} (and
+  \blist{dxx}) argument. Vectorization will speed up computations for
+  periodic orbits.
+\item \blist{'p_vectorized'} (logical, default \blist{false}): if the
   functions in \blist{'sys_rhs'}, \blist{'sys_deri'} (if provided),
   \blist{'sys_tau'} (for sd-DDEs) and \blist{'sys_dtau'} (for sd-DDEs
-  if provided) can be called with $3$d arrays in their \blist{xx}
+  if provided) can be called with $1\times p\times \blist{nvec}$
+  arrays in their \blist{par} (and \blist{dpar})
   argument. Vectorization will speed up computations for periodic
-  orbits only.
+  orbits.
 \end{itemize}
 An example for a necessary modification of the right-hand side to
 permit vectorization is given for the neuron example in
@@ -1635,35 +1668,53 @@ of points, method parameters and plotting information.
       \hline\noalign{\smallskip}
       field     & content &  default   \\\hline\noalign{\smallskip}
       %
-      \blist{'sys_rhs'} \textbf{\textsf{(mandatory)}} & function handle &  function in file \file{sys\_rhs.m} if found in 
+      \blist{'sys_rhs'} \textbf{\textsf{[!]}} & function handle &  function in file \file{sys\_rhs.m} if found in 
       current working folder \\[1ex]
       % 
       \blist{'sys_ntau'} & function handle &  \blist{@()0} \\[1ex]
       %
-      \blist{'sys_tau'} \textbf{\textsf{(mandatory)}} & function handle &  function in file 
+      \blist{'sys_tau'} \textbf{\textsf{[!]}} & function handle &  function in file 
       \file{sys\_tau.m} if found in current working folder\\[1ex]
       %
-      \blist{'sys_cond'} & function handle & \blist{@(p)dummy_cond}, a built-in routine that adds no conditions\\[1ex]
+      \blist{'sys_cond'} & function handle & \blist{@(p)dummy_cond}, a provided routine that adds no conditions\\[1ex]
       %
-      \blist{'sys_deri'} & function handle & \blist{df_deriv}, coming with 
+      \blist{'sys_cond_reference'} & logical & \blist{false}\\[1ex]
+      %
+      \blist{'lhs_matrix'} & function handle & \blist{@(sz)eye(sz)}\\[1ex]
+      %
+      \blist{'sys_deri'} & function handle & \blist{dde_gen_deriv}, coming with 
       \DDEBIFCODE{} and using finite-difference approximation\\[1ex]
       %
-      \blist{'sys_dtau'} & function handle &  \blist{df_derit}, coming with 
+      \blist{'sys_dirderi'} & function handle & \blist{dde_gen_deriv}, coming with 
+      \DDEBIFCODE{} and using finite-difference approximation\\[1ex]
+      %
+      \blist{'sys_dtau'} & function handle &  \blist{dde_gen_deriv}, coming with 
+      \DDEBIFCODE{} and using finite-difference approximation\\[1ex]
+      %
+      \blist{'sys_dirdtau'} & function handle &  \blist{dde_gen_deriv}, coming with 
       \DDEBIFCODE{} and using finite-difference approximation\\[1ex]
       %
       \blist{'x_vectorized'} & logical &  \blist{false}\\[1ex]
+      %
+      \blist{'p_vectorized'} & logical &  \blist{false}\\[1ex]
       %
       (\blist{'tp_del'}) & logical & n/a (automatically
       determined from the number of arguments expected by \blist{funcs.sys_tau})\\[1ex]
       %
       (\blist{'sys_deri_provided'}) & logical & n/a (set automatically)\\[1ex]
       %
-      (\blist{'sys_dtau_provided'}) & logical & n/a (set automatically)
+      (\blist{'sys_dtau_provided'}) & logical & n/a (set automatically)\\[1ex]
+      %
+      (\blist{'sys_dirderi_provided'}) & logical & n/a (set automatically)\\[1ex]
+      %
+      (\blist{'sys_dirtau_provided'}) & logical & n/a (set automatically)
       \\\noalign{\smallskip}\hline
   \end{tabular}
-  \caption{\textbf{\textsf{Problem definition structure}} containing (at least) 
-    the user-provided functions. 
-    Fields in brackets should not normally be set or manually changed by the user. See also section~\ref{sec:funcs}.}
+  \caption{\textbf{\textsf{Problem definition structure}} containing
+    (at least) the user-provided functions.  Fields in brackets should
+    not normally be set or manually changed by the user. See also
+    section~\ref{sec:funcs}.  Only fields marked with \textbf{[!]} are
+    mandatory (for sd-DDEs \blist{'sys_ntau'} is mandatory, too).}
   \label{tab:funcs}
 \end{table}
 The user-provided functions described in Section~\ref{sec:system:def}
@@ -1681,13 +1732,21 @@ demos \texttt{neuron} and \texttt{sd\_demo} (see
 
 \subsection{Point structures}\label{sec:point:struct}
 
-Table \ref{point_structures} describes the structures used to
+\Cref{point_structures} describes the structures used to
 represent a single steady state, fold, Hopf, 
 %G.'s change
-periodic and 
-homoclinic/heteroclinic solution point.
-%end of G.'s change
-
+periodic and homoclinic/heteroclinic solution point. If, as a user one
+wants to create a variable \blist{pt} of a certain point type the recommended function to use is
+\begin{lstlisting}
+  pt=dde_kind_create(...)
+\end{lstlisting}
+where \blist{kind} is replaced by the particular type of point (e.g.,
+\blist{stst}, \blist{fold}, \blist{hopf}, \blist{psol},
+\blist{hcli}). The arguments of \blist{dde_kind_create} are name value
+pairs, similar to the \blist{struct(...)} function. However,
+\blist{dde_kind_create} function performs additional sanity checks,
+inserts defaults (for example, providing the field \blist{'kind'} is
+not necessary) and puts the fields in the order described in \Cref{point_structures}.
 \begin{table}[htbp]%\small
 {\renewcommand{\blist}[1]{\mbox{\lstinline[basicstyle={\ttfamily\small}]!#1!}}
   \begin{center}
@@ -1697,7 +1756,11 @@ homoclinic/heteroclinic solution point.
         \blist{'kind'}      & \blist{'stst'}            \\
         \blist{'parameter'} & $\RR^{1\times p}$ \\
         \blist{'x'}         & $\RR^{n\times 1}$ \\
-        \blist{'stability'} & empty\,or\,struct\\ \\ \\\hline
+        \blist{'stability'} & \blist{[]}\,or\,struct\\
+        \blist{'nmfm'} & \blist{[]}\,or\,struct\\
+        \blist{'nvec'} & \blist{[]}\,or\,struct\\
+        \blist{'flag'} & \blist{char} array\\
+        \\ \\\hline
       \end{tabular}
       \caption{Steady state}
     \end{subtable}
@@ -1708,7 +1771,10 @@ homoclinic/heteroclinic solution point.
         \blist{'parameter'} & $\RR^{1\times p}$ \\
         \blist{'x'}         & $\RR^{n\times 1}$ \\
         \blist{'v'}         & $\RR^{n\times 1}$ \\
-        \blist{'stability'} & empty\,or\,struct \\ \\\hline
+        \blist{'stability'} & \blist{[]}\,or\,struct\\
+        \blist{'nmfm'} & \blist{[]}\,or\,struct\\
+        \blist{'nvec'} & \blist{[]}\,or\,struct\\
+        \blist{'flag'} & \blist{char} array\\ \\\hline
       \end{tabular}
       \caption{Steady state fold}
     \end{subtable}
@@ -1720,7 +1786,10 @@ homoclinic/heteroclinic solution point.
         \blist{'x'}         & $\RR^{n\times 1}$ \\
         \blist{'v'}         & $\CC^{n\times 1}$ \\
         \blist{'omega'}     & $\RR$             \\
-        \blist{'stability'} & empty\,or\,struct\\\hline
+        \blist{'stability'} & \blist{[]}\,or\,struct\\
+        \blist{'nmfm'} & \blist{[]}\,or\,struct\\
+        \blist{'nvec'} & \blist{[]}\,or\,struct\\
+        \blist{'flag'} & \blist{char} array\\\hline
       \end{tabular}
       \caption{Steady state Hopf}
     \end{subtable}\vspace*{5ex}
@@ -1729,11 +1798,11 @@ homoclinic/heteroclinic solution point.
         field     & content           \\\hline \noalign{\smallskip}
        \blist{'kind'}      & \blist{'psol'}            \\
         \blist{'parameter'} & $\RR^{1\times p}$ \\
-        \blist{'mesh'}      & $[0,1]^{1\times (Ld+1)}$ or empty \\
+        \blist{'mesh'}      & $[0,1]^{1\times (Ld+1)}$ \\
         \blist{'degree'}    & $\NN_0$           \\
         \blist{'profile'}   & $\RR^{n\times (Ld+1)}$ \\
         \blist{'period'}    & $\RR^+_0$         \\
-        \blist{'stability'} & empty or struct \\ \\ \\ \\ \\ \\ \\ \\\hline
+        \blist{'stability'} & \blist{[]}\,or\,struct \\ \\ \\ \\ \\ \\ \\ \\\hline
       \end{tabular}
       \caption{Periodic orbit}
     \end{subtable}
@@ -1771,7 +1840,17 @@ the periodic solution, $d$ is the degree of the polynomial on each
 interval, $s_1$ is the number of unstable modes of $x^-$ and $s_2$ is the
 number of unstable modes of $x^+$.}
 \end{table}
-
+For a point structure \blist{pt} one may call the functions
+\begin{lstlisting}
+  ind=dde_ind_from_point(pt,free_par_ind)
+  x=  dde_x_from_point(pt,free_par_ind)
+  pt= dde_point_from_x(x,ptemplate,free_par_ind)
+\end{lstlisting}
+to convert between the point structure and a numerical vector of
+variables used during continuation and equation solving. The output
+\blist{ind} of \blist{dde_ind_from_point} returns a structure of
+indices, pointing to the location of the variable entries in \blist{x}.
+\paragraph{Steady states and their bifurcation points}
 A steady state solution is represented by the parameter values
 $\eta$ (which contain also the constant delay values, 
 see section \ref{sec:system:def})
@@ -1783,38 +1862,58 @@ values $\eta$, its position $x^*$, a frequency $\omega$
 and a (complex) null-vector of the
 characteristic matrix $\Delta(\i \omega)$.
 
+\paragraph{Periodic orbits}
 A periodic solution is represented by the parameter
 values $\eta$, the period $T$ and 
-a time-scaled profile $x^*(t/T)$ on a mesh in [0,1].
+a time-scaled profile $x^*(t/T)$ on a mesh in $[0,1]$.
 The mesh is an ordered 
-collection of \define{interval points} $\{0=t_0<t_1<\ldots<t_L=1\}$
-and \define{representation points} $t_{i+\frac{j}{d}}$, $i=0,\ldots,L-1$,
-$j=1,\ldots,d-1$ which need to be chosen in function of the interval points as
+collection of \define{interval points} $\{0=t_1<t_{d+1}<\ldots<t_{Ld+1}=1\}$
+and \define{representation points} $t_{(i-1)d+j}$, $i=1,\ldots,L$,
+$j=1,\ldots,d$ which need to be chosen inside of the interval points as
 \[
-t_{i+\frac{j}{d}}=t_i+\frac{j}{d}(t_{i+1}-t_i).
+t_{(i-1)d+j}=t_{(i-1)d+1}+b_j(t_{id+1}-t_{(i-1)d+1})\mbox{.}
 \]
-\paragraph{Warning:
-this assumption is not checked but needs to be fulfilled for
-correct results!}
+The \define{scaled internal representation points} $b_j\in[0,1]$ are values that can be set by the user, but
+are assumed to be independent of the subinterval $i$.
+\begin{quote}
+  \textbf{\emph{Warning}}: this assumption is periodically checked
+  using the function \blist{dde_coll_check}. It needs to be fulfilled
+  for correct results!
+\end{quote}
 The profile is a continuous piecewise polynomial on the mesh. 
 More specifically, it is
 a polynomial of degree $d$ on each
-subinterval $[t_i,t_{i+1}]$, $i=0,\ldots,L-1$.
-Each of these polynomials is uniquely represented
-by its values at the points $\{t_{i+\frac{j}{d}}\}_{j=0,\ldots,d}$.
+subinterval $[t_{(i-1)d+1},t_{id+1}]$ for $i=1,\ldots,L$.
+The polynomial $q_i$ on interval $[t_{(i-1)d+1},t_{id+1}]$ is uniquely represented
+by its values at the points $\{t_{(i-1)d+j}: j=1,\ldots,d+1\}$.
 Hence the complete profile is represented by
 its value at all the mesh points,
 \[
-x^*(t_{i+\frac{j}{d}}),\ i=0,\ldots,L-1,\ j=0,\ldots,d-1;
-\mathrm{\ and\ } x^*(t_L).
+x^*\left(t_\ell\right),\ \ell=1,\ldots,Ld+1\mbox{.}
 \]
-Because polynomials on adjacent intervals share the value
-at the common interval point, this representation is automatically
-continuous (it is, however, not continuously differentiable).
-(As indicated in table \ref{point_structures}, the mesh may be empty, 
-which indicates the use of an equidistant, fixed mesh.)
+Because polynomials on adjacent intervals share the value at the
+common interval point $t_{id+1}$ for $i=0,\ldots L$, this
+representation is automatically continuous (it is, however, not
+continuously differentiable).
+
+The default choice for the scaled internal representation points $b_j$ are equidistant,
+\begin{displaymath}
+  b_j=\frac{j-1}{d}\mbox{\quad $j=1,\ldots,d$,}
+\end{displaymath}
+for reasons of backward compatibility to version $<3.2$ (this has also
+been the choice in AUTO, MatCont and the COLL toolbox of \textsc{COCO}
+as of 2019). This representation provides stable interpolation only
+for low degrees $d$ (error amplification is of order $2^d$
+\cite{berrut2004}). If one plans to use high-order interpolation
+(e.g., $d>10$), the user should choose representation nodes of
+orthogonal polynomials. A pre-defined choice are Chebyshev nodes of
+the second kind. The default representation nodes are Chebyshev nodes
+if a degree $d>10$ is chosen (through \blist{p_topsol},
+\blist{SetupPsol} or \blist{dde_psol_from_...}).
 
 %G's addition
+
+\paragraph{Conecting orbits}
 A connecting orbit is represented by the parameter values $\eta$, the
 period $T$, a time-scaled profile $x^*(t/T)$ on a mesh in [0,1], the
 steady states $x^-$ and $x^+$ (fields \blist{'x1'} and \blist{'x2'} in
