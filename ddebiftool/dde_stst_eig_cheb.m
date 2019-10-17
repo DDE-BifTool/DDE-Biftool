@@ -30,8 +30,7 @@ if isempty(options.minimal_real_part)
     options.minimal_real_part=-1;
 end
 taumax=max(taus(:));
-stability=struct('l0',[],'l1',[],'n1',[],'err',[],'v',[],'w',[],...
-    'discarded',[]);
+stability=dde_stst_stability();
 if options.VWout
     stability.mesh=[];
 end
@@ -107,8 +106,8 @@ while err>options.root_accuracy && ncheb<=options.maxsize/dim
     end
     ncheb=round(ncheb*options.nchebfac);
 end
-stability=struct('l0',lambda(:).','l1',lambda(:),'n1',[],...
-    'err',max(abs(res),[],1),'v',v,'w',w,'discarded',[]);
+stability=dde_stst_stability('l0',lambda(:).','l1',lambda(:),...
+    'err',max(abs(res),[],1),'v',v,'w',w);
 if options.VWout
     nlam=numel(lambda);
     stability.v=reshape(V,dim,[],nlam);

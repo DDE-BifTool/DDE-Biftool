@@ -21,7 +21,9 @@ max_n=method.max_newton_iterations;
 len_l0=length(stability.l0);
 n1 = zeros(size(stability.l0));
 l1=n1; % modification by JS to avoid error for empty l0
-for j=1:len_l0,
+res1=NaN(1,len_l0);
+stability.v=NaN(size(AA,1),len_l0);
+for j=1:len_l0
   lambda=stability.l0(j);
   DD=dde_stst_ch_matrix(AA,tau,lambda);
   try
@@ -34,6 +36,7 @@ for j=1:len_l0,
   [dummy,kk]=min(abs(diag(EE))); %#ok<ASGLU>
   vv=VV(:,kk);
   vv=vv/norm(vv);
+  stability.err(j)=norm(DD*vv,'inf');
   % normalisation cc for vv :
   cc=vv';
   while 1
@@ -56,23 +59,28 @@ for j=1:len_l0,
       end
   end
   
-  if ~cvg_flag,
+  if ~cvg_flag
       n1(j)=-1;
   end
   l1(j)=lambda;
+  res1(j)=norm(DD*vv,'inf');
+  stability.v(:,j)=vv;
 end
-
+lrem=false(size(n1));
 if method.remove_unconverged_roots
     % remove n1 and sort roots
-    l1=l1(n1~=-1);
+    lrem=n1==-1;
+    stability.discarded=struct('l0',stability.l0(lrem),...
+        'err',stability.err(lrem));
+    l1=l1(~lrem);
     n1=[];
     if ~isempty(l1)
         [dummy,idx]=sort(real(l1)); %#ok<ASGLU>
         l1=l1(idx(end:-1:1)).';
     end
 end
-
 stability.l1=l1(:);
+stability.err=res1(~lrem);
+stability.v=stability.v(:,~lrem);
 stability.n1=n1;
-
 end

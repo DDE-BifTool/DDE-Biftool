@@ -51,13 +51,9 @@ tau=tau(:)';
 if length(l0)>method.max_number_of_eigenvalues
     l0=l0(1:method.max_number_of_eigenvalues);
 end
-stability.h=h;
-stability.l0=l0(:);
+stability=dde_stst_stability('h',h,'l0',l0(:),'err',NaN(1,numel(l0)));
 max_n=method.max_newton_iterations;
-if max_n==0 || isempty(l0)
-    stability.l1=[];
-    stability.n1=[];
-else
+if max_n>0 && ~isempty(l0)
     stability=dde_stst_lms_nwt(stability,A,tau,method);
 end
 end

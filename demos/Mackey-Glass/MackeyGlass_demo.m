@@ -82,8 +82,8 @@ end
 figure(1);
 hold on
 per_orb=br_contn(funcs,per_orb,60);
-per_orb=br_stabl(funcs,per_orb,0,1);
-nunst_per=GetStability(per_orb,'exclude_trivial',true);
+[nunst_per,dom_per,triv_per,per_orb.point]=...
+    GetStability(per_orb,'exclude_trivial',true,'funcs',funcs);
 %% Find period doubling bifurcations in two parameters
 ind_pd=find(diff(nunst_per)==1);
 [pdfuncs,pdbranch1,suc]=SetupPeriodDoubling(funcs,per_orb,ind_pd(1),...

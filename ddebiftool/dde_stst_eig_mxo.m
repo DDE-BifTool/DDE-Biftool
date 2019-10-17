@@ -76,7 +76,7 @@ if taumax==0 || norm(reshape(A(:,:,2:end),n,[]),'inf')==0
         l0=l0(1:method.max_number_of_eigenvalues);
     end
     l1=l0.';
-    stability=struct('h',NaN,'l0',l0,'l1',l1,'n1',[]);
+    stability=dde_stst_stability('l0',l0,'l1',l1);
     return
 end
 % end of modification (JS)
@@ -167,7 +167,7 @@ if length(lambda)>method.max_number_of_eigenvalues
   lambda=lambda(1:method.max_number_of_eigenvalues);
 end
 
-stability=struct('h',hh,'l0',lambda(:),'l1',[],'n1',[]);
+stability=dde_stst_stability('h',hh,'l0',lambda(:));
 stability=dde_stst_lms_nwt(stability,A,tau,method);
 end
 %%

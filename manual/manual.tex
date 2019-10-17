@@ -1921,10 +1921,12 @@ the data structure), the unstable eigenvalues of these steady states,
 $\lambda^-$ and $\lambda^+$ (fields \blist{'lambda_v'} and
 \blist{'lambda_w'} in the data structure), the unstable right
 eigenvectors of $x^-$ (\blist{'v'}), the unstable left eigenvectors of
-$x^+$ (\blist{'w'}), the direction in which the profile leaves the unstable
-manifold, determined by $\alpha$, and the distance of the first point
-of the profile to $x^-$, determined by $\epsilon$.  For the mesh and
-profile, the same remarks as in the case of periodic solutions hold.
+$x^+$ (\blist{'w'}), the direction in which the profile leaves the
+unstable manifold, determined by $\alpha$, and the distance of the
+first point of the profile to $x^-$, determined by $\epsilon$.  For
+the mesh and profile, the same remarks as in the case of periodic
+solutions hold, However, the current implementation does only permit
+equidistant representaion points $b-j$.
 %end of G's addition
 
 The point structures are used as input to the point
@@ -1946,26 +1948,33 @@ typically performed as a separate step, after computation of the
 solution branches, because stability computation can easily be more
 expensive than the solution finding. If no stability has been computed
 yet, the field \blist{'stability'} is empty, otherwise, it contains
-the computed stability information in the form described in
-Table~\ref{stab_structures}.
+computed stability information in the form described in
+Table~\ref{stab_structures}. This information depends on the type of
+computation method chosen.
 
 \begin{table}[htbp]
   \begin{center}
-    \begin{subtable}[t]{0.45\textwidth}
+    \begin{subtable}[t]{0.4\textwidth}
       \begin{tabular}[t]{lc}\hline\noalign{\smallskip}
-        field & content     \\\hline\noalign{\smallskip}
-        \blist{'h'}     & $\RR$       \\
+        field & content    \\\hline\noalign{\smallskip}
+        (\blist{'h'})     & \blist{[]} or $\RR$  \\
         \blist{'l0'}    & $\CC^{n_l}$ \\
         \blist{'l1'}    & $\CC^{n_c}$ \\
-        \blist{'n1'}    & $(\{-1\}\cup\NN_0)^{n_c}$ or empty\\\hline
+        \blist{'n1'}    & \blist{[]} or $\{-1,0,\ldots\}^{n_c}$ \\
+        (\blist{'err'})    & $\CC^{1\times n_l}$ \\
+        (\blist{'v'}) &\blist{[]} or $\CC^{n\times n_l}$ \\
+        (\blist{'w'}) &\blist{[]} or $\CC^{n\times n_l}$ \\
+        (\blist{'discarded'}) &\blist{[]} or struct \\\hline
       \end{tabular}
       \caption{Structure in field \blist{'stability'} for steady
         state, fold and Hopf points of Table~\ref{point_structures}}
     \end{subtable}\qquad
-    \begin{subtable}[t]{0.45\textwidth}
+    \begin{subtable}[t]{0.35\textwidth}
       \begin{tabular}[t]{lc}\hline\noalign{\smallskip}
         field & content     \\\hline\noalign{\smallskip}
-        \blist{'mu'}    & $\CC^{n_m}$ \\ \\ \\ \\\hline
+        \blist{'mu'}    & $\CC^{n_m\times 1}$ \\
+        \blist{'eigenfuncs'} & \blist{[]} or struct$^{n_m}$\\
+        \blist{'err'} & $\RR^{1\times n_m}$\\ \\\hline
       \end{tabular}
       \caption{Structure in field \blist{'stability'} for periodic
         orbit points of Table~\ref{point_structures}}
@@ -1981,23 +1990,43 @@ Table~\ref{stab_structures}.
 \end{table}
 For steady state, fold and Hopf points, approximations to the
 rightmost roots of the characteristic equation are provided in field
-\blist{'l0'} in order of decreasing real part.  The steplength that
-was used to obtain the approximations is provided in field
-\blist{'h'}. Corrected roots are provided in field \blist{'l1'} and
-the number of Newton iterations applied for each corrected root in a
-corresponding field \blist{'n1'}.  If unconverged roots are discarded,
-\blist{'n1'} is empty and the roots in \blist{'l1'} are ordered with
-respect to real part; otherwise the order in \blist{'l1'} corresponds
-to the order in \blist{'l0'} and an element $-1$ in \blist{'n1'}
-signals that no convergence was reached for the corresponding root in
-\blist{'l0'} and the last computed iterate is stored in \blist{'l1'}.
-The collection of uncorrected roots presents more accurate yet less
-robust information than the collection of approximate roots, see
-section \ref{code_num_methods}. For periodic solutions only
-approximations to the Floquet multipliers are provided in a field
-\blist{'mu'} (in order of decreasing modulus). As the characteristic
-matrix is not analytically available, \DDEBIFCODE{} does not offer an
-additional correction.
+\blist{'l0'} in order of decreasing real part.
+
+\paragraph{Methods \blist{'mxo'} and \blist{'bdf'}}
+The steplength that was used to obtain the approximations is provided
+in field \blist{'h'}. Corrected roots are provided in field
+\blist{'l1'} and the number of Newton iterations applied for each
+corrected root in a corresponding field \blist{'n1'}.  If unconverged
+roots are discarded, \blist{'n1'} is empty and the roots in
+\blist{'l1'} are ordered with respect to real part; otherwise the
+order in \blist{'l1'} corresponds to the order in \blist{'l0'} and an
+element $-1$ in \blist{'n1'} signals that no convergence was reached
+for the corresponding root in \blist{'l0'} and the last computed
+iterate is stored in \blist{'l1'}.  The collection of corrected roots
+presents more accurate yet less robust information than the collection
+of approximate roots, see section \ref{code_num_methods}. The field
+\blist{'v'} contains right eigenvectors for corrected roots. The field
+\blist{'err'} contains the error in the characteristic equation
+$\max|\Delta(\lambda)v|$ for corrected roots. If correction was performed
+and some roots were discarded then the discarded roots are stored in a
+struct in the field \blist{'discarded.l0'}, along with the error \blist{'discarded.err'}.
+
+\paragraph{Method \blist{'cheb'} (default)}
+The field \blist{'l0'} stores the eigenvalues, the fields \blist{'v'},
+\blist{'w'} store right and left eigenvectors ($\Delta(\lambda)v=0$,
+$w^H\Delta(\lambda)=0$, scaling $w^H\Delta'(\lambda)v=1$). The field
+\blist{'err'} contains the error estimate $\max|\Delta(\lambda)v|$ for
+each eigenvalue. The field \blist{'l1'} has entries identical to
+\blist{'l0'} since no correction is done. The fields \blist{'n1'} and
+\blist{'h'} are empty.
+
+For periodic solutions only approximations to the Floquet multipliers
+are provided in a field \blist{'mu'} (in order of decreasing
+modulus). If the method options \blist{'eigenfuncs'} is set then the
+field \blist{'eigenfuncs'} contains an array of points of kind
+\blist{'psol'} with the eigenfunctions corresponding to
+\blist{'mu'}. As the characteristic matrix is not analytically
+available, \DDEBIFCODE{} does not offer an additional correction.
 
 
 \subsection{Method parameters}\label{sec:method:struct}
