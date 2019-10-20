@@ -160,6 +160,7 @@ switch kind
         method.stability.minimal_modulus=0;
         method.stability.root_accuracy=1e-6;
         method.stability.collocation_parameters=[];
+        method.stability.geteigenfuncs=false;
     case 'hcli'
         method=rmfield(method,'stability');
 end

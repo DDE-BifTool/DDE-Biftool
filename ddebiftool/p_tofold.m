@@ -14,7 +14,7 @@ function fold=p_tofold(point,varargin)
 %%
 %% for backward compatibility re-organize arguments
 args=varargin;
-if ~isfield(point,'kind')
+if ~isfield(point,'x')
     funcs=point;
     point=args{1};
     args=[args(2:end),{'funcs',funcs}];

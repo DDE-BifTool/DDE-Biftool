@@ -39,7 +39,7 @@ function [pfuncs,pbranch,suc]=SetupPOfold(funcs,branch,ind,varargin)
 %
 %% process options
 default={'contpar',[],'sys_deri',1e-4,'sys_dtau',1e-4,'correc',true,'dir',[],...
-    'step',1e-3,'pitchfork',false,'hjac',1e-4,'df_deriv',false,...
+    'step',1e-3,'nextrapar',0,'hjac',1e-4,'df_deriv',false,...
     'nullparind',zeros(0,1),'extra_cond',{}};
 [options,pass_on]=dde_set_options(default,varargin,'pass_on');
 branch.point=branch.point(ind); % remove all points but approx fold
@@ -67,6 +67,7 @@ ip.nuserpar=length(point.parameter); % number of original system parameters
 %% extend problem
 ip.beta=ip.nuserpar+1;       % location of add. parameter beta
 ip.period=ip.nuserpar+2;     % location of copy of period
+ip.nextrapar=options.nextrapar;
 nnull=length(options.nullparind);
 ip.nullparind=NaN(nnull,2); % location of parameters for nullspace vector
 ip.nullparind(:,1)=options.nullparind;
@@ -111,20 +112,24 @@ free_par=[pbranch.parameter.free,...
 [dum,is]=unique(free_par); %#ok<ASGLU>
 pbranch.parameter.free=free_par(sort(is));
 %% extended delays are for derivatives
-pfuncs.sys_cond=@(p,pref)sys_cond_psolcollect(p,pref,...
-    {@(p,pref)sys_cond_psoluser(p,ip,get_comp,funcs,pref),...
-    @(p,pref)sys_cond_POfold(p,ip),...
-    @(p,pref)sys_cond_fixperiod(p,ip.period),...
-    delay_cond{:},...
-    options.extra_cond{:}}); %#ok<CCAT>
 pfuncs.sys_cond_reference=true;
 pfuncs.get_comp=get_comp;
 pfuncs.kind='POfold';
 pfuncs.userfuncs=funcs;
 pfuncs.ip=ip;
+pfuncs.sys_cond=@(p,pref)dde_sys_cond_collect(pfuncs,p,pref,...
+    {@(p,pref)sys_cond_POfold(p,ip),...
+    @(p,pref)sys_cond_fixperiod(p,ip.period),...
+    delay_cond{:},...
+    options.extra_cond{:}}); %#ok<CCAT>
 %% create initial guess for correction
 pfoldini0=POfoldInit(funcs,point,branch.method,ip,ip.nullparind(:,1)');
+%% for branch points, preprocess to add dummy parameters
+if pfuncs.ip.nextrapar>0
+    pbranch.method.point.preprocess='dde_BP_preprocess';
+end
 %% correct initial guess and find 2nd point along branch if desired
 [pbranch,suc]=correct_ini(pfuncs,pbranch,pfoldini0,...
     options.dir,options.step,options.correc);
 end
+%

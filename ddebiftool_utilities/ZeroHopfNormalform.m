@@ -29,7 +29,7 @@ switch type
     case 'fold'
         tobif1=@(p)p_tofold(funcs,p);
     case 'hopf'
-        tobif1=@(p)p_tohopf(funcs,p);
+        tobif1=@(p)p_tohopf(funcs,p,'includehopf',true);
     otherwise        
         error('ZeroHopfNormalform:type',...
             'ZeroHopfNormalform: cannot detect zero-Hopf along branch of type %s.',...

@@ -1,5 +1,5 @@
 %% Initialize continuation of equilibrium bifurcation (fold or Hopf)
-function [bifbranch,suc]=SetupStstBifurcation(funcs,branch,ind,type,varargin)
+function [bifbranch,suc,funcs]=SetupStstBifurcation(funcs,branch,ind,type,varargin)
 %% Inputs
 %
 % * |funcs|: functions used for DDE
@@ -22,6 +22,7 @@ function [bifbranch,suc]=SetupStstBifurcation(funcs,branch,ind,type,varargin)
 % 
 % * |bifbranch|: branch of bifurcation points with first point (or two points)
 % * |suc|: flag whether corection was successful
+% * |funcs|: same as |funcs|, unless branch point
 %
 % Parameter limits for bifbranch etc are inherited from branch, unless overridden by
 % optional input arguments.
@@ -29,8 +30,13 @@ function [bifbranch,suc]=SetupStstBifurcation(funcs,branch,ind,type,varargin)
 % $Id: SetupStstBifurcation.m 309 2018-10-28 19:02:42Z jansieber $
 %
 %% process options
-default={'contpar',[],'correc',true,'dir',[],'step',1e-3};
+default={'contpar',[],'correc',true,'dir',[],'step',1e-3,...
+    'extra_cond',[],'branchpoint',false};
 [options,pass_on]=dde_set_options(default,varargin,'pass_on');
+if options.branchpoint
+    [funcs,bifbranch,suc]=SetupBPstst(funcs,branch,ind,options.extra_cond,varargin{:});
+    return
+end
 % initialize branch of bifurcations (bifbranch)
 bifbranch=branch;
 bifbranch=replace_branch_pars(bifbranch,options.contpar,pass_on);

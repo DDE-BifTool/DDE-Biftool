@@ -26,6 +26,19 @@ default={'remesh_flag',false,'step_cnd',repmat(point,0,1),...
 [options,pass_on]=dde_set_options(default,varargin,'pass_on');
 %% replace old stability and other info by empty fields if present:
 point=dde_trim_point(feval(['dde_',point.kind,'_create'],point),point);
+%% remesh if required
+if isfield(method,'remesh') && ...
+        method.remesh && ...
+        options.remesh_flag>1 && ...
+        mod(options.remesh_flag,method.adapt_mesh_before_correct)==0
+    point=p_remesh(point);
+    if ~isempty(options.previous)
+        options.previous=dde_trim_point(p_remesh(options.previous,point),point);
+    end
+    for i=1:length(options.step_cnd)
+        options.step_cnd(i)=dde_trim_point(p_remesh(options.step_cnd(i),point),point);
+    end
+end
 
 %% preprocess point, stepcond and functions
 data=struct('funcs',funcs,'free_par',free_par,'method',method,...
@@ -34,24 +47,12 @@ data=struct('funcs',funcs,'free_par',free_par,'method',method,...
 if isfield(method,'preprocess') && ~isempty(method.preprocess)
     data=feval(method.preprocess,data);
 end
-%% remesh if required
-if isfield(data.method,'remesh') && ...
-        data.method.remesh && ...
-        options.remesh_flag>1 && ...
-        mod(options.remesh_flag,data.method.adapt_mesh_before_correct)==0
-    data.point=p_remesh(data.point);
-    if ~isempty(data.previous)
-        data.previous=dde_trim_point(p_remesh(data.previous,data.point),point);
-    end
-    for i=1:length(data.step_cnd)
-        data.step_cnd(i)=dde_trim_point(p_remesh(data.step_cnd(i),data.point),point);
-    end
-end
 %% prepare f and x0 for Newton-Raphson iterations:
 f=@(x)p_correc_rhs(data.funcs,data.method,data.point,data.free_par,...
     'x',x,'pref',data.previous,'step_cond',data.step_cnd,...
-    'extrapar',data.extracolumns,pass_on{:});
+    'extracolumns',data.extracolumns,pass_on{:});
 if nargout>1
-    x0=dde_x_from_point(data.point,data.free_par);
+    x0=cat(1,dde_x_from_point(data.point,data.free_par),...
+        zeros(size(data.extracolumns,2),1));
 end
 end

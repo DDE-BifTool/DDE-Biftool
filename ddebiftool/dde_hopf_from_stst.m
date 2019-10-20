@@ -8,11 +8,12 @@ function hopf=dde_hopf_from_stst(stst,varargin)
 % * 'method': parameters for stability computation
 % $Id: dde_hopf_from_stst.m 315 2019-01-29 19:42:21Z jansieber $
 %%
-default={'funcs',[],'excludefreqs',[],'method',getfield(df_mthod('stst'),'stability')};
+default={'funcs',[],'excludefreqs',[],'includehopf',false,...
+    'method',getfield(df_mthod('stst'),'stability')};
 [options,pass_on]=dde_set_options(default,varargin,'pass_on');
 hopf=setfield(dde_hopf_create(stst),'stability',stst.stability);
 excludefreqs=abs(options.excludefreqs(:).');
-if ~isempty(hopf.omega)
+if ~isempty(hopf.omega) && ~options.includehopf
     excludefreqs=[abs(hopf.omega),excludefreqs];
 elseif isfield(stst,'nvec') && isfield(stst,'flag') && ~isempty(stst.nvec) && strcmp(stst.flag,'hopf')
     %% Hopf eigenvector and value has been computed during normal form computations

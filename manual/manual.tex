@@ -2022,11 +2022,12 @@ each eigenvalue. The field \blist{'l1'} has entries identical to
 
 For periodic solutions only approximations to the Floquet multipliers
 are provided in a field \blist{'mu'} (in order of decreasing
-modulus). If the method options \blist{'eigenfuncs'} is set then the
+modulus). If the method field \blist{'geteigenfuncs'} is set then the
 field \blist{'eigenfuncs'} contains an array of points of kind
 \blist{'psol'} with the eigenfunctions corresponding to
 \blist{'mu'}. As the characteristic matrix is not analytically
-available, \DDEBIFCODE{} does not offer an additional correction.
+available, \DDEBIFCODE{} does not offer an additional correction. If
+\blist{geteigenfuncs} was set, then the field \blist{'err'} is computed. This field contains the residuals
 
 
 \subsection{Method parameters}\label{sec:method:struct}

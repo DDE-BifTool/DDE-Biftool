@@ -19,7 +19,7 @@ function [ubp,suc,v0,w0,ulin]=dde_bp_solve(f,u0,varargin)
 %
 % $Id: dde_bp_solve.m 324 2019-02-03 01:54:58Z jansieber $
 mth=getfield(df_mthod('fold'),'point');
-default={'solver',[],'hdev',1e-4,'print',0};
+default={'solver',[],'hdev',1e-4,'print',0,'v0',[],'w0',[]};
 options=dde_set_options(default,varargin,'pass_on');
 mth.print_residual_info=options.print;
 if isempty(options.solver)
@@ -27,10 +27,15 @@ if isempty(options.solver)
 end
 %% initialize initial guess and residual function
 nu=length(u0);
-%% initial Jacobian
-[r0,J0]=f(u0); %#ok<ASGLU>
-%% its approximate nullspaces (right: 2d, left: 1d)
-[v0,w0]=dde_svdspaces_lr(J0,2);
+if isempty(options.v0) || isempty(options.w0)
+    %% initial Jacobian
+    [r0,J0]=f(u0); %#ok<ASGLU>
+    %% its approximate nullspaces (right: 2d, left: 1d)
+    [v0,w0]=dde_svdspaces_lr(J0,2);
+else
+    v0=options.v0;
+    w0=options.w0;
+end
 %% regularized f: [f(u+v0 a)+w b; v0'(u-u0)] has dimension deficit 2 and its Jacobian
 reg=@(u,action)f_reg_residual(u,u0,v0,w0,f,action);
 f_reg=@(u)reg(u,'res');

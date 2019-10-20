@@ -25,6 +25,11 @@ default={'print',0};
 options=dde_set_options(default,varargin,'pass_on');
 Type=[upper(type(1)),type(2:end)];
 [bifbranch,suc]=feval(['Setup',Type],funcs,branch,inds(1),varargin{:});
+if strcmp(type,'fold') && ~suc
+    % try branch point
+    [bifbranch,suc]=feval(['Setup',Type],funcs,branch,inds(1),...
+        'branchpoint',true,varargin{:});
+end
 if ~suc
     if options.print>0
         fprintf('Comdim1Normalform: nonlinear system not successfully solved\n');
