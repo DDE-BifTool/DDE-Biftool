@@ -112,7 +112,9 @@ nunst_hopf=GetStability(hopf_branch_wbifs,'exclude_trivial',true);
 %
 % The characteristic matrix has a double root at lambda=0 in BT.
 hbt=hopf_branch_wbifs.point(br_getflags(hopf_branch_wbifs,'BT'));
-J0=hopf_jac(funcs,hbt.x,hbt.omega,hbt.v,hbt.parameter,[ind.delta,ind.beta],hbt.v.');
+mth=hopf_branch_wbifs.method.point;
+mth.preprocess='';
+J0=dde_hopf_jac_res(funcs,hbt,hopf_branch_wbifs.parameter.free,mth,'pref',hbt);
 disp('J0=');
 disp(J0);
 fprintf('Size of J0: (%d x %d), min(svd(J0))=%g\n',...
