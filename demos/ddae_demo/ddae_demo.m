@@ -60,9 +60,9 @@ rw_branch=br_contn(rfuncs,rw_branch,10,'plotaxis',ax1);
 bvals=getp(rw_branch,'b');
 %% Stability computations of equilibria
 % use the Breda discretization with Chebyshev polynomials. They increase
-% the mesh adaptively until 20 eigenvalues nearest to 0 are acccurate. 
+% the mesh adaptively until 20 eigenvalues closest to 0 are acccurate. 
 [stat_nunst,dom,defect,rw_branch.point]=GetStability(rw_branch, ...
-    'funcs',rfuncs,stab_inputs{:},'nearest',0);
+    'funcs',rfuncs,stab_inputs{:},'closest',0);
 %% A simple animation of the spectrum
 animate_spectrum(rw_branch,ip,'order','reverse','hold','on',...
     'pause',0.1,'figures',[3,4])
@@ -80,7 +80,7 @@ rw_hopf=br_contn(rfuncs,rw_hopf,100,'plotaxis',ax2);
 rw_hopf=br_rvers(rw_hopf);
 rw_hopf=br_contn(rfuncs,rw_hopf,200,'plotaxis',ax2);
 [hopf_nunst,dom,defect,rw_hopf.point]=GetStability(rw_hopf, ...
-    'funcs',rfuncs,stab_inputs{:},'nearest',0);
+    'funcs',rfuncs,stab_inputs{:},'closest',0);
 disp('Hopf: b, a and number of unstable eigenvalues');
 disp([getp(rw_hopf,'b');getp(rw_hopf,'a');hopf_nunst.']);
 %% RW Fold bifurcations
@@ -97,7 +97,7 @@ rw_fold=br_contn(foldfuncs,rw_fold,100,'plotaxis',ax2);
 rw_fold=br_rvers(rw_fold);
 rw_fold=br_contn(foldfuncs,rw_fold,100,'plotaxis',ax2);
 [fold_nunst,dom,defect,rw_fold.point]=GetStability(rw_fold, ...
-    'funcs',foldfuncs,stab_inputs{:},'nearest',0);
+    'funcs',foldfuncs,stab_inputs{:},'closest',0);
 disp('Fold: b, a and number of unstable eigenvalues');
 disp([getp(rw_fold,'b');getp(rw_fold,'a');fold_nunst.']);
 %% Relative periodic orbits (modulated waves) branching off at Hopf

@@ -37,14 +37,15 @@ default={'wrapJ',true,...
 % only compute res & jac at specified points?
 n=size(pt.profile,1);
 if ~options.c_is_tvals
-    if isempty(options.c)
+    if isempty(options.c) || ischar(options.c)
         options.c=dde_coll_set_grid('collocation',pt.degree,'type',options.c,...
             'lhs_num',funcs.lhs_matrix(n));
     end
     if 1==max(options.c)
         options.submesh_limit=1;
     end
-    tc=dde_coll_meshfill(pt.mesh(1:pt.degree:end),pt.degree,'grid',options.c);
+    tc=dde_coll_meshfill(pt.mesh(1:pt.degree:end),pt.degree,...
+        'purpose','collocation','grid',options.c);
 else
     tc=options.c(:)';
 end

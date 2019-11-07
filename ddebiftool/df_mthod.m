@@ -55,6 +55,7 @@ method.bifurcation.minimal_real_part = -0.1;
 method.bifurcation.correction_tolerance = 1e-6;
 method.bifurcation.secant_iterations = 30;
 method.bifurcation.secant_tolerance = 1e-6;
+method.bifurcation.print = 0;
 method.bifurcation.imagthreshold = 1e-6;
 method.bifurcation.monitor_eigenvalues = 0;
 method.bifurcation.plot_testfunctions = 0;

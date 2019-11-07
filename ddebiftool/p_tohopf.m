@@ -24,7 +24,7 @@ if ~isfield(point,'x')
     point=args{1};
     args=[args(2:end),{'funcs',funcs}];
 end
-if isnumeric(args{1})
+if ~isempty(args) && isnumeric(args{1})
     args=[{'excludefreqs'},args];
     args=args(:)';
 end

@@ -6,8 +6,10 @@ function [psolbr,augmented] = nmfm_POfold_from_genh_init(funcs,genh,radius,freep
 % @Id $Id: nmfm_POfold_from_genh_init.m 373 2019-09-03 22:13:51Z jansieber $
 %%
 %% create template for periodic solution
+default={'correc_in_setup',true};
+[options,pass_on]=dde_set_options(default,varargin,'pass_on');
 psol=p_topsol([],setfield(genh,'kind','hopf'),'radius',radius(1),...
-    varargin{:}); %#ok<SFLD>
+    pass_on{:}); %#ok<SFLD>
 %% normal form coefficients
 n=length(genh.x);
 get_n=@(x)x(1:n);
@@ -43,6 +45,6 @@ profile={...
     [zn,     zn,    h20]};
 %% approximation to limit cycle
 psolbr=nmfm_psol_from_C2(funcs,profile,dpar,d_om,freepars,radius,psol);
-psolbr=replace_branch_pars(psolbr,psolbr.parameter.free,varargin);
-augmented=false;
+psolbr=replace_branch_pars(psolbr,psolbr.parameter.free,pass_on);
+augmented={{'correc',options.correc_in_setup}};
 end

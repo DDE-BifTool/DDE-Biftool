@@ -10,7 +10,8 @@ end
 %% extract named components
 dim=ip.dim;
 npar=ip.nuserpar;
-type={'kind','solution','nullvector','solution_for_stability','xtau_ind'};
+type={'kind','solution','nullvector','solution_for_stability',...
+    'xtau_ind','eigenvector'};
 for i=1:length(pfold_array)
     pfold=pfold_array(i);
     switch component
@@ -21,7 +22,7 @@ for i=1:length(pfold_array)
             result=pfold;
             result.profile=result.profile(1:dim,:);
             result.parameter=result.parameter(1:npar);
-        case type{3} %'nullvector'
+        case type([3,6]) %'nullvector','eigenvector'
             result=pfold;
             result.profile=result.profile(dim+1:end,:);
             result.parameter=result.parameter(ip.nullparind(:,2));
