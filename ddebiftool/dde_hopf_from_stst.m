@@ -11,7 +11,7 @@ function hopf=dde_hopf_from_stst(stst,varargin)
 default={'funcs',[],'excludefreqs',[],'includehopf',false,...
     'method',getfield(df_mthod('stst'),'stability')};
 [options,pass_on]=dde_set_options(default,varargin,'pass_on');
-hopf=setfield(dde_hopf_create(stst),'stability',stst.stability);
+hopf=setfield(dde_hopf_create('point',stst),'stability',stst.stability);
 excludefreqs=abs(options.excludefreqs(:).');
 if ~isempty(hopf.omega) && ~options.includehopf
     excludefreqs=[abs(hopf.omega),excludefreqs];

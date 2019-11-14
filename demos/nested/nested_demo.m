@@ -85,10 +85,10 @@ xlabel('t/T');
 ylabel('x');
 title('profiles');
 %% Plot 1d bifurcation diagram
-cla(ax1);hold(ax1,'on');
-lg1=Plot2dBranch(eqbr,'ax',ax1);
-lg1=Plot2dBranch(per,'ax',ax1,'oldlegend',lg1);
-lg1=Plot2dBranch(per,'ax',ax1,'oldlegend',lg1,'y',@(p)min(p.profile));
+figure(1);clf;ax1=gca;hold(ax1,'on');
+Plot2dBranch(eqbr,'ax',ax1);
+Plot2dBranch(per,'ax',ax1);
+Plot2dBranch(per,'ax',ax1,'y',@(p)min(p.profile));
 xlabel(parnames{ind.tau1});
 ylabel('min x, max x');
 %% Save data

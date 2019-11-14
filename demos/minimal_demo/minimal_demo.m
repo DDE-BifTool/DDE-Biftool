@@ -227,7 +227,7 @@ title('Two-parameter bifurcation diagram in tau and b');
 % the first 3 points along each branch.  The see
 % <../../../ddebiftool_utilities/html/BranchFromCodimension2.html> for
 % description of optional inputs and fields of output.
-t_args={'submesh','cheb','degree',50,'intervals',1,...
+t_args={'degree',50,'intervals',1,...
     'collocation_parameters','cheb','print_residual_info',1};
 C1info=BranchFromCodimension2(funcs,hopf,br_args{:},t_args{:});
 %% Continue all newly found branches

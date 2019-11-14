@@ -8,8 +8,8 @@ for i=length(conds):-1:1
     Jac{i}=Jac{i}(:)';
 end
 [ru,Ju]=sys_cond_user(p,pref,funcs);
-r=[ru;res{:}]';
-J=[Ju;Jac{:}]';
+r=[ru,res{:}]';
+J=[Ju,Jac{:}]';
 end
 function [r,J]=sys_cond_user(point,pref,funcs)
 %% call user defined extra conditions and embed derivative into extended point

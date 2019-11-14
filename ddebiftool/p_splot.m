@@ -19,7 +19,7 @@ end
 switch point.kind
     case {'stst','fold','hopf'}
         if isfield(point.stability,'l0')
-            root_plt(point.stability.l0,point.stability.l1,point.stability.n1,'plotaxis',options.plotaxis);
+            root_plt(point.stability.l0,point.stability.l1,[],'plotaxis',options.plotaxis);
         end
         xlabel('\Re(\lambda)');
         ylabel('\Im(\lambda)');

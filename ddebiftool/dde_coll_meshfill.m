@@ -8,9 +8,10 @@
 %%
 function newmesh=dde_coll_meshfill(tcoarse,degree,varargin)
 %% fill coarse grid with uniform values from grid
-default={'acc',1,'doublecount',false,'scal',@(x)x,'grid','linear'};
+default={'acc',1,'doublecount',false,'scal',@(x)x,'grid','linear',...
+    'purpose','storage'};
 options=dde_set_options(default,varargin,'pass_on');
-grid=dde_coll_set_grid('storage',degree,'type',options.grid);
+grid=dde_coll_set_grid(options.purpose,degree,'type',options.grid);
 if ~options.doublecount && grid(1)==0 && grid(end)==1
     append=tcoarse(end);
     grid=grid(1:end-1);

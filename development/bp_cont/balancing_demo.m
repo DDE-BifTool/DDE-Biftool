@@ -60,16 +60,16 @@ isb=find(diff(nunst_per)==1,1,'first')+1;
 [sbfuncs,sbbranch,suc]=SetupPOfold(funcs,perbranch,isb,'nextrapar',1,...
     'extra_cond',{@(p,pref)sys_cond_POBP(p,[1,0])},...
     'contpar',[ip.phi,ip.psi],'dir',ip.phi,'step',0.1,'max_step',[],...
-    'minimal_angle',0.8);
+    'minimal_angle',0.6);
 sbbranch=br_contn(sbfuncs,sbbranch,40,'plotaxis',ax2);
 sbbranch=br_rvers(sbbranch);
-sbbranch=br_contn(sbfuncs,sbbranch,400,'plotaxis',ax2);
+sbbranch=br_contn(sbfuncs,sbbranch,700,'plotaxis',ax2);
 %%
 [nunst_sb,dom_sb,triv_sb,sbbranch.point]=GetStability(sbbranch,'funcs',sbfuncs,'exclude_trivial',true);
 %% Plot complete bifurcation diagram so far
-figure(2);clf;ax=gca;hold(ax,'on');xlabel(ax,'tau0');ylabel(ax,'x0');
+figure(2);clf;ax=gca;hold(ax,'on');xlabel(ax,'phi');ylabel(ax,'psi');
 Plot2dBranch(hopf_wbifs,'ax',ax);
-Plot2dBranch(bpbr,'ax',ax,'funcs',bpfuncs);
-Plot2dBranch(sbbranch,'ax',ax,'funcs',sbfuncs);
+Plot2dBranch(bpbr,'ax',ax,'funcs',bpfuncs,'lgname','pitchfork');
+Plot2dBranch(sbbranch,'ax',ax,'funcs',sbfuncs,'lgname','PO pitchfork');
 set(ax,'fontsize',18,'fontweight','bold','fontname','courier','linewidth',2,'box','on');
 %ax.YLim(2)=6.5;

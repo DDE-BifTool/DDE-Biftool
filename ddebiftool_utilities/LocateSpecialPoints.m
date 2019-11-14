@@ -20,29 +20,40 @@ function [branch,testfuncs,indices,biftype]=LocateSpecialPoints(funcs,branch,var
 %
 % $Id: LocateSpecialPoints.m 309 2018-10-28 19:02:42Z jansieber $
 %
+default={'pointtype_list',pointtype_list()};
+[options,pass_on]=dde_set_options(default,varargin,'pass_on');
 %% Simple wrapper around branch specific functions
-types=struct(...
-    'stst',@StstCodimension1,...
-    'fold',@FoldCodimension2,...
-    'hopf',@HopfCodimension2);
-btype=branch.point(1).kind;
-if ~isfield(types,btype)
-    warning('LocateSpecialPoints:type',...
-        'LocateSpecialPoints for type %s not implemented', btype);
-    testfuncs=[];
-    indices=[];
-    biftype={};
+testfuncs=[];
+indices=[];
+biftype={};
+if isempty(branch.point)
     return
 end
-routine=types.(btype);
-[bifpoints,indices,branch,testfuncs]=routine(funcs,branch,varargin{:});
+if isfield(funcs,'kind')
+    kind=funcs.kind;
+else
+    kind=branch.point(1).kind;
+end
+Kind=[upper(kind(1)),kind(2:end)];
+codim=options.pointtype_list.codim.(kind);
+routine=[Kind,'Codimension',num2str(codim+1)];
+if ~exist(routine,'file')
+    warning('LocateSpecialPoints:type',...
+        'LocateSpecialPoints for type %s not implemented', kind);
+    return
+end
+[bifpoints,indices,branch,testfuncs]=feval(routine,funcs,branch,pass_on{:});
 %% insert bifpoints into refined branch
 %#ok<*SFLD>
-branch=br_flag(branch);biftype=cell(1,length(indices));
+biftype=cell(1,length(indices));
 for i=1:length(indices)
     biftype{i}=bifpoints{i}.kind;
-    branch.point(indices(i)).flag=bifpoints{i}.kind;
-    branch.point(indices(i)).nmfm=structmerge(branch.point(indices(i)).nmfm,bifpoints{i}.nmfm);
+    if isfield(branch.point(indices(i)),'flag')
+        branch.point(indices(i)).flag=bifpoints{i}.kind;
+    end
+    if isfield(branch.point(indices(i)),'nmfm')
+        branch.point(indices(i)).nmfm=structmerge(branch.point(indices(i)).nmfm,bifpoints{i}.nmfm);
+    end
     % below: only copy codim2 normal form nvec if nvec is empty. codim2
     % don't need previous eigenvectors while codim1 normal forms need it
     % for continuity of test function. However, Hopf-Hopf detection of
@@ -50,9 +61,6 @@ for i=1:length(indices)
     if isfield(bifpoints{i},'nvec') && isempty(branch.point(indices(i)).nvec)
         branch.point(indices(i)).nvec=bifpoints{i}.nvec;
     end
-%     if isfield(bifpoints{i},'omega')
-%         branch.point(indices(i)).omega=bifpoints{i}.omega;
-%     end
 end
 end
 function s=structmerge(varargin)

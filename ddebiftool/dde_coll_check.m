@@ -22,7 +22,7 @@ else
     hmesh=reshape(pt.mesh(2:end),pt.degree,[]);
     hmesh=(hmesh-tcoarse(od,1:end-1))./hcoarse(od,:);
     hmeshd=diff(hmesh,[],2);
-    assert(max(abs(hmeshd(:)))<1e-8,'dde_coll_check:mesh',...
+    assert(isempty(hmeshd)||max(abs(hmeshd(:)))<1e-8,'dde_coll_check:mesh',...
         'dde_coll_check: internal meshes differ');
 end
 submesh=pt.mesh(1:pt.degree+1)/pt.mesh(pt.degree+1);

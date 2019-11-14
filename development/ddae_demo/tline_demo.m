@@ -50,7 +50,7 @@ ntriv_eq=br_contn(funcs,ntriv_eq,120,'plotaxis',ax1);
 Rvals=getp(ntriv_eq,'R');
 %%
 [ntriv_wbifs,eqbiftests,eqbif_ind,eqbiftype]=LocateSpecialPoints(...
-    funcs,ntriv_eq,stab_inputs{:},'nearest',0);
+    funcs,ntriv_eq,stab_inputs{:},'closest',0);
 stat_nunst=GetStability(ntriv_wbifs);
 %%
 [hopf1,suc]=SetupHopf(funcs,ntriv_wbifs,eqbif_ind(1),...
@@ -61,7 +61,7 @@ hopf1=br_rvers(hopf1);
 hopf1=br_contn(funcs,hopf1,200,'plotaxis',ax2);
 %%
 [hopf1_wbifs,h1biftests,h1bif_ind,h1biftype]=LocateSpecialPoints(...
-    funcs,hopf1,stab_inputs{:},'nearest',0);
+    funcs,hopf1,stab_inputs{:},'closest',0);
 %%
 figure(3);clf;ax3=gca;
 for i=1:length(hopf1_wbifs.point)
@@ -87,7 +87,7 @@ hopf2=br_rvers(hopf2);
 hopf2=br_contn(funcs,hopf2,200,'plotaxis',ax2);
 %%
 [hopf2_wbifs,h2biftests,h2bif_ind,h2biftype]=LocateSpecialPoints(...
-    funcs,hopf2,stab_inputs{:},'nearest',0);
+    funcs,hopf2,stab_inputs{:},'closest',0);
 %%
 p_eva=@(p,t)dde_coll_eva(p.profile,p.mesh,mod(t,1),p.degree,'kron',true);
 ptau=@(p)setfield(p,'profile',p_eva(p,p.mesh-p.parameter(ip.tau_by_C)/p.period));

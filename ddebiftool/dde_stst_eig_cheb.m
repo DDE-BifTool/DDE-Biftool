@@ -19,7 +19,7 @@ taus=max(0,taus);
 default={'ncheb',[],'minimal_real_part',-1,...
     'root_accuracy',1e-6,'maxsize',200,'inisize',max(2,ceil(40/dim)),'nchebfac',2,...
     'max_number_of_eigenvalues',20,'min_number_of_eigenvalues',[],...
-    'scale_w',true,'nearest',[],'tauscal_limit',1e-5,...
+    'scale_w',true,'closest',[],'tauscal_limit',1e-5,...
     'imagthreshold',1e-10,'discard_accuracy_factor',1e5,'lhs_matrix',eye(size(A,1)),...
     'VWout',false};
 options=dde_set_options(default,varargin,'pass_on','method');
@@ -151,11 +151,11 @@ lambda(~isfinite(lambda))=-Inf;
 lambda=lambda(iy);
 V=V(:,iy);
 W=W(:,iy);
-if isempty(opts.nearest)
+if isempty(opts.closest)
     [rlam,ix]=sort(real(lambda),'descend');
     sel=rlam>=opts.minimal_real_part;
 else
-    [rlam,ix]=sort(abs(lambda-opts.nearest),'ascend');
+    [rlam,ix]=sort(abs(lambda-opts.closest),'ascend');
     sel=true(size(rlam));
 end    
 lambda=lambda(ix);

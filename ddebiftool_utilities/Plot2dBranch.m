@@ -4,8 +4,6 @@
 %
 % * |'name'| label used for branch in legend
 % * |'ax'| axis to which plot is added (default gca)
-% * |'oldlegend'|: outputs from previous calls, containing legend entries
-% already established
 % * |'color'| base color for branch (will be gradually paler for unstabile
 % eigenvalues) ,default is from line palette
 % * |'funcs'|: problem functions, needed if stability not yet computed
@@ -76,7 +74,7 @@ elseif isempty(options.y) && length(branch.parameter.free)<2
 else
     p2=@(ind)arrayfun(options.y,pts(ind));
 end    
-%% assign colors to codim1 bifurcations
+%% assign colors to curves
 typenames=fieldnames(getfield(options.pointtype_list(),'codim')); %#ok<GFLD>
 if ~isempty(options.name)
     name=options.name;
@@ -98,22 +96,8 @@ else
 end
 stfac=options.stability;
 stcolor=1-(1-repmat(cl,length(nunst_unique),1)).*repmat(stfac.^nunst_unique(:),1,3);
-%% divide up the branch into parts between codim2 bifurcations
-np=length(pts);
-if isfield(pts(1),'flag') && ~isempty([pts.flag]) % flags indicate computation of codim2 bifurcations occured
-    bifind=find(arrayfun(@(x)~isempty(x.flag),pts));
-    bd=unique([1,bifind,np]);
-    bd=[bd(1:end-1);bd(2:end)];
-    %%  assign markers to bifurcations
-    [biftypes,~,biflocations]=unique({pts(bifind).flag});
-    [~,type_ind]=ismember(biftypes,typenames);
-    markers=options.markersymbols(mod(type_ind-1,length(options.markersymbols))+1);
-    markers=markers(biflocations);
-else % no flags: just use stability changes
-    bifind=[];
-    bd=unique([1,find(diff(nunst(:)')~=0),np]);
-end
-bd=[bd(1:end-1);bd(2:end)];
+%% divide up the branch into parts between special points
+[bd,bifind,labels,markers]=splitbranch(pts,nunst,typenames,options.markersymbols);
 nparts=size(bd,2);
 nunstparts=nunst(floor(mean(bd,1)));
 [nunstparts,ix]=sort(nunstparts,'descend');
@@ -136,14 +120,16 @@ for i=1:nparts
     end
 end
 %% plot codimension 2 bifurcation points
-for i=1:length(bifind)
-    lgpt=plot(ax,p1(bifind(i)),p2(bifind(i)),markers(i),...
-        'markerfacecolor',options.bifcolor,'markeredgecolor',options.bifcolor,...
-        pdeco{:});
-    lgtext=sprintf('%s',pts(bifind(i)).flag);
-    set(lgpt,'DisplayName',lgtext,'UserData','Plot2dBranch');
-    lg{1}=[lg{1},lgpt(:)'];
-    lg{2}=[lg{2},{lgtext}];
+if ~isempty(markers)
+    for i=1:length(bifind)
+        lgpt=plot(ax,p1(bifind(i)),p2(bifind(i)),markers(i),...
+            'markerfacecolor',options.bifcolor,'markeredgecolor',options.bifcolor,...
+            pdeco{:});
+        lgtext=sprintf('%s',labels{i});
+        set(lgpt,'DisplayName',lgtext,'UserData','Plot2dBranch');
+        lg{1}=[lg{1},lgpt(:)'];
+        lg{2}=[lg{2},{lgtext}];
+    end
 end
 %% make legend texts unique
 obj=get(ax,'Children');
@@ -167,5 +153,27 @@ elseif i<maxi
     s=sprintf('%s #unst=%d',name,i);
 else
     s=sprintf('%s #unst>=%d',name,i);
+end
+end
+%%
+function [bd,bifind,labels,markers]=splitbranch(pts,nunst,types,symbols)
+np=length(pts);
+if isfield(pts(1),'flag') && ~isempty([pts.flag]) 
+    % flags indicate computation of bifurcations occured
+    bifind=find(arrayfun(@(x)~isempty(x.flag),pts));
+    labels={pts(bifind).flag};
+else
+    bifind=find(diff(nunst(:)')~=0);
+    labels={};
+    markers={};
+end
+bd=unique([1,bifind,np]);
+bd=[bd(1:end-1);bd(2:end)];
+%%  assign markers to bifurcations
+[biftypes,~,biflocations]=unique(labels);
+[~,type_ind]=ismember(biftypes,types);
+if ~isempty(labels)
+    markers=symbols(mod(type_ind-1,length(symbols))+1);
+    markers=markers(biflocations);
 end
 end
